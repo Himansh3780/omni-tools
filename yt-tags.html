@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Spy Elite - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME --- */
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --border: #334155; --primary: #ef4444; --accent: #3b82f6; --success: #22c55e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* NAV */
+        nav { padding: 20px 5%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+        .badge { background: rgba(239, 68, 68, 0.1); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 20px; width: 100%; }
+
+        /* SEARCH BAR */
+        .spy-bar { 
+            background: var(--panel); padding: 30px; border-radius: 20px; border: 1px solid var(--border); 
+            display: flex; gap: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); margin-bottom: 30px; flex-wrap: wrap;
+        }
+        .input-wrapper { flex: 1; position: relative; min-width: 250px; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+        
+        input { 
+            width: 100%; padding: 18px 18px 18px 50px; background: #020617; border: 2px solid var(--border); 
+            color: white; border-radius: 12px; font-size: 1rem; transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
+
+        button { 
+            padding: 18px 30px; background: var(--primary); color: white; border: none; border-radius: 12px; 
+            font-weight: 700; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 10px; transition: 0.2s;
+        }
+        button:hover { background: #dc2626; transform: translateY(-2px); }
+        button:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.5; }
+
+        /* ANALYTICS DASHBOARD */
+        #result-area { display: none; animation: slideUp 0.4s ease; }
+        
+        .dash-grid { display: grid; grid-template-columns: 350px 1fr; gap: 30px; margin-bottom: 30px; }
+        
+        /* LEFT CARD: STATS */
+        .stats-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 25px; height: fit-content; }
+        .thumb-preview { width: 100%; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .stat-row:last-child { border: none; margin: 0; padding: 0; }
+        .stat-label { color: var(--muted); }
+        .stat-val { font-weight: 700; color: white; }
+
+        /* SEO SCORE CIRCLE */
+        .score-box { text-align: center; margin-bottom: 25px; background: #0f172a; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .score-num { font-size: 2.5rem; font-weight: 800; color: var(--success); }
+        .score-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* RIGHT CARD: TAGS */
+        .tags-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; display: flex; flex-direction: column; }
+        
+        .tags-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .action-group { display: flex; gap: 10px; }
+        .sm-btn { padding: 8px 15px; font-size: 0.85rem; background: #334155; border-radius: 8px; }
+        .sm-btn:hover { background: #475569; }
+
+        .tags-container { 
+            display: flex; flex-wrap: wrap; gap: 10px; flex: 1; align-content: flex-start;
+        }
+
+        .tag-chip { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 8px 14px; 
+            border-radius: 6px; color: #cbd5e1; font-size: 0.9rem; cursor: pointer; transition: 0.2s; user-select: none;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tag-chip:hover { background: rgba(255, 255, 255, 0.1); border-color: white; color: white; }
+        .tag-chip.copied { background: var(--success); border-color: var(--success); color: white; }
+        
+        /* POWER TAG (Match Title) */
+        .tag-chip.power { border-color: var(--primary); background: rgba(239, 68, 68, 0.1); color: #fca5a5; }
+        .tag-chip.power i { font-size: 0.7rem; }
+
+        .loading { display: none; text-align: center; margin-top: 40px; }
+        
+        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @media(max-width: 900px) { .dash-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+    <span class="badge">SEO SPY ELITE</span>
+</nav>
+
+<div class="container">
+    <div style="text-align:center; margin-bottom:40px;">
+        <h1 style="font-size:2.5rem; margin-bottom:10px;">YouTube Spy Elite</h1>
+        <p style="color:var(--muted);">Analyze competitors. Steal their keywords. Rank #1.</p>
+    </div>
+
+    <div class="spy-bar">
+        <div class="input-wrapper">
+            <i class="fa-brands fa-youtube"></i>
+            <input type="text" id="videoUrl" placeholder="Paste YouTube Link here (e.g. https://youtu.be/...)">
+        </div>
+        <button onclick="extractTags()" id="spyBtn"><i class="fa-solid fa-radar"></i> ANALYZE</button>
+    </div>
+
+    <div class="loading" id="loader">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i>
+        <h3 style="color:white;">Cracking Video Data...</h3>
+        <p style="color:var(--muted);">Analyzing keywords and SEO score.</p>
+    </div>
+
+    <div id="result-area">
+        <div class="dash-grid">
+            
+            <div class="stats-card">
+                <div class="score-box">
+                    <div class="score-num" id="seoScore">--</div>
+                    <div class="score-label">SEO Potential</div>
+                </div>
+
+                <img id="vidThumb" class="thumb-preview" src="">
+                
+                <h3 id="vidTitle" style="font-size:1rem; margin-bottom:20px; line-height:1.4;">Video Title</h3>
+
+                <div class="stat-row">
+                    <span class="stat-label">Total Tags</span>
+                    <span class="stat-val" id="tagCount">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Title Keywords</span>
+                    <span class="stat-val" id="powerCount" style="color:var(--primary);">0</span>
+                </div>
+                
+                <div style="margin-top:20px;">
+                    <button class="sm-btn" style="width:100%; justify-content:center; background:#020617; border:1px solid var(--border);" onclick="downloadThumb()">
+                        <i class="fa-solid fa-download"></i> Download Thumbnail
+                    </button>
+                </div>
+            </div>
+
+            <div class="tags-card">
+                <div class="tags-header">
+                    <h3><i class="fa-solid fa-tags" style="color:var(--muted); margin-right:10px;"></i> Keywords Found</h3>
+                    <div class="action-group">
+                        <button class="sm-btn" onclick="copyForDesc()"><i class="fa-solid fa-align-left"></i> Copy for Desc.</button>
+                        <button class="sm-btn" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                        <button class="sm-btn" style="background:var(--success);" onclick="copyAll()"><i class="fa-regular fa-copy"></i> Copy All</button>
+                    </div>
+                </div>
+                
+                <p style="font-size:0.85rem; color:var(--muted); margin-bottom:15px;">
+                    <i class="fa-solid fa-bolt" style="color:var(--primary);"></i> = Power Tag (Used in Title)
+                </p>
+
+                <div class="tags-container" id="tagsBox">
+                    </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentTags = [];
+    let currentTitle = "";
+    let videoId = "";
+
+    async function extractTags() {
+        const urlInput = document.getElementById('videoUrl').value;
+        const loader = document.getElementById('loader');
+        const resultArea = document.getElementById('result-area');
+        const spyBtn = document.getElementById('spyBtn');
+        
+        try {
+            if(urlInput.includes('youtu.be/')) videoId = urlInput.split('youtu.be/')[1].split('?')[0];
+            else if(urlInput.includes('v=')) videoId = urlInput.split('v=')[1].split('&')[0];
+            if(!videoId) throw new Error("Invalid ID");
+        } catch(e) { alert("Invalid YouTube URL"); return; }
+
+        loader.style.display = 'block';
+        resultArea.style.display = 'none';
+        spyBtn.disabled = true;
+
+        try {
+            const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=https://www.youtube.com/watch?v=${videoId}`;
+            const response = await fetch(proxyUrl);
+            const text = await response.text();
+            
+            // Extract Tags
+            let tags = [];
+            const regex = /"keywords":\s*\[(.*?)\]/;
+            const match = text.match(regex);
+            
+            if(match && match[1]) {
+                tags = match[1].replace(/"/g, '').split(',').map(t => t.trim());
+            } else {
+                // Fallback to meta
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const meta = doc.querySelector('meta[name="keywords"]');
+                if(meta) tags = meta.content.split(',').map(t => t.trim());
+            }
+
+            if(tags.length === 0) throw new Error("No tags found.");
+
+            // Extract Title
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const title = doc.querySelector('title') ? doc.querySelector('title').innerText.replace(' - YouTube', '') : "Unknown Title";
+
+            renderResults(tags, title);
+
+        } catch (err) {
+            alert("Could not extract tags. Video might be private.");
+        }
+
+        loader.style.display = 'none';
+        spyBtn.disabled = false;
+    }
+
+    function renderResults(tags, title) {
+        currentTags = tags;
+        currentTitle = title;
+        
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('vidTitle').innerText = title;
+        document.getElementById('vidThumb').src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+        document.getElementById('tagCount').innerText = tags.length;
+
+        const tagsBox = document.getElementById('tagsBox');
+        tagsBox.innerHTML = "";
+        
+        let powerCount = 0;
+        const titleLower = title.toLowerCase();
+
+        tags.forEach(tag => {
+            const isPower = titleLower.includes(tag.toLowerCase());
+            if(isPower) powerCount++;
+
+            const div = document.createElement('div');
+            div.className = isPower ? 'tag-chip power' : 'tag-chip';
+            div.innerHTML = isPower ? `<i class="fa-solid fa-bolt"></i> ${tag}` : tag;
+            div.onclick = () => {
+                navigator.clipboard.writeText(tag);
+                div.classList.add('copied');
+                setTimeout(() => div.classList.remove('copied'), 1000);
+            };
+            tagsBox.appendChild(div);
+        });
+
+        document.getElementById('powerCount').innerText = powerCount;
+        calculateScore(tags.length, powerCount);
+    }
+
+    function calculateScore(count, power) {
+        // Simple algo: Optimal tags is 15-20. Bonus for power tags.
+        let score = 50;
+        if(count > 5) score += 10;
+        if(count > 10) score += 10;
+        if(count > 20) score -= 5; // Too many
+        score += (power * 5);
+        if(score > 100) score = 100;
+        
+        const scoreEl = document.getElementById('seoScore');
+        scoreEl.innerText = score;
+        
+        // Color coding
+        scoreEl.style.color = score > 80 ? '#22c55e' : (score > 50 ? '#eab308' : '#ef4444');
+    }
+
+    function copyAll() {
+        navigator.clipboard.writeText(currentTags.join(', '));
+        alert("All tags copied!");
+    }
+
+    function copyForDesc() {
+        // Formats as a sentence for description
+        const text = "Keywords: " + currentTags.join(', ');
+        navigator.clipboard.writeText(text);
+        alert("Formatted for Description!");
+    }
+
+    function exportCSV() {
+        let csvContent = "data:text/csv;charset=utf-8,Tag\n" + currentTags.join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "youtube_tags.csv");
+        document.body.appendChild(link);
+        link.click();
+    }
+
+    function downloadThumb() {
+        const link = document.createElement('a');
+        link.href = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        link.target = '_blank';
+        link.download = 'thumbnail.jpg';
+        link.click();
+    }
+</script>
+
+</body>
+</html>

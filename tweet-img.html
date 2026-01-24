@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweet to Image Generator - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <style>
+        :root { --bg: #020617; --panel: #0f172a; --text: #f8fafc; --border: #1e293b; --twitter: #1d9bf0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        nav { padding: 20px 5%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { color: #94a3b8; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { color: white; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; display: grid; grid-template-columns: 350px 1fr; gap: 40px; }
+        
+        /* CONTROLS */
+        .controls { background: var(--panel); padding: 30px; border-radius: 20px; border: 1px solid var(--border); height: fit-content; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; color: #94a3b8; margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; }
+        input, textarea, select { width: 100%; padding: 12px; background: #020617; border: 1px solid #334155; color: white; border-radius: 8px; }
+        
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        button { width: 100%; padding: 15px; background: var(--twitter); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+        button:hover { opacity: 0.9; }
+
+        /* PREVIEW AREA */
+        .preview-area { display: flex; justify-content: center; align-items: flex-start; background: #1e293b; padding: 40px; border-radius: 20px; overflow: hidden; }
+        
+        /* THE TWEET CARD */
+        .tweet-card { 
+            background: black; color: white; width: 500px; padding: 30px; border-radius: 0; font-family: 'Inter', sans-serif; position: relative; 
+            border: 1px solid #333;
+        }
+        .tweet-card.light { background: white; color: black; border-color: #eee; }
+        .tweet-card.dim { background: #15202b; color: white; border-color: #38444d; }
+
+        .user-row { display: flex; gap: 12px; margin-bottom: 15px; }
+        .pfp { width: 48px; height: 48px; border-radius: 50%; background: #333; object-fit: cover; }
+        .user-info { display: flex; flex-direction: column; justify-content: center; }
+        .name { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 4px; }
+        .handle { color: #71767b; font-size: 15px; }
+        .verified { color: var(--twitter); font-size: 16px; display: none; }
+        
+        .tweet-text { font-size: 23px; line-height: 1.4; margin-bottom: 20px; white-space: pre-wrap; }
+        
+        .meta-row { color: #71767b; font-size: 15px; border-bottom: 1px solid #2f3336; padding-bottom: 15px; margin-bottom: 15px; }
+        .stats-row { display: flex; gap: 20px; color: #71767b; font-size: 15px; font-weight: 400; }
+        .stat-num { color: white; font-weight: 700; }
+        
+        .tweet-card.light .stat-num { color: black; }
+        .tweet-card.light .meta-row { border-color: #eff3f4; }
+        
+        @media(max-width: 900px) { .container { grid-template-columns: 1fr; } .tweet-card { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+    <span style="color:var(--twitter); font-weight:800;">TWEET GEN</span>
+</nav>
+
+<div class="container">
+    
+    <div class="controls">
+        <div class="input-group">
+            <label>Theme</label>
+            <select id="theme" onchange="update()">
+                <option value="dark">Dark (Default)</option>
+                <option value="dim">Dim (Midnight)</option>
+                <option value="light">Light</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Profile Picture</label>
+            <input type="file" onchange="loadPfp(event)">
+        </div>
+
+        <div class="input-group">
+            <label>Name</label>
+            <input type="text" id="inpName" value="Elon Musk" oninput="update()">
+        </div>
+
+        <div class="input-group">
+            <label>Handle (@)</label>
+            <input type="text" id="inpHandle" value="@elonmusk" oninput="update()">
+        </div>
+
+        <div class="input-group">
+            <label>Tweet Content</label>
+            <textarea id="inpText" rows="4" oninput="update()">I'm buying Coca-Cola to put the cocaine back in.</textarea>
+        </div>
+
+        <div class="toggle-row">
+            <label style="margin:0;">Verified Badge?</label>
+            <input type="checkbox" id="inpVerify" checked onchange="update()" style="width:20px;">
+        </div>
+
+        <div class="input-group">
+            <label>Stats (Retweets / Likes)</label>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="inpRts" value="86.5K" oninput="update()">
+                <input type="text" id="inpLikes" value="4.2M" oninput="update()">
+            </div>
+        </div>
+
+        <button onclick="downloadImage()"><i class="fa-solid fa-download"></i> Download Image</button>
+    </div>
+
+    <div class="preview-area">
+        <div class="tweet-card" id="card">
+            <div class="user-row">
+                <img src="https://pbs.twimg.com/profile_images/1780044485541699584/p78MCn3B_400x400.jpg" class="pfp" id="pfpImg">
+                <div class="user-info">
+                    <div class="name"><span id="outName">Elon Musk</span> <i class="fa-solid fa-circle-check verified" id="iconVerify"></i></div>
+                    <div class="handle" id="outHandle">@elonmusk</div>
+                </div>
+            </div>
+            
+            <div class="tweet-text" id="outText">I'm buying Coca-Cola to put the cocaine back in.</div>
+            
+            <div class="meta-row">
+                <span id="outTime">10:45 AM · Apr 28, 2022</span> · <span style="color:#1d9bf0">Twitter for iPhone</span>
+            </div>
+            
+            <div class="stats-row">
+                <div><span class="stat-num" id="outRts">86.5K</span> Retweets</div>
+                <div><span class="stat-num">10.3K</span> Quote Tweets</div>
+                <div><span class="stat-num" id="outLikes">4.2M</span> Likes</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function update() {
+        // Text
+        document.getElementById('outName').innerText = document.getElementById('inpName').value;
+        document.getElementById('outHandle').innerText = document.getElementById('inpHandle').value;
+        document.getElementById('outText').innerText = document.getElementById('inpText').value;
+        document.getElementById('outRts').innerText = document.getElementById('inpRts').value;
+        document.getElementById('outLikes').innerText = document.getElementById('inpLikes').value;
+
+        // Verified
+        const isVerified = document.getElementById('inpVerify').checked;
+        document.getElementById('iconVerify').style.display = isVerified ? 'inline-block' : 'none';
+
+        // Theme
+        const theme = document.getElementById('theme').value;
+        const card = document.getElementById('card');
+        card.className = `tweet-card ${theme}`;
+        
+        // Date (Auto update to now)
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const dateStr = now.toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'});
+        document.getElementById('outTime').innerText = `${timeStr} · ${dateStr}`;
+    }
+
+    function loadPfp(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('pfpImg').src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function downloadImage() {
+        const card = document.getElementById('card');
+        html2canvas(card, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'tweet.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+    
+    // Init
+    update();
+</script>
+
+</body>
+</html>

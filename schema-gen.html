@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Markup Generator - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME --- */
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --border: #334155; --primary: #f59e0b; /* SEO Gold */ }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* NAV */
+        nav { padding: 20px 5%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+        .badge { background: rgba(245, 158, 11, 0.1); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        /* LEFT: FORM */
+        .editor-card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; }
+        
+        .type-selector { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
+        .type-btn { 
+            white-space: nowrap; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); 
+            background: #020617; color: var(--muted); cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .type-btn:hover { color: white; border-color: white; }
+        .type-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; color: var(--muted); margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
+        input, textarea, select { 
+            width: 100%; padding: 14px; background: #020617; border: 1px solid var(--border); 
+            color: white; border-radius: 10px; font-size: 0.95rem; font-family: inherit; transition: 0.2s;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); }
+
+        /* RIGHT: CODE PREVIEW */
+        .preview-card { position: sticky; top: 40px; height: fit-content; }
+        
+        .code-box { 
+            background: #0d1117; border: 1px solid #30363d; border-radius: 12px; padding: 20px; 
+            font-family: 'Courier New', monospace; color: #e6edf3; font-size: 0.9rem; line-height: 1.5; 
+            min-height: 400px; white-space: pre-wrap; overflow-x: auto;
+        }
+        
+        .action-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        .copy-btn { 
+            background: var(--primary); color: #000; border: none; padding: 10px 20px; 
+            border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+        .copy-btn:hover { opacity: 0.9; }
+
+        .validate-link { color: var(--muted); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+        .validate-link:hover { color: white; text-decoration: underline; }
+
+        /* JSON COLORS */
+        .json-key { color: #7ee787; }
+        .json-val { color: #a5d6ff; }
+        .json-num { color: #79c0ff; }
+
+        @media(max-width: 900px) { .container { grid-template-columns: 1fr; } .preview-card { position: static; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+    <span class="badge">SEO TOOLKIT</span>
+</nav>
+
+<div class="container">
+    
+    <div class="editor-card">
+        <h1 style="margin-bottom:20px;">Schema Generator</h1>
+        
+        <div class="type-selector">
+            <button class="type-btn active" onclick="setType('article')">Article</button>
+            <button class="type-btn" onclick="setType('product')">Product</button>
+            <button class="type-btn" onclick="setType('faq')">FAQ Page</button>
+            <button class="type-btn" onclick="setType('local')">Local Business</button>
+        </div>
+
+        <div id="form-area">
+            </div>
+    </div>
+
+    <div class="preview-card">
+        <div class="action-row">
+            <h3 style="font-size:1rem;">JSON-LD Code</h3>
+            <a href="https://validator.schema.org/" target="_blank" class="validate-link">
+                <i class="fa-solid fa-up-right-from-square"></i> Test in Google
+            </a>
+        </div>
+        
+        <div class="code-box" id="output"></div>
+        
+        <div style="margin-top:20px;">
+            <button class="copy-btn" onclick="copyCode()" style="width:100%; justify-content:center;">
+                <i class="fa-regular fa-copy"></i> Copy Code
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentType = 'article';
+
+    // FORM TEMPLATES
+    const forms = {
+        article: `
+            <div class="input-group">
+                <label>Headline</label>
+                <input type="text" id="headline" placeholder="e.g. How to tie a tie" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Article URL</label>
+                <input type="text" id="url" placeholder="https://website.com/article" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Image URL</label>
+                <input type="text" id="image" placeholder="https://website.com/thumb.jpg" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Author Name</label>
+                <input type="text" id="author" placeholder="John Doe" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Publisher Name</label>
+                <input type="text" id="publisher" placeholder="My Blog" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Publish Date</label>
+                <input type="date" id="date" oninput="generate()">
+            </div>
+        `,
+        product: `
+            <div class="input-group">
+                <label>Product Name</label>
+                <input type="text" id="name" placeholder="Super Widget 3000" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Image URL</label>
+                <input type="text" id="image" placeholder="https://..." oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Description</label>
+                <textarea id="desc" rows="3" oninput="generate()"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Brand</label>
+                <input type="text" id="brand" placeholder="Acme Corp" oninput="generate()">
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div class="input-group">
+                    <label>Price</label>
+                    <input type="number" id="price" placeholder="99.99" oninput="generate()">
+                </div>
+                <div class="input-group">
+                    <label>Currency</label>
+                    <input type="text" id="currency" value="USD" oninput="generate()">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Rating (0-5)</label>
+                <input type="number" id="rating" step="0.1" max="5" placeholder="4.5" oninput="generate()">
+            </div>
+        `,
+        faq: `
+            <div id="faq-container">
+                <div class="input-group">
+                    <label>Question 1</label>
+                    <input type="text" class="faq-q" placeholder="What is...?" oninput="generate()">
+                    <label style="margin-top:10px;">Answer 1</label>
+                    <textarea class="faq-a" rows="2" placeholder="It is..." oninput="generate()"></textarea>
+                </div>
+            </div>
+            <button onclick="addFaq()" style="background:#334155; color:white; padding:10px; border:none; border-radius:8px; cursor:pointer;">+ Add Question</button>
+        `,
+        local: `
+            <div class="input-group">
+                <label>Business Name</label>
+                <input type="text" id="name" placeholder="Joe's Pizza" oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Image URL</label>
+                <input type="text" id="image" placeholder="https://..." oninput="generate()">
+            </div>
+            <div class="input-group">
+                <label>Address</label>
+                <input type="text" id="address" placeholder="123 Main St" oninput="generate()">
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div class="input-group">
+                    <label>City</label>
+                    <input type="text" id="city" placeholder="New York" oninput="generate()">
+                </div>
+                <div class="input-group">
+                    <label>Zip Code</label>
+                    <input type="text" id="zip" placeholder="10001" oninput="generate()">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Phone</label>
+                <input type="text" id="phone" placeholder="+1 555-0199" oninput="generate()">
+            </div>
+             <div class="input-group">
+                <label>Price Range</label>
+                <input type="text" id="priceRange" placeholder="$$" oninput="generate()">
+            </div>
+        `
+    };
+
+    // INIT
+    document.getElementById('form-area').innerHTML = forms.article;
+    generate();
+
+    function setType(type) {
+        currentType = type;
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('form-area').innerHTML = forms[type];
+        generate();
+    }
+
+    function addFaq() {
+        const div = document.createElement('div');
+        div.className = 'input-group';
+        div.style.marginTop = "20px";
+        div.style.borderTop = "1px solid #334155";
+        div.style.paddingTop = "20px";
+        div.innerHTML = `
+            <label>Question</label>
+            <input type="text" class="faq-q" oninput="generate()">
+            <label style="margin-top:10px;">Answer</label>
+            <textarea class="faq-a" rows="2" oninput="generate()"></textarea>
+        `;
+        document.getElementById('faq-container').appendChild(div);
+    }
+
+    function generate() {
+        let schema = {};
+
+        if (currentType === 'article') {
+            schema = {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": getVal('headline'),
+                "image": [getVal('image')],
+                "datePublished": getVal('date') + "T08:00:00+08:00",
+                "author": [{
+                    "@type": "Person",
+                    "name": getVal('author'),
+                    "url": getVal('url')
+                }]
+            };
+        } 
+        else if (currentType === 'product') {
+            schema = {
+                "@context": "https://schema.org/",
+                "@type": "Product",
+                "name": getVal('name'),
+                "image": [getVal('image')],
+                "description": getVal('desc'),
+                "brand": { "@type": "Brand", "name": getVal('brand') },
+                "offers": {
+                    "@type": "Offer",
+                    "url": "",
+                    "priceCurrency": getVal('currency'),
+                    "price": getVal('price'),
+                    "availability": "https://schema.org/InStock"
+                }
+            };
+            if(getVal('rating')) {
+                schema.aggregateRating = {
+                    "@type": "AggregateRating",
+                    "ratingValue": getVal('rating'),
+                    "reviewCount": "89"
+                };
+            }
+        }
+        else if (currentType === 'faq') {
+            const qs = document.querySelectorAll('.faq-q');
+            const as = document.querySelectorAll('.faq-a');
+            let list = [];
+            qs.forEach((q, i) => {
+                if(q.value) {
+                    list.push({
+                        "@type": "Question",
+                        "name": q.value,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": as[i].value
+                        }
+                    });
+                }
+            });
+            schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": list
+            };
+        }
+        else if (currentType === 'local') {
+            schema = {
+                "@context": "https://schema.org",
+                "@type": "LocalBusiness",
+                "name": getVal('name'),
+                "image": getVal('image'),
+                "telephone": getVal('phone'),
+                "priceRange": getVal('priceRange'),
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": getVal('address'),
+                    "addressLocality": getVal('city'),
+                    "postalCode": getVal('zip'),
+                    "addressCountry": "US"
+                }
+            };
+        }
+
+        // FORMAT JSON
+        const jsonStr = JSON.stringify(schema, null, 4);
+        const coloredJson = syntaxHighlight(jsonStr);
+        document.getElementById('output').innerHTML = `<script type="application/ld+json">\n${coloredJson}\n<\/script>`;
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : "";
+    }
+
+    function copyCode() {
+        const text = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Code Copied!");
+    }
+
+    // Syntax Highlighter for prettier JSON
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'json-num';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'json-key';
+                } else {
+                    cls = 'json-val';
+                }
+            } 
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Sitemap Builder - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --border: #334155; --primary: #10b981; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        /* HEADER & IMPORT */
+        .top-bar { background: var(--panel); padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 30px; }
+        textarea { width: 100%; height: 100px; background: #020617; border: 1px solid var(--border); color: white; padding: 15px; border-radius: 8px; font-family: monospace; resize: vertical; }
+        .btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); margin-left: 10px; }
+        .btn-outline:hover { color: white; border-color: white; }
+
+        /* TABLE EDITOR */
+        .table-wrapper { overflow-x: auto; background: var(--panel); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 15px 20px; background: rgba(255,255,255,0.05); color: var(--muted); font-size: 0.85rem; text-transform: uppercase; }
+        td { padding: 15px 20px; border-top: 1px solid var(--border); }
+        
+        input.row-input { background: transparent; border: none; color: white; width: 100%; font-family: monospace; }
+        select.row-select { background: #020617; border: 1px solid var(--border); color: white; padding: 5px; border-radius: 4px; }
+        
+        .del-btn { color: #ef4444; cursor: pointer; padding: 5px; }
+        .del-btn:hover { background: rgba(239, 68, 68, 0.1); border-radius: 4px; }
+
+        /* OUTPUT */
+        .output-box { background: #020617; border: 1px solid var(--border); color: #a5d6ff; padding: 20px; border-radius: 12px; font-family: monospace; white-space: pre-wrap; display: none; margin-bottom: 20px; max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-block;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+
+    <div class="container">
+        <div class="top-bar">
+            <h2 style="margin-bottom:10px;">1. Import Links</h2>
+            <textarea id="bulkInput" placeholder="Paste your links here (one per line)...&#10;https://site.com&#10;https://site.com/about"></textarea>
+            <button class="btn" onclick="parseBulk()"><i class="fa-solid fa-plus"></i> Import to Table</button>
+            <button class="btn btn-outline" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Empty Row</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="sitemapTable">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">URL Location</th>
+                        <th style="width: 20%;">Last Mod</th>
+                        <th style="width: 15%;">Freq</th>
+                        <th style="width: 10%;">Priority</th>
+                        <th style="width: 5%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+            <div id="emptyMsg" style="padding:40px; text-align:center; color:#94a3b8;">No links yet. Paste them above!</div>
+        </div>
+
+        <div style="text-align:right; margin-bottom:20px;">
+            <button class="btn" style="padding:15px 30px; font-size:1rem;" onclick="generateXML()">
+                <i class="fa-solid fa-code"></i> Generate Sitemap.xml
+            </button>
+        </div>
+
+        <div class="output-box" id="xmlOutput"></div>
+        <button class="btn" id="dlBtn" style="display:none; width:100%; background:#334155;" onclick="downloadXML()">
+            <i class="fa-solid fa-download"></i> Download File
+        </button>
+    </div>
+
+<script>
+    const tableBody = document.getElementById('tableBody');
+    const today = new Date().toISOString().split('T')[0];
+
+    function addRow(url = "") {
+        document.getElementById('emptyMsg').style.display = 'none';
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="row-input" value="${url}" placeholder="https://..."></td>
+            <td><input type="date" class="row-select" value="${today}"></td>
+            <td>
+                <select class="row-select">
+                    <option value="daily">Daily</option>
+                    <option value="weekly" selected>Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </td>
+            <td>
+                <select class="row-select">
+                    <option value="1.0">1.0</option>
+                    <option value="0.8" selected>0.8</option>
+                    <option value="0.5">0.5</option>
+                </select>
+            </td>
+            <td style="text-align:center;"><i class="fa-solid fa-trash del-btn" onclick="removeRow(this)"></i></td>
+        `;
+        tableBody.appendChild(tr);
+    }
+
+    function parseBulk() {
+        const text = document.getElementById('bulkInput').value;
+        const lines = text.split('\n').filter(line => line.trim() !== "");
+        lines.forEach(url => addRow(url.trim()));
+        document.getElementById('bulkInput').value = ""; // Clear
+    }
+
+    function removeRow(btn) {
+        btn.closest('tr').remove();
+        if(tableBody.children.length === 0) document.getElementById('emptyMsg').style.display = 'block';
+    }
+
+    function generateXML() {
+        const rows = tableBody.querySelectorAll('tr');
+        if(rows.length === 0) { alert("Add some links first!"); return; }
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input, select');
+            const url = inputs[0].value;
+            const date = inputs[1].value;
+            const freq = inputs[2].value;
+            const prio = inputs[3].value;
+
+            if(url) {
+                xml += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>${freq}</changefreq>\n    <priority>${prio}</priority>\n  </url>\n`;
+            }
+        });
+
+        xml += `</urlset>`;
+
+        const out = document.getElementById('xmlOutput');
+        out.textContent = xml;
+        out.style.display = 'block';
+        document.getElementById('dlBtn').style.display = 'block';
+        out.scrollIntoView({behavior: "smooth"});
+    }
+
+    function downloadXML() {
+        const txt = document.getElementById('xmlOutput').textContent;
+        const el = document.createElement('a');
+        el.href = 'data:text/xml;charset=utf-8,' + encodeURIComponent(txt);
+        el.download = 'sitemap.xml';
+        el.click();
+    }
+</script>
+</body>
+</html>

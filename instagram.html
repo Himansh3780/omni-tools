@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Audit - Engagement & Fake Follower Check</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #020617;
+            --panel: #0f172a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            /* Instagram Gradient Colors */
+            --ig-purple: #833ab4;
+            --ig-red: #fd1d1d;
+            --ig-orange: #fcb045;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* NAV */
+        nav { padding: 20px 5%; border-bottom: 1px solid #1e293b; background: var(--bg); display: flex; justify-content: space-between; align-items: center; }
+        .back-link { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .back-link:hover { color: white; }
+
+        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+
+        /* CARD */
+        .glass-panel {
+            background: var(--panel);
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(131, 58, 180, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .ig-gradient-text {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; text-align: center; }
+        .sub { text-align: center; color: var(--muted); margin-bottom: 30px; }
+
+        /* INPUTS */
+        .input-box { margin-bottom: 20px; }
+        .input-box label { display: block; color: var(--muted); margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
+        .input-box input {
+            width: 100%; padding: 16px; background: #020617; border: 1px solid #334155; border-radius: 12px;
+            color: white; font-size: 1.1rem; font-weight: 600; transition: 0.3s;
+        }
+        .input-box input:focus { border-color: var(--ig-purple); box-shadow: 0 0 0 4px rgba(131, 58, 180, 0.2); }
+
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%; padding: 20px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border: none; border-radius: 12px; color: white; font-size: 1.1rem; font-weight: 800;
+            cursor: pointer; transition: transform 0.2s; margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(220, 39, 67, 0.3);
+        }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(220, 39, 67, 0.5); }
+
+        /* RESULTS AREA */
+        .results-area { display: none; margin-top: 40px; animation: slideUp 0.6s ease; }
+
+        /* 1. STATUS CARD */
+        .status-card {
+            background: rgba(255,255,255,0.03); border: 1px solid #334155; border-radius: 16px; padding: 25px;
+            text-align: center; margin-bottom: 20px;
+        }
+        .big-percent { font-size: 3.5rem; font-weight: 800; margin: 10px 0; color: white; line-height: 1; }
+        .grade-pill { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+        .grade-A { background: rgba(16, 185, 129, 0.2); color: var(--success); } /* Green */
+        .grade-F { background: rgba(239, 68, 68, 0.2); color: var(--danger); } /* Red */
+        .grade-C { background: rgba(234, 179, 8, 0.2); color: #eab308; } /* Yellow */
+
+        /* 2. THE "FEAR" BOX (Fake Followers) */
+        .fear-box {
+            background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 20px;
+            margin-bottom: 20px; display: flex; gap: 15px; align-items: center;
+        }
+        .fear-icon { font-size: 1.5rem; color: var(--danger); }
+        .fear-text { font-size: 0.9rem; color: #fca5a5; line-height: 1.5; }
+
+        /* 3. BRAND DEAL ESTIMATOR */
+        .brand-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155; border-radius: 16px; padding: 25px; text-align: center;
+        }
+        .money-val { color: var(--success); font-weight: 800; font-size: 1.5rem; }
+        .affiliate-link {
+            display: inline-block; margin-top: 15px; text-decoration: none; color: white; font-weight: 700;
+            background: #2563eb; padding: 10px 20px; border-radius: 8px; transition: 0.2s;
+        }
+        .affiliate-link:hover { background: #1d4ed8; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @media(max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-chevron-left"></i> All Tools</a>
+        <div style="font-weight:700;">OmniTools Pro</div>
+    </nav>
+
+    <div class="container">
+        <div class="glass-panel">
+            <h1>Instagram <span class="ig-gradient-text">Audit</span></h1>
+            <p class="sub">Check engagement, detect fake followers, and estimate post value.</p>
+
+            <div class="input-box">
+                <label>Followers</label>
+                <input type="number" id="followers" placeholder="e.g. 5000">
+            </div>
+
+            <div class="grid-3">
+                <div class="input-box">
+                    <label>Avg Likes</label>
+                    <input type="number" id="likes" placeholder="e.g. 200">
+                </div>
+                <div class="input-box">
+                    <label>Avg Comments</label>
+                    <input type="number" id="comments" placeholder="e.g. 15">
+                </div>
+            </div>
+
+            <button class="btn-main" onclick="audit()">
+                <i class="fa-brands fa-instagram"></i> RUN AUDIT
+            </button>
+
+            <div class="results-area" id="results">
+                
+                <div class="status-card">
+                    <div id="grade-badge"><span class="grade-pill grade-C">AVERAGE</span></div>
+                    <div class="big-percent" id="eng-rate">0%</div>
+                    <div style="color:var(--muted); font-size:0.9rem;">ENGAGEMENT RATE</div>
+                </div>
+
+                <div class="fear-box" id="fake-box" style="display:none;">
+                    <div class="fear-icon"><i class="fa-solid fa-ghost"></i></div>
+                    <div class="fear-text">
+                        <strong>Ghost Followers Detected?</strong><br>
+                        Your engagement is unusually low. We estimate you may have <span id="fake-count" style="font-weight:800; color:white;">0</span> inactive or fake followers hurting your reach.
+                    </div>
+                </div>
+
+                <div class="brand-box">
+                    <div style="color:var(--muted); font-size:0.85rem; text-transform:uppercase; font-weight:700; margin-bottom:5px;">Estimated Price Per Post</div>
+                    <div class="money-val" id="price-val">$0 - $0</div>
+                    <p style="font-size:0.85rem; color:#94a3b8; margin: 10px 0;">Brands pay more for high engagement.</p>
+                    
+                    <a href="#" class="affiliate-link">Get More Brand Deals &rarr;</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function audit() {
+            const followers = parseFloat(document.getElementById('followers').value);
+            const likes = parseFloat(document.getElementById('likes').value);
+            const comments = parseFloat(document.getElementById('comments').value);
+
+            if(!followers || !likes) { alert("Please enter your stats!"); return; }
+
+            // 1. CALC ENGAGEMENT: ((Likes + Comments) / Followers) * 100
+            // Default comments to 0 if empty
+            const comms = comments ? comments : 0;
+            const engagement = ((likes + comms) / followers) * 100;
+
+            // 2. CALC PRICE (Micro-Influencer rates: $10 per 1k followers usually, adjusted by eng)
+            let rateMultiplier = 10; // Base $10 CPM
+            if(engagement > 5) rateMultiplier = 15; // High eng bonus
+            if(engagement < 1) rateMultiplier = 5;  // Low eng penalty
+
+            const estPriceLow = (followers / 1000) * (rateMultiplier * 0.8);
+            const estPriceHigh = (followers / 1000) * (rateMultiplier * 1.2);
+
+            // 3. UI UPDATES
+            document.getElementById('eng-rate').innerText = engagement.toFixed(2) + "%";
+            document.getElementById('price-val').innerText = `$${Math.floor(estPriceLow)} - $${Math.floor(estPriceHigh)}`;
+
+            // 4. GRADE LOGIC & PSYCHOLOGY
+            const badge = document.getElementById('grade-badge');
+            const fakeBox = document.getElementById('fake-box');
+
+            if(engagement < 1.5) {
+                // BAD GRADE
+                badge.innerHTML = `<span class="grade-pill grade-F">CRITICAL CONDITION</span>`;
+                document.getElementById('eng-rate').style.color = "#ef4444";
+                
+                // Show Fear Box
+                fakeBox.style.display = "flex";
+                // Estimate 30% are fake
+                document.getElementById('fake-count').innerText = Math.floor(followers * 0.3).toLocaleString();
+            
+            } else if (engagement > 4.5) {
+                // GOOD GRADE
+                badge.innerHTML = `<span class="grade-pill grade-A">INFLUENCER STATUS</span>`;
+                document.getElementById('eng-rate').style.color = "#10b981";
+                fakeBox.style.display = "none";
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); // DOPAMINE
+            } else {
+                // AVERAGE
+                badge.innerHTML = `<span class="grade-pill grade-C">HEALTHY / AVERAGE</span>`;
+                document.getElementById('eng-rate').style.color = "#eab308";
+                fakeBox.style.display = "none";
+            }
+
+            document.getElementById('results').style.display = "block";
+        }
+    </script>
+</body>
+</html>

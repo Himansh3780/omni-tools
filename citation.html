@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Citation Machine - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --accent: #f43f5e; --border: #334155; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; }
+        
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .tab { padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; color: var(--muted); transition: 0.2s; }
+        .tab.active { background: rgba(244, 63, 94, 0.1); color: var(--accent); }
+        .tab:hover:not(.active) { color: white; background: rgba(255,255,255,0.05); }
+
+        /* FORM */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        
+        label { display: block; margin-bottom: 8px; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+        input { width: 100%; background: #020617; border: 1px solid var(--border); color: white; padding: 14px; border-radius: 8px; }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        /* PREVIEW BOX */
+        .preview-box { 
+            background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 30px; 
+            font-family: 'Times New Roman', serif; font-size: 1.1rem; line-height: 1.6; border-left: 5px solid var(--accent);
+            display: none; animation: slideUp 0.3s ease;
+        }
+        
+        .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 20px; font-size: 1rem; }
+        .btn:hover { opacity: 0.9; }
+
+        @keyframes slideUp { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" style="color:var(--muted); text-decoration:none; margin-bottom:20px; display:inline-block;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        
+        <div class="card">
+            <h1 style="margin-bottom:20px;">Citation Generator</h1>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="setMode('apa')">APA 7</div>
+                <div class="tab" onclick="setMode('mla')">MLA 9</div>
+                <div class="tab" onclick="setMode('chi')">Chicago</div>
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <label>Author First Name</label>
+                    <input type="text" id="first" placeholder="John">
+                </div>
+                <div>
+                    <label>Author Last Name</label>
+                    <input type="text" id="last" placeholder="Doe">
+                </div>
+                <div>
+                    <label>Date Published</label>
+                    <input type="text" id="year" placeholder="2023">
+                </div>
+                <div>
+                    <label>Website Name</label>
+                    <input type="text" id="site" placeholder="Wikipedia">
+                </div>
+                <div class="full-width">
+                    <label>Article Title</label>
+                    <input type="text" id="title" placeholder="History of the Internet">
+                </div>
+                <div class="full-width">
+                    <label>URL</label>
+                    <input type="text" id="url" placeholder="https://...">
+                </div>
+            </div>
+
+            <button class="btn" onclick="generate()">Generate Citation</button>
+
+            <div class="preview-box" id="result-area">
+                <div id="citation-text"></div>
+                <button onclick="copyText()" style="background:#eee; color:#333; border:1px solid #ccc; padding:8px 15px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:bold; margin-top:15px; font-family:sans-serif;">
+                    <i class="fa-regular fa-copy"></i> Copy to Clipboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let mode = 'apa';
+
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    function generate() {
+        const last = document.getElementById('last').value || "Lastname";
+        const first = document.getElementById('first').value || "Firstname";
+        const year = document.getElementById('year').value || "n.d.";
+        const title = document.getElementById('title').value || "Article Title";
+        const site = document.getElementById('site').value || "Website";
+        const url = document.getElementById('url').value;
+
+        let html = "";
+
+        if (mode === 'apa') {
+            // APA: Last, F. M. (Year). Title. Site. URL
+            html = `${last}, ${first.charAt(0)}. (${year}). <i>${title}</i>. ${site}. ${url}`;
+        } 
+        else if (mode === 'mla') {
+            // MLA: Last, First. "Title." Site, Year, URL.
+            html = `${last}, ${first}. "${title}." <i>${site}</i>, ${year}, ${url}.`;
+        }
+        else if (mode === 'chi') {
+            // Chicago: Last, First. "Title." Site. Year. URL.
+            html = `${last}, ${first}. "${title}." ${site}. ${year}. ${url}.`;
+        }
+
+        const box = document.getElementById('result-area');
+        document.getElementById('citation-text').innerHTML = html;
+        box.style.display = 'block';
+    }
+
+    function copyText() {
+        // Copy HTML as Rich Text (Preserves Italics)
+        const range = document.createRange();
+        range.selectNode(document.getElementById('citation-text'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        alert("Copied! (Italics preserved)");
+    }
+</script>
+</body>
+</html>

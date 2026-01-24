@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Preview Generator - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --border: #334155; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        
+        /* INPUTS */
+        .card { background: var(--panel); padding: 30px; border-radius: 12px; border: 1px solid var(--border); }
+        input, textarea { width: 100%; padding: 12px; background: #020617; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #94a3b8; font-size: 0.9rem; font-weight: bold; }
+        
+        /* TABS */
+        .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab { background: var(--panel); border: 1px solid var(--border); color: #94a3b8; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+        .tab.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .tab:hover:not(.active) { color: white; }
+
+        /* PREVIEW AREA */
+        .preview-box { display: none; }
+        .preview-box.active { display: block; }
+
+        /* FACEBOOK STYLE */
+        .fb-card { background: #242526; border-radius: 8px; overflow: hidden; border: 1px solid #3e4042; max-width: 500px; margin: 0 auto; }
+        .fb-img { width: 100%; height: 260px; object-fit: cover; background: #3a3b3c; }
+        .fb-text { padding: 12px; }
+        .fb-host { color: #b0b3b8; font-size: 13px; text-transform: uppercase; margin-bottom: 5px; }
+        .fb-title { color: #e4e6eb; font-weight: 600; font-size: 16px; margin-bottom: 3px; line-height: 1.2; }
+        .fb-desc { color: #b0b3b8; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* TWITTER STYLE */
+        .tw-card { border-radius: 16px; overflow: hidden; border: 1px solid #333639; max-width: 500px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .tw-img { width: 100%; height: 260px; object-fit: cover; background: #333639; }
+        .tw-text { padding: 12px; background: black; color: white; }
+        .tw-title { font-weight: bold; font-size: 15px; margin-bottom: 2px; }
+        .tw-desc { color: #71767b; font-size: 15px; }
+        .tw-host { color: #71767b; font-size: 15px; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+
+        .btn { width: 100%; padding: 15px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-block;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Customize Meta Tags</h2>
+            
+            <label>Title</label>
+            <input type="text" id="title" placeholder="My Awesome Article" oninput="update()">
+            
+            <label>Description</label>
+            <textarea id="desc" rows="3" placeholder="A short summary of the page..." oninput="update()"></textarea>
+            
+            <label>Image URL</label>
+            <input type="text" id="img" placeholder="https://..." oninput="update()">
+            
+            <label>Website URL</label>
+            <input type="text" id="url" placeholder="https://website.com" oninput="update()">
+
+            <button class="btn" onclick="copyMeta()">Copy HTML Code</button>
+        </div>
+
+        <div>
+            <div class="tab-bar">
+                <div class="tab active" onclick="setTab('fb')"><i class="fa-brands fa-facebook"></i> Facebook</div>
+                <div class="tab" onclick="setTab('tw')"><i class="fa-brands fa-twitter"></i> Twitter</div>
+            </div>
+
+            <div id="prev-fb" class="preview-box active">
+                <div class="fb-card">
+                    <img src="" class="fb-img" id="fbImg" onerror="this.style.opacity=0">
+                    <div class="fb-text">
+                        <div class="fb-host" id="fbUrl">WEBSITE.COM</div>
+                        <div class="fb-title" id="fbTitle">Page Title</div>
+                        <div class="fb-desc" id="fbDesc">Description...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="prev-tw" class="preview-box">
+                <div class="tw-card">
+                    <img src="" class="tw-img" id="twImg" onerror="this.style.opacity=0">
+                    <div class="tw-text">
+                        <div class="tw-host"><i class="fa-solid fa-link" style="font-size:12px;"></i> <span id="twUrl">website.com</span></div>
+                        <div class="tw-title" id="twTitle">Page Title</div>
+                        <div class="tw-desc" id="twDesc">Description...</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    function update() {
+        const title = document.getElementById('title').value || "Page Title";
+        const desc = document.getElementById('desc').value || "Description goes here...";
+        const urlRaw = document.getElementById('url').value;
+        const img = document.getElementById('img').value;
+
+        // Parse Domain
+        let domain = "WEBSITE.COM";
+        let domainLower = "website.com";
+        try { 
+            const u = new URL(urlRaw);
+            domain = u.hostname.toUpperCase();
+            domainLower = u.hostname;
+        } catch {}
+
+        // Update FB
+        document.getElementById('fbTitle').innerText = title;
+        document.getElementById('fbDesc').innerText = desc;
+        document.getElementById('fbUrl').innerText = domain;
+        if(img) { document.getElementById('fbImg').src = img; document.getElementById('fbImg').style.opacity=1; }
+
+        // Update Twitter
+        document.getElementById('twTitle').innerText = title;
+        document.getElementById('twDesc').innerText = desc;
+        document.getElementById('twUrl').innerText = domainLower;
+        if(img) { document.getElementById('twImg').src = img; document.getElementById('twImg').style.opacity=1; }
+    }
+
+    function setTab(mode) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        document.querySelectorAll('.preview-box').forEach(b => b.classList.remove('active'));
+        document.getElementById('prev-'+mode).classList.add('active');
+    }
+
+    function copyMeta() {
+        const t = document.getElementById('title').value;
+        const d = document.getElementById('desc').value;
+        const i = document.getElementById('img').value;
+        const u = document.getElementById('url').value;
+
+        const code = `
+<meta property="og:type" content="website" />
+<meta property="og:url" content="${u}" />
+<meta property="og:title" content="${t}" />
+<meta property="og:description" content="${d}" />
+<meta property="og:image" content="${i}" />
+
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="${u}" />
+<meta property="twitter:title" content="${t}" />
+<meta property="twitter:description" content="${d}" />
+<meta property="twitter:image" content="${i}" />
+        `.trim();
+        
+        navigator.clipboard.writeText(code);
+        alert("Copied Code!");
+    }
+</script>
+</body>
+</html>

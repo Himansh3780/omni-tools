@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Money & Viral Audit - OmniTools</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #020617;
+            --panel: #0f172a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --tiktok: #ff0050;
+            --cyan: #00f2ea;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #eab308;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* NAV */
+        nav { padding: 20px 5%; border-bottom: 1px solid #1e293b; background: var(--bg); display: flex; justify-content: space-between; align-items: center; }
+        .back-link { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .back-link:hover { color: white; }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+
+        /* CARD */
+        .glass-panel {
+            background: var(--panel);
+            border: 1px solid #1e293b;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(0, 242, 234, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; text-align: center; line-height: 1.2; }
+        h1 span { background: linear-gradient(to right, var(--cyan), var(--tiktok)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { text-align: center; color: var(--muted); margin-bottom: 40px; }
+
+        /* INPUTS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .input-box label { display: block; color: var(--muted); margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-box input {
+            width: 100%; padding: 16px; background: #020617; border: 1px solid #334155; border-radius: 12px;
+            color: white; font-size: 1.2rem; font-weight: 600; transition: 0.3s;
+        }
+        .input-box input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px rgba(0, 242, 234, 0.1); }
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%; padding: 20px;
+            background: linear-gradient(90deg, var(--tiktok), var(--cyan));
+            border: none; border-radius: 12px; color: white; font-size: 1.2rem; font-weight: 800;
+            cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 10px 30px rgba(255, 0, 80, 0.3);
+        }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 0, 80, 0.5); }
+
+        /* RESULTS (Hidden) */
+        .results-area { display: none; margin-top: 40px; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        /* 1. VIRAL SCORE (Gamification) */
+        .score-card {
+            background: rgba(255,255,255,0.03); border: 1px solid #334155; border-radius: 16px; padding: 25px;
+            text-align: center; margin-bottom: 20px; position: relative;
+        }
+        .score-badge {
+            display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px;
+        }
+        .badge-bad { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-good { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .badge-god { background: linear-gradient(90deg, var(--tiktok), var(--cyan)); color: white; }
+
+        .big-money { font-size: 3rem; font-weight: 800; color: white; margin: 10px 0; letter-spacing: -1px; }
+        .per-post { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+
+        /* 2. LOSS AVERSION BOX */
+        .loss-box {
+            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 15px;
+        }
+        .loss-icon { font-size: 1.5rem; color: var(--danger); }
+        .loss-text { font-size: 0.95rem; color: #fca5a5; line-height: 1.5; }
+        .loss-amount { font-weight: 800; color: white; text-decoration: underline; text-decoration-color: var(--danger); }
+
+        /* 3. SOCIAL PROOF BARS */
+        .comparison-box { margin-bottom: 30px; }
+        .bar-group { margin-bottom: 15px; }
+        .bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+        .bar-bg { height: 10px; background: #1e293b; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 10px; width: 0%; transition: width 1.5s ease; }
+        
+        .bar-you { background: var(--cyan); }
+        .bar-avg { background: #475569; }
+
+        /* AFFILIATE CTA */
+        .cta-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--cyan); border-radius: 16px; padding: 25px; text-align: center;
+        }
+        .cta-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: white; }
+        .cta-btn {
+            display: inline-block; background: var(--cyan); color: #000; padding: 12px 25px; border-radius: 8px;
+            font-weight: 800; text-decoration: none; margin-top: 10px; transition: 0.2s;
+        }
+        .cta-btn:hover { box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-chevron-left"></i> All Tools</a>
+        <div style="font-weight:700;">OmniTools Pro</div>
+    </nav>
+
+    <div class="container">
+        <div class="glass-panel">
+            <h1>TikTok <span>Viral Audit</span></h1>
+            <p class="sub">Don't just calculate earnings. Analyze your viral potential.</p>
+
+            <div class="grid-2">
+                <div class="input-box">
+                    <label>Followers</label>
+                    <input type="number" id="followers" placeholder="e.g. 10,000">
+                </div>
+                <div class="input-box">
+                    <label>Avg. Likes</label>
+                    <input type="number" id="likes" placeholder="e.g. 1,500">
+                </div>
+            </div>
+
+            <button class="btn-main" onclick="analyze()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AUDIT MY ACCOUNT
+            </button>
+
+            <div class="results-area" id="results">
+                
+                <div class="score-card">
+                    <div id="badge-container"><span class="score-badge badge-good">POTENTIAL: HIGH</span></div>
+                    <div class="per-post">ESTIMATED EARNINGS PER POST</div>
+                    <div class="big-money" id="money-display">$0</div>
+                    <div class="per-post" style="margin-top:5px; font-size:0.8rem; opacity:0.7;">Based on updated 2026 CPM rates</div>
+                </div>
+
+                <div class="loss-box" id="loss-section">
+                    <div class="loss-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="loss-text">
+                        <strong>You are losing money.</strong><br>
+                        With your current follower count, you <em>could</em> be earning <span class="loss-amount" id="potential-loss">$500</span> more if you optimized your engagement.
+                    </div>
+                </div>
+
+                <div class="comparison-box">
+                    <div class="bar-group">
+                        <div class="bar-label"><span>Your Engagement Rate</span> <span id="my-eng-text" style="color:var(--cyan); font-weight:700;">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill bar-you" id="bar-you"></div></div>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-label"><span>Avg. Creator in your Niche</span> <span>4.5%</span></div>
+                        <div class="bar-bg"><div class="bar-fill bar-avg" style="width: 45%;"></div></div>
+                    </div>
+                </div>
+
+                <div class="cta-box">
+                    <div class="cta-title">🚀 Want to fix your Engagement?</div>
+                    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:15px;">Unlock the "Viral Secret" course used by top creators.</p>
+                    <a href="#" class="cta-btn">GET THE BLUEPRINT &rarr;</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyze() {
+            const followers = parseFloat(document.getElementById('followers').value);
+            const likes = parseFloat(document.getElementById('likes').value);
+
+            if(!followers || !likes) { alert("Enter stats first!"); return; }
+
+            // CALCS
+            const engagement = (likes / followers) * 100;
+            const views = likes * 8; // Est views
+            const lowEarn = (views / 1000) * 10;
+            const highEarn = (views / 1000) * 25;
+            const avg = (lowEarn + highEarn) / 2;
+
+            // RENDER TEXT
+            document.getElementById('money-display').innerText = `$${Math.floor(lowEarn)} - $${Math.floor(highEarn)}`;
+            document.getElementById('my-eng-text').innerText = engagement.toFixed(1) + "%";
+
+            // RENDER BARS (Social Proof)
+            // Cap the bar at 100% width
+            let barWidth = engagement * 10; 
+            if(barWidth > 100) barWidth = 100;
+            document.getElementById('bar-you').style.width = barWidth + "%";
+
+            // RENDER BADGE & LOSS AVERSION
+            const badgeCont = document.getElementById('badge-container');
+            const lossSec = document.getElementById('loss-section');
+            const potentialLoss = document.getElementById('potential-loss');
+
+            // Psychology Logic
+            if(engagement < 3) {
+                // BAD SCORE -> TRIGGER FEAR (Loss Aversion)
+                badgeCont.innerHTML = `<span class="score-badge badge-bad">STATUS: LEAVING MONEY ON TABLE</span>`;
+                lossSec.style.display = "flex";
+                // Calc potential loss (What they would earn if they had 8% engagement)
+                let potential = (followers * 0.08 * 8 / 1000) * 20;
+                let loss = potential - avg;
+                potentialLoss.innerText = "$" + Math.floor(loss);
+            } else if (engagement > 10) {
+                // GOD SCORE -> TRIGGER DOPAMINE
+                badgeCont.innerHTML = `<span class="score-badge badge-god"><i class="fa-solid fa-fire"></i> STATUS: VIRAL GOD</span>`;
+                lossSec.style.display = "none"; // Hide negative box
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); // DOPAMINE HIT
+            } else {
+                // NORMAL SCORE
+                badgeCont.innerHTML = `<span class="score-badge badge-good">STATUS: HEALTHY GROWTH</span>`;
+                lossSec.style.display = "none";
+            }
+
+            // SHOW
+            document.getElementById('results').style.display = "block";
+        }
+    </script>
+</body>
+</html>

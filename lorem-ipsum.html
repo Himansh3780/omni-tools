@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Viral Ipsum Gen - OmniTools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --primary: #f43f5e; --border: #334155; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 30px; }
+        
+        .flavor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .flavor-btn { background: #020617; border: 2px solid var(--border); color: #94a3b8; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-weight: bold; text-align: center; }
+        .flavor-btn i { display: block; font-size: 1.5rem; margin-bottom: 5px; }
+        .flavor-btn.active { border-color: var(--primary); color: white; background: rgba(244, 63, 94, 0.1); }
+
+        .controls { display: flex; gap: 15px; margin-bottom: 20px; }
+        input { background: #020617; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; width: 80px; text-align: center; }
+        
+        .output-box { background: #020617; border: 1px solid var(--border); padding: 20px; border-radius: 12px; height: 300px; overflow-y: auto; line-height: 1.8; color: #cbd5e1; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" style="color:#94a3b8; text-decoration:none;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <h1 style="margin:20px 0;">Placeholder Text Generator</h1>
+        
+        <div class="card">
+            <label style="display:block; margin-bottom:10px; font-weight:bold; color:#94a3b8;">Choose Flavor:</label>
+            <div class="flavor-grid">
+                <div class="flavor-btn active" onclick="setType('std', this)"><i class="fa-solid fa-font"></i> Standard</div>
+                <div class="flavor-btn" onclick="setType('corp', this)"><i class="fa-solid fa-briefcase"></i> Corporate</div>
+                <div class="flavor-btn" onclick="setType('pirate', this)"><i class="fa-solid fa-skull-crossbones"></i> Pirate</div>
+            </div>
+
+            <div class="controls">
+                <div style="flex:1;">
+                    <label style="font-size:0.8rem; font-weight:bold; display:block; margin-bottom:5px;">Paragraphs</label>
+                    <input type="number" id="num" value="3" min="1" max="20">
+                </div>
+                <div style="align-self:end;">
+                    <button class="btn" onclick="generate()">Generate Text</button>
+                    <button class="btn" style="background:#334155; margin-left:10px;" onclick="copy()">Copy</button>
+                </div>
+            </div>
+
+            <div class="output-box" id="output"></div>
+        </div>
+    </div>
+<script>
+    let type = 'std';
+    const dict = {
+        std: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        corp: "Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view.",
+        pirate: "Yar matey, shiver me timbers! Walk the plank, ye scallywag. Hoist the colors and set sail for the seven seas. Dead men tell no tales, but the treasure be ours. Arrr, grab yer grog and sing a shanty!"
+    };
+
+    function setType(t, btn) {
+        type = t;
+        document.querySelectorAll('.flavor-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        generate();
+    }
+
+    function generate() {
+        const n = document.getElementById('num').value;
+        const text = dict[type];
+        let res = "";
+        for(let i=0; i<n; i++) res += `<p style="margin-bottom:15px;">${text}</p>`;
+        document.getElementById('output').innerHTML = res;
+    }
+
+    function copy() { navigator.clipboard.writeText(document.getElementById('output').innerText); alert("Copied!"); }
+    
+    generate();
+</script>
+</body>
+</html>
