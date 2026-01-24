@@ -78,6 +78,86 @@ const toolsDB = [
         "desc": "Calculate profit after fees.", 
         "tag": "" 
     },
+    { 
+        "name": "Loan Calculator", 
+        "url": "loan-calculator.html", 
+        "cat": "business", 
+        "icon": "fa-sack-dollar", 
+        "desc": "Calculate mortgage & loan payments.", 
+        "tag": "PRO" 
+    },
+{ 
+        "name": "CPM Calculator", 
+        "url": "cpm-calc.html", 
+        "cat": "business", 
+        "icon": "fa-chart-pie", 
+        "desc": "Calculate YouTube & AdSense Revenue.", 
+        "tag": "HOT" 
+    },
+{ 
+        "name": "GST/VAT Calculator", 
+        "url": "gst-calc.html", 
+        "cat": "business", 
+        "icon": "fa-calculator", 
+        "desc": "Add or Remove Tax instantly.", 
+        "tag": "" 
+    },
+    { 
+        "name": "Hourly to Salary", 
+        "url": "salary-converter.html", 
+        "cat": "business", 
+        "icon": "fa-money-bill-wave", 
+        "desc": "Convert hourly wage to yearly income.", 
+        "tag": "NEW" 
+    },
+{ 
+        "name": "Rent vs. Buy", 
+        "url": "rent-vs-buy.html", 
+        "cat": "business", 
+        "icon": "fa-house-chimney", 
+        "desc": "Compare monthly rental vs mortgage costs.", 
+        "tag": "HOT" 
+    },
+{ 
+        "name": "Resignation Letter", 
+        "url": "resignation-letter.html", 
+        "cat": "business", 
+        "icon": "fa-file-signature", 
+        "desc": "Generate a professional resignation letter PDF.", 
+        "tag": "FREE" 
+    },
+{ 
+        "name": "Profit Margin Tool", 
+        "url": "profit-calculator.html", 
+        "cat": "business", 
+        "icon": "fa-chart-line", 
+        "desc": "Calculate Margin, Markup & Scale.", 
+        "tag": "PRO" 
+    },
+{ 
+        "name": "Receipt Generator", 
+        "url": "receipt-maker.html", 
+        "cat": "business", 
+        "icon": "fa-receipt", 
+        "desc": "Create rent & cash receipts instantly.", 
+        "tag": "FREE" 
+    },
+{ 
+        "name": "Purchase Order Generator", 
+        "url": "po-generator.html", 
+        "cat": "business", 
+        "icon": "fa-file-invoice", 
+        "desc": "Create official B2B purchase orders.", 
+        "tag": "PRO" 
+    },
+{ 
+        "name": "Commission Calculator", 
+        "url": "commission-calc.html", 
+        "cat": "business", 
+        "icon": "fa-hand-holding-dollar", 
+        "desc": "Calculate sales commissions & revenue.", 
+        "tag": "MONEY" 
+    },
 
     // --- SEO & DEV ---
     { 
@@ -146,6 +226,15 @@ const toolsDB = [
         "desc": "APA, MLA & Chicago maker.", 
         "tag": "" 
     },
+    { 
+        "name": "Age Calculator", 
+        "url": "age-calculator.html", 
+        "cat": "student", 
+        "icon": "fa-hourglass-start", 
+        "desc": "Calculate exact age & countdown.", 
+        "tag": "FUN" 
+    },
+    
 
     // --- IMAGE & TEXT ---
     { 
