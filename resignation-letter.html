@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Resignation Letter Generator - Professional Templates</title>
+    <meta name="description" content="Create a professional resignation letter in seconds. Choose from Formal, Friendly, or Short templates. Download as PDF or Copy to Clipboard.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* --- OFFICE THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --primary: #6366f1; /* Indigo */
+            --paper: #ffffff;
+            --paper-text: #334155;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* HERO CARD */
+        .header-card { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* SPLIT LAYOUT */
+        .workspace { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; }
+
+        /* LEFT: CONTROLS */
+        .controls { background: var(--panel); border: var(--border); border-radius: 20px; padding: 30px; height: fit-content; }
+        
+        .section-label { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 12px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 10px; font-size: 1rem; transition: 0.2s; font-family: 'Outfit', sans-serif;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+
+        /* TONE SELECTOR */
+        .tone-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tone-btn { 
+            flex: 1; padding: 10px; background: #020617; border: 1px solid #334155; color: var(--muted); 
+            border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-align: center;
+        }
+        .tone-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* ACTION BUTTONS */
+        .btn-row { display: flex; gap: 15px; margin-top: 20px; }
+        .btn { flex: 1; padding: 15px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-copy { background: #334155; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        /* RIGHT: PAPER PREVIEW */
+        .paper-container { position: relative; }
+        
+        .paper {
+            background: var(--paper); color: var(--paper-text); 
+            padding: 60px; min-height: 800px; width: 100%;
+            border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            font-family: 'Libre Baskerville', serif; line-height: 1.8; font-size: 1.05rem;
+        }
+
+        .letter-date { margin-bottom: 40px; }
+        .letter-recipient { margin-bottom: 30px; font-weight: 700; }
+        .letter-body { margin-bottom: 40px; white-space: pre-wrap; }
+        .letter-sign { margin-top: 60px; }
+        .sign-placeholder { font-family: 'Outfit', sans-serif; color: #94a3b8; font-style: italic; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section ul { padding-left: 20px; margin-bottom: 20px; }
+        .seo-section li { margin-bottom: 10px; }
+
+        @media(max-width: 900px) { 
+            .workspace { grid-template-columns: 1fr; } 
+            .paper { padding: 30px; min-height: 600px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-card">
+        <h1>Resignation Letter Generator</h1>
+        <p class="subtitle">Draft a professional, respectful resignation letter in seconds.</p>
+    </div>
+
+    <div class="workspace">
+        <div class="controls">
+            <div class="section-label">1. Choose Template Tone</div>
+            <div class="tone-row">
+                <div class="tone-btn active" onclick="setTone('formal', this)">Formal</div>
+                <div class="tone-btn" onclick="setTone('friendly', this)">Friendly</div>
+                <div class="tone-btn" onclick="setTone('short', this)">Short</div>
+            </div>
+
+            <div class="section-label">2. Your Details</div>
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" id="myName" placeholder="John Doe" oninput="updateLetter()">
+            </div>
+            <div class="input-group">
+                <label>Your Job Title</label>
+                <input type="text" id="myRole" placeholder="Marketing Manager" oninput="updateLetter()">
+            </div>
+            
+            <div class="section-label">3. Company Details</div>
+            <div class="input-group">
+                <label>Manager's Name</label>
+                <input type="text" id="managerName" placeholder="Jane Smith" oninput="updateLetter()">
+            </div>
+            <div class="input-group">
+                <label>Company Name</label>
+                <input type="text" id="company" placeholder="Acme Corp" oninput="updateLetter()">
+            </div>
+            
+            <div class="section-label">4. The Important Date</div>
+            <div class="input-group">
+                <label>Last Day of Work</label>
+                <input type="date" id="lastDay" oninput="updateLetter()">
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-copy" onclick="copyText()"><i class="fa-regular fa-copy"></i> Copy Text</button>
+                <button class="btn btn-primary" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+            </div>
+        </div>
+
+        <div class="paper-container">
+            <div class="paper" id="letterContent">
+                <div class="letter-date" id="displayDate">October 24, 2025</div>
+                
+                <div class="letter-recipient">
+                    Dear <span id="pManager">Manager Name</span>,
+                </div>
+
+                <div class="letter-body" id="pBody">
+Please accept this letter as formal notification that I am resigning from my position as [Your Role] at [Company Name]. My last day will be [Date].
+
+I would like to thank you for the opportunity to have worked at [Company Name] for the past [Duration]. I have learned a great deal and enjoyed my time with the team.
+
+I will do everything possible to wrap up my duties and train other team members during the next two weeks. Please let me know if there is anything else I can do to aid during the transition.
+
+Sincerely,
+                </div>
+
+                <div class="letter-sign">
+                    <div class="sign-placeholder">[Signature]</div>
+                    <div id="pName" style="font-weight:700; margin-top:10px;">Your Name</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>How to Write a Professional Resignation Letter</h2>
+        <p>
+            Resigning from a job can be stressful, but writing the letter shouldn't be. A resignation letter is a formal document that officially begins the process of your departure. It is kept in your employment file, so it is crucial to keep it <strong>professional, positive, and brief</strong>.
+        </p>
+
+        <h3>What should be included?</h3>
+        <ul>
+            <li><strong>The Statement:</strong> Clearly state that you are resigning. Do not be vague.</li>
+            <li><strong>The Date:</strong> Specify your last day of work (usually 2 weeks from the date of the letter).</li>
+            <li><strong>The Gratitude:</strong> Thank the employer for the opportunities you had. This burns no bridges.</li>
+            <li><strong>The Offer:</strong> Offer to help with the transition or training of your replacement.</li>
+        </ul>
+
+        <h3>Templates Explained</h3>
+        <p>
+            <strong>1. Formal (Standard):</strong> Best for corporate environments. It sticks to the facts and keeps emotion to a minimum.<br>
+            <strong>2. Friendly (Warm):</strong> Use this if you have a good relationship with your manager and want to express genuine appreciation.<br>
+            <strong>3. Short (Basic):</strong> Use this if you want to keep it strictly legal and avoid giving any reasons for leaving.
+        </p>
+
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>Q: How much notice should I give?</strong><br>The standard professional courtesy is <strong>two weeks</strong>. However, check your employment contract, as some senior roles require a month or more.</p>
+        <p><strong>Q: Should I say why I am leaving?</strong><br>No. You are not legally required to give a reason, and it is often better to leave it out of the written letter. Save the details for the exit interview if you wish.</p>
+    </div>
+
+</div>
+
+<script>
+    // Set Today's Date
+    const today = new Date();
+    document.getElementById('displayDate').innerText = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // Set Default Last Day (2 weeks from now)
+    const twoWeeks = new Date(Date.now() + 12096e5);
+    document.getElementById('lastDay').valueAsDate = twoWeeks;
+
+    let currentTone = 'formal';
+
+    const templates = {
+        formal: `Please accept this letter as formal notification that I am resigning from my position as {role} at {company}. My last day will be {date}.
+
+I would like to thank you for the opportunity to have worked at {company}. I have learned a great deal during my time here and I appreciate the support provided by the team.
+
+I will do everything possible to wrap up my duties and train other team members during the transition period. Please let me know if there is anything specific you need from me before my departure.
+
+Sincerely,`,
+        
+        friendly: `I am writing to formally resign from my position as {role} at {company}. My final day of work will be {date}.
+
+I have truly enjoyed my time working with you and the team. I am grateful for the opportunities I've had to grow and for the professional relationships I've built here. It has been a pleasure being part of {company}.
+
+I want to ensure a smooth transition, so I am happy to assist in training my replacement or wrapping up any pending projects over the next few weeks.
+
+Best wishes,`,
+        
+        short: `Please accept this letter as notice of my resignation from the position of {role} at {company}.
+
+My last day of employment will be {date}.
+
+I wish the company the best of luck in the future.
+
+Regards,`
+    };
+
+    function setTone(tone, btn) {
+        currentTone = tone;
+        document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateLetter();
+    }
+
+    function updateLetter() {
+        const name = document.getElementById('myName').value || "[Your Name]";
+        const role = document.getElementById('myRole').value || "[Your Role]";
+        const manager = document.getElementById('managerName').value || "Manager Name";
+        const company = document.getElementById('company').value || "[Company Name]";
+        const rawDate = document.getElementById('lastDay').value;
+        
+        let dateStr = "[Date]";
+        if(rawDate) {
+            const d = new Date(rawDate);
+            dateStr = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Update Fields
+        document.getElementById('pManager').innerText = manager;
+        document.getElementById('pName').innerText = name;
+
+        // Update Body
+        let body = templates[currentTone];
+        body = body.replace(/{role}/g, role);
+        body = body.replace(/{company}/g, company);
+        body = body.replace(/{date}/g, dateStr);
+        
+        document.getElementById('pBody').innerText = body;
+    }
+
+    function copyText() {
+        const text = document.querySelector('.paper').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Letter copied to clipboard!");
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('letterContent');
+        const opt = {
+            margin: 1,
+            filename: 'Resignation_Letter.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Init
+    updateLetter();
+</script>
+
+</body>
+</html>

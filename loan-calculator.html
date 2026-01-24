@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Loan Calculator & EMI Planner - OmniTools</title>
+    <meta name="description" content="Calculate your monthly loan payments, total interest, and amortization schedule. Features extra payment savings and currency toggle ($/₹).">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- MODERN AESTHETIC VARIABLES --- */
+        :root { 
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --primary: #10b981; /* Green */
+            --primary-glow: rgba(16, 185, 129, 0.4);
+            --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --glass: rgba(30, 41, 59, 0.7);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        /* --- ANIMATED BACKGROUND --- */
+        .bg-blob {
+            position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -200px; left: -200px; z-index: -1; pointer-events: none; animation: float 10s infinite alternate;
+        }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(50px, 50px); } }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+        /* --- HEADER --- */
+        nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 10px 0; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .back-btn:hover { color: var(--primary); transform: translateX(-5px); }
+        
+        .currency-toggle {
+            background: rgba(255,255,255,0.05); padding: 5px; border-radius: 8px; display: flex; gap: 5px; border: var(--border);
+        }
+        .curr-btn { padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 700; color: var(--muted); transition: 0.2s; }
+        .curr-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
+
+        /* --- TOOL GRID --- */
+        .grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; margin-bottom: 60px; }
+        
+        .card { 
+            background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: var(--border); border-radius: 24px; padding: 35px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 5px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .subtitle { color: var(--muted); margin-bottom: 30px; font-size: 0.95rem; }
+
+        /* --- INPUTS --- */
+        .input-group { margin-bottom: 25px; position: relative; }
+        .input-group label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+        
+        .input-wrapper { position: relative; transition: 0.3s; }
+        .input-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 1.1rem; }
+        
+        input { 
+            width: 100%; background: rgba(2, 6, 23, 0.6); border: 1px solid #334155; color: white; 
+            padding: 16px 16px 16px 50px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; font-family: 'Outfit', sans-serif;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+
+        /* SLIDER (New Feature) */
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: #334155; border-radius: 5px; margin-top: 10px; padding: 0; border: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 15px var(--primary-glow); }
+
+        .btn { width: 100%; padding: 18px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px var(--primary-glow); margin-top: 10px; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--primary-glow); }
+
+        /* --- RESULTS SECTION --- */
+        .result-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .monthly-val { font-size: 3.5rem; font-weight: 800; color: white; text-shadow: 0 0 30px rgba(16,185,129,0.3); line-height: 1; margin: 10px 0; }
+        .monthly-label { color: var(--primary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.8rem; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-val { font-size: 1.1rem; font-weight: 700; color: white; margin-top: 5px; }
+        .stat-label { font-size: 0.75rem; color: var(--muted); }
+
+        /* CHART AREA */
+        .chart-box { position: relative; height: 280px; width: 100%; margin: 30px 0; display: flex; align-items: center; justify-content: center; }
+        
+        /* EXTRA PAYMENTS (Feature) */
+        .extra-pay-box { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; margin-top: 30px; }
+        .extra-pay-title { font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+
+        /* --- SEO CONTENT --- */
+        .seo-section { max-width: 800px; margin: 0 auto; color: #cbd5e1; line-height: 1.8; font-size: 1.05rem; }
+        .seo-section h2 { font-size: 1.8rem; color: white; margin-top: 50px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #334155; }
+        .seo-section h3 { font-size: 1.4rem; color: white; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section p { margin-bottom: 20px; }
+        .seo-section ul { padding-left: 20px; margin-bottom: 20px; }
+        .seo-section li { margin-bottom: 10px; }
+        
+        .faq-item { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .faq-q { color: white; font-weight: 700; margin-bottom: 10px; display: block; }
+
+        @media(max-width: 900px) { .grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="bg-blob"></div>
+
+<div class="container">
+    
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+        <div class="currency-toggle">
+            <div class="curr-btn active" onclick="setCurrency('$')">$ USD</div>
+            <div class="curr-btn" onclick="setCurrency('₹')">₹ INR</div>
+        </div>
+    </nav>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h1>Loan Calculator</h1>
+            <p class="subtitle">Plan your payments with extra accuracy.</p>
+            
+            <div class="input-group">
+                <label>Loan Amount</label>
+                <div class="input-wrapper">
+                    <i class="currency-symbol fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="amount" value="100000" oninput="syncSlider('amount', 'amountRange')">
+                </div>
+                <input type="range" id="amountRange" min="1000" max="1000000" step="1000" value="100000" oninput="syncInput('amount', 'amountRange')">
+            </div>
+
+            <div class="input-group">
+                <label>Interest Rate (%)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-percent"></i>
+                    <input type="number" id="rate" value="6.5" step="0.1" oninput="syncSlider('rate', 'rateRange')">
+                </div>
+                <input type="range" id="rateRange" min="0.1" max="20" step="0.1" value="6.5" oninput="syncInput('rate', 'rateRange')">
+            </div>
+
+            <div class="input-group">
+                <label>Loan Term (Years)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <input type="number" id="years" value="30" oninput="syncSlider('years', 'yearsRange')">
+                </div>
+                <input type="range" id="yearsRange" min="1" max="50" step="1" value="30" oninput="syncInput('years', 'yearsRange')">
+            </div>
+
+            <div class="extra-pay-box">
+                <div class="extra-pay-title"><i class="fa-solid fa-piggy-bank"></i> Extra Monthly Payment</div>
+                <div class="input-wrapper">
+                    <i class="currency-symbol fa-solid fa-plus"></i>
+                    <input type="number" id="extra" value="0" placeholder="0" style="background:rgba(0,0,0,0.2);">
+                </div>
+                <div style="font-size:0.8rem; color:var(--muted); margin-top:5px;">Add this to pay off debt faster.</div>
+            </div>
+
+            <button class="btn" onclick="calculate()">Calculate Payment</button>
+        </div>
+
+        <div class="card">
+            <div class="result-header">
+                <div class="monthly-label">Estimated Monthly Payment</div>
+                <div class="monthly-val" id="monthlyDisplay">$0.00</div>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="loanChart"></canvas>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Total Principal</div>
+                    <div class="stat-val" id="resPrin">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Interest</div>
+                    <div class="stat-val" style="color:#ef4444" id="resInt">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Cost</div>
+                    <div class="stat-val" style="color:#10b981" id="resCost">$0</div>
+                </div>
+            </div>
+            
+            <div id="savingsMsg" style="text-align:center; margin-top:20px; font-weight:bold; color:#fbbf24; display:none;">
+                <i class="fa-solid fa-star"></i> You will save <span id="saveAmt"></span> by paying extra!
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        
+        <h2>Ultimate Loan Amortization Calculator (2025 Edition)</h2>
+        <p>
+            Understanding your debt is the first step to financial freedom. Whether you are planning to buy a dream home, purchase a new car, or consolidate personal debt, our <strong>Advanced Loan Calculator</strong> provides the clarity you need. Unlike basic calculators, this tool visualizes your principal-to-interest ratio and lets you simulate "Extra Payments" to see how much money you can save.
+        </p>
+
+        <h3>Why use this Loan Calculator?</h3>
+        <ul>
+            <li><strong>Visual Insights:</strong> See exactly where your money goes with our interactive doughnut chart.</li>
+            <li><strong>Extra Payment Simulation:</strong> Discover how adding just $50 or $100 a month can slash years off your mortgage.</li>
+            <li><strong>Multi-Currency Support:</strong> Instantly switch between USD ($) and INR (₹) for global usability.</li>
+            <li><strong>Privacy First:</strong> All calculations happen in your browser. No data is sent to any server.</li>
+        </ul>
+
+        <h2>How Loan Amortization Works</h2>
+        <p>
+            Amortization is the mathematical process of spreading out a loan into a series of fixed payments. While your total monthly payment remains the same, the components change over time:
+        </p>
+        <p>
+            1. <strong>The Interest Heavy Phase:</strong> In the beginning, the majority of your payment goes toward paying off interest. This is how banks make their money upfront.<br>
+            2. <strong>The Tipping Point:</strong> About halfway through the loan term, the balance shifts.<br>
+            3. <strong>The Principal Phase:</strong> In the final years, almost 100% of your payment goes toward reducing the actual debt.
+        </p>
+
+        <h3>Frequently Asked Questions</h3>
+        
+        <div class="faq-item">
+            <span class="faq-q">Q: Does paying extra really help?</span>
+            <p>Yes! Because interest is calculated on your *remaining balance*, every extra dollar you pay reduces the principal immediately. This means interest has less balance to grow on next month. It creates a snowball effect that can save you thousands.</p>
+        </div>
+
+        <div class="faq-item">
+            <span class="faq-q">Q: Can I use this for Auto Loans?</span>
+            <p>Absolutely. Select a shorter term (e.g., 5 or 7 years) to calculate car payments. The math remains the same for any fixed-rate loan.</p>
+        </div>
+
+        <div class="faq-item">
+            <span class="faq-q">Q: What is a good interest rate?</span>
+            <p>Interest rates fluctuate based on the economy and your credit score. As of 2024/2025, a typical mortgage rate is between 6% and 8%, while personal loans can range from 8% to 15%.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    let chartInstance = null;
+    let currency = '$';
+
+    function setCurrency(sym) {
+        currency = sym;
+        document.querySelectorAll('.curr-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update Icons
+        const icons = document.querySelectorAll('.currency-symbol');
+        icons.forEach(i => {
+            i.className = sym === '$' ? 'currency-symbol fa-solid fa-dollar-sign' : 'currency-symbol fa-solid fa-indian-rupee-sign';
+        });
+        
+        calculate();
+    }
+
+    function syncInput(id, rangeId) {
+        document.getElementById(id).value = document.getElementById(rangeId).value;
+        calculate();
+    }
+    function syncSlider(id, rangeId) {
+        document.getElementById(rangeId).value = document.getElementById(id).value;
+        calculate();
+    }
+
+    function calculate() {
+        // Get Inputs
+        const P = parseFloat(document.getElementById('amount').value);
+        const annualRate = parseFloat(document.getElementById('rate').value);
+        const years = parseFloat(document.getElementById('years').value);
+        const extra = parseFloat(document.getElementById('extra').value) || 0;
+
+        if(!P || !annualRate || !years) return;
+
+        // Standard Calc
+        const r = annualRate / 100 / 12;
+        const n = years * 12;
+        
+        const x = Math.pow(1 + r, n);
+        const monthly = (P * x * r) / (x - 1);
+        
+        const totalPay = monthly * n;
+        const totalInt = totalPay - P;
+
+        // Calc with Extra Payment (Approximation for savings)
+        let savings = 0;
+        if(extra > 0) {
+            // Simplified logic: Total interest roughly reduces by ratio of extra payment
+            // For a perfect calc, we'd loop. For UI speed, we estimate or do a quick loop.
+            let bal = P;
+            let intTotalNew = 0;
+            while(bal > 0) {
+                let i = bal * r;
+                let prin = (monthly + extra) - i;
+                intTotalNew += i;
+                bal -= prin;
+                if(intTotalNew > totalInt) break; // Safety
+            }
+            if(intTotalNew < totalInt) {
+                savings = totalInt - intTotalNew;
+            }
+        }
+
+        // Update UI
+        document.getElementById('monthlyDisplay').innerText = fmt(monthly);
+        document.getElementById('resPrin').innerText = fmt(P);
+        document.getElementById('resInt').innerText = fmt(totalInt);
+        document.getElementById('resCost').innerText = fmt(totalPay);
+
+        if(savings > 0) {
+            document.getElementById('savingsMsg').style.display = 'block';
+            document.getElementById('saveAmt').innerText = fmt(savings);
+        } else {
+            document.getElementById('savingsMsg').style.display = 'none';
+        }
+
+        updateChart(P, totalInt);
+    }
+
+    function updateChart(p, i) {
+        const ctx = document.getElementById('loanChart').getContext('2d');
+        if(chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Principal Amount', 'Total Interest'],
+                datasets: [{
+                    data: [p, i],
+                    backgroundColor: ['#10b981', '#ef4444'],
+                    borderColor: '#1e293b',
+                    borderWidth: 5,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#94a3b8', font: {family:'Outfit'} } }
+                }
+            }
+        });
+    }
+
+    function fmt(num) {
+        return currency + num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+    }
+
+    // Init
+    calculate();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Receipt Maker - Generate Rent & Cash Receipts</title>
+    <meta name="description" content="Create official cash receipts and rent receipts instantly. Free online receipt generator with PDF download. Perfect for landlords and small businesses.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* --- MERCHANT THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #8b5cf6; /* Violet */
+            --paper: #f8fafc;
+            --ink: #1e293b;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; }
+
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        /* LEFT: EDITOR */
+        .editor { background: var(--panel); border: var(--border); border-radius: 20px; padding: 30px; height: fit-content; }
+        
+        .section-title { color: var(--brand); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; }
+        
+        input, textarea, select { 
+            width: 100%; padding: 12px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 10px; font-size: 1rem; transition: 0.2s; font-family: 'Outfit', sans-serif;
+        }
+        input:focus { border-color: var(--brand); }
+
+        /* RIGHT: PREVIEW */
+        .preview-area { display: flex; justify-content: center; align-items: flex-start; perspective: 1000px; }
+        
+        .receipt {
+            background: var(--paper); color: var(--ink); width: 380px; min-height: 500px;
+            padding: 30px; font-family: 'Courier Prime', monospace; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: rotateX(0deg); transition: transform 0.5s;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 20px 20px; /* Subtle texture */
+        }
+        
+        /* Zig Zag Bottom Effect */
+        .receipt::after {
+            content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 20px;
+            background: linear-gradient(135deg, var(--paper) 25%, transparent 25%), 
+                        linear-gradient(225deg, var(--paper) 25%, transparent 25%);
+            background-position: 0 0; background-size: 20px 20px;
+        }
+
+        .r-header { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 20px; }
+        .r-title { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .r-meta { font-size: 0.8rem; color: #64748b; }
+
+        .r-body { min-height: 200px; }
+        .r-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .r-total { border-top: 2px dashed #cbd5e1; padding-top: 15px; margin-top: 20px; font-weight: 700; font-size: 1.2rem; display: flex; justify-content: space-between; }
+
+        .r-footer { text-align: center; margin-top: 30px; font-size: 0.8rem; color: #64748b; font-style: italic; }
+
+        /* PAID STAMP */
+        .stamp {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
+            border: 5px solid #ef4444; color: #ef4444; font-size: 3rem; font-weight: 900;
+            padding: 10px 20px; text-transform: uppercase; opacity: 0; pointer-events: none;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png'); /* Grunge texture */
+            -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .stamp.visible { opacity: 0.8; transform: translate(-50%, -50%) rotate(-15deg) scale(1); }
+
+        /* BUTTONS */
+        .btn-row { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn { padding: 15px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; color: white; }
+        .btn-dl { background: var(--brand); }
+        .btn-dl:hover { opacity: 0.9; }
+        .btn-paid { background: #ef4444; }
+        
+        /* SEO */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+
+        @media(max-width: 850px) { .workspace { grid-template-columns: 1fr; } .receipt { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="workspace">
+        
+        <div class="editor">
+            <h1>Receipt Maker</h1>
+            <p class="subtitle">Generate a digital receipt instantly.</p>
+
+            <div class="section-title">1. Business Details</div>
+            <div class="input-group">
+                <label>Received From (Your Name/Business)</label>
+                <input type="text" id="fromName" placeholder="My Business LLC" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Date</label>
+                <input type="date" id="rDate" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Receipt #</label>
+                <input type="text" id="rNum" value="00105" oninput="update()">
+            </div>
+
+            <div class="section-title">2. Payment Details</div>
+            <div class="input-group">
+                <label>Bill To (Customer Name)</label>
+                <input type="text" id="toName" placeholder="John Customer" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Payment Method</label>
+                <select id="payMethod" oninput="update()">
+                    <option>Cash</option>
+                    <option>Credit Card</option>
+                    <option>Bank Transfer</option>
+                    <option>Check</option>
+                    <option>PayPal/Venmo</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Item / Service Description</label>
+                <input type="text" id="itemDesc" placeholder="Rent Payment - March" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Amount ($)</label>
+                <input type="number" id="amount" placeholder="500.00" oninput="update()">
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-paid" onclick="togglePaid()"><i class="fa-solid fa-stamp"></i> Toggle PAID</button>
+                <button class="btn btn-dl" onclick="downloadPDF()"><i class="fa-solid fa-download"></i> Download PDF</button>
+            </div>
+        </div>
+
+        <div class="preview-area">
+            <div class="receipt" id="receipt">
+                <div class="stamp" id="stamp">PAID</div>
+                
+                <div class="r-header">
+                    <div class="r-title">RECEIPT</div>
+                    <div class="r-meta" id="displayFrom">My Business LLC</div>
+                    <div class="r-meta" id="displayDate">Oct 24, 2025</div>
+                    <div class="r-meta">No. <span id="displayNum">00105</span></div>
+                </div>
+
+                <div class="r-body">
+                    <div class="r-row">
+                        <span><strong>Received From:</strong></span>
+                        <span id="displayTo">John Customer</span>
+                    </div>
+                    <div class="r-row">
+                        <span><strong>Payment Method:</strong></span>
+                        <span id="displayMethod">Cash</span>
+                    </div>
+                    
+                    <div style="margin: 20px 0; border-bottom: 1px solid #e2e8f0;"></div>
+
+                    <div class="r-row">
+                        <span id="displayItem">Rent Payment - March</span>
+                        <span id="displayAmtMain">$500.00</span>
+                    </div>
+                </div>
+
+                <div class="r-total">
+                    <span>TOTAL</span>
+                    <span id="displayTotal">$500.00</span>
+                </div>
+
+                <div class="r-footer">
+                    Thank you for your payment!<br>
+                    Please keep this for your records.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>Free Receipt Generator for Landlords & Freelancers</h2>
+        <p>
+            Lost the receipt book? Need to send a quick proof of payment to a tenant or client? Our <strong>Free Online Receipt Maker</strong> creates a clean, professional "thermal-style" receipt in seconds.
+        </p>
+        <p>
+            Unlike complicated invoice software, this tool is designed for <strong>speed</strong>. It is perfect for one-off transactions like rent payments, used car sales, or freelance deposits.
+        </p>
+
+        <h3>When to use a Receipt vs. an Invoice?</h3>
+        <ul>
+            <li><strong>Invoice:</strong> Sent <em>before</em> payment to request money. (Use our Invoice Generator for this).</li>
+            <li><strong>Receipt:</strong> Given <em>after</em> payment to prove money was received.</li>
+        </ul>
+
+        <h3>Common Uses</h3>
+        <ul>
+            <li><strong>Rent Receipts:</strong> Landlords can quickly generate PDF proof for tenants paying cash.</li>
+            <li><strong>Craigslist/Facebook Sales:</strong> Selling a laptop or car? Print a receipt to transfer ownership officially.</li>
+            <li><strong>Petty Cash:</strong> Small businesses can document cash expenses for tax time.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // Set Today's Date
+    document.getElementById('rDate').valueAsDate = new Date();
+    update();
+
+    function update() {
+        // Get Values
+        const from = document.getElementById('fromName').value || "My Business LLC";
+        const dateRaw = document.getElementById('rDate').value;
+        const num = document.getElementById('rNum').value || "0000";
+        const to = document.getElementById('toName').value || "Customer Name";
+        const method = document.getElementById('payMethod').value;
+        const item = document.getElementById('itemDesc').value || "Item Description";
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
+
+        // Format Date
+        let dateStr = "Date";
+        if(dateRaw) {
+            const d = new Date(dateRaw);
+            dateStr = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Update UI
+        document.getElementById('displayFrom').innerText = from;
+        document.getElementById('displayDate').innerText = dateStr;
+        document.getElementById('displayNum').innerText = num;
+        document.getElementById('displayTo').innerText = to;
+        document.getElementById('displayMethod').innerText = method;
+        document.getElementById('displayItem').innerText = item;
+        
+        const money = "$" + amount.toFixed(2);
+        document.getElementById('displayAmtMain').innerText = money;
+        document.getElementById('displayTotal').innerText = money;
+    }
+
+    function togglePaid() {
+        document.getElementById('stamp').classList.toggle('visible');
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('receipt');
+        // temporarily remove shadow/transform for cleaner print
+        element.style.boxShadow = 'none';
+        element.style.transform = 'none';
+        
+        const opt = {
+            margin: 10,
+            filename: 'Receipt_' + document.getElementById('rNum').value + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: [100, 150], orientation: 'portrait' } // Custom slip size
+        };
+        
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Restore styles
+            element.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+        });
+    }
+</script>
+
+</body>
+</html>

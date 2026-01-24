@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Margin & Markup Calculator - Visual Business Tool</title>
+    <meta name="description" content="Calculate Gross Margin and Markup instantly. Visualize your profit vs. costs. Perfect for Dropshipping, Amazon FBA, and Retail pricing.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- COMMERCE THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --profit: #10b981; /* Green (Dopamine) */
+            --cost: #f43f5e;   /* Red (Pain) */
+            --revenue: #3b82f6; /* Blue (Neutral) */
+            --glow: 0 0 20px rgba(16, 185, 129, 0.2);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* MAIN CARD */
+        .card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; }
+
+        /* INPUT GRID */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        
+        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; opacity: 0.5; }
+        
+        input { 
+            width: 100%; padding: 20px 20px 20px 45px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 16px; font-size: 1.5rem; font-weight: 700; transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        input:focus { border-color: var(--revenue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+
+        /* VISUAL BAR (THE PSYCHOLOGY HOOK) */
+        .vis-container { margin: 40px 0; }
+        .vis-labels { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 0.9rem; }
+        
+        .bar-track { height: 24px; background: #334155; border-radius: 12px; overflow: hidden; display: flex; }
+        .bar-cost { height: 100%; background: var(--cost); width: 50%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        .bar-profit { height: 100%; background: var(--profit); width: 50%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        
+        /* Pattern Overlay for Texture */
+        .bar-cost::after, .bar-profit::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+            background-size: 10px 10px; opacity: 0.3;
+        }
+
+        /* RESULTS BOX */
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .res-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .res-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; font-weight: 700; }
+        .res-val { font-size: 1.8rem; font-weight: 800; color: white; }
+        
+        .profit-text { color: var(--profit); text-shadow: var(--glow); }
+
+        /* DREAM SIMULATOR */
+        .dream-section { 
+            background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(0,0,0,0) 100%); 
+            border: 1px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 25px; margin-top: 30px;
+        }
+        .dream-title { color: var(--profit); font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .slider-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        input[type=range] { padding: 0; height: 6px; background: #334155; border-radius: 5px; cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: var(--profit); margin-top: -7px; box-shadow: 0 0 10px var(--profit); }
+
+        .dream-val { font-size: 1.5rem; font-weight: 700; color: white; margin-top: 10px; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { .input-grid, .results-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="card">
+        <h1>Profit Margin Calculator</h1>
+        <p class="subtitle">Visualize your costs and potential earnings instantly.</p>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Cost of Goods (COGS)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="number" id="cost" value="25.00" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Selling Price</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="price" value="49.99" oninput="calculate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="vis-container">
+            <div class="vis-labels">
+                <span style="color:var(--cost)">Cost <span id="pctCost">50%</span></span>
+                <span style="color:var(--profit)">Profit <span id="pctProfit">50%</span></span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-cost" id="barCost"></div>
+                <div class="bar-profit" id="barProfit"></div>
+            </div>
+        </div>
+
+        <div class="results-grid">
+            <div class="res-box">
+                <div class="res-label">Net Profit</div>
+                <div class="res-val profit-text" id="netProfit">$0.00</div>
+            </div>
+            <div class="res-box">
+                <div class="res-label">Gross Margin</div>
+                <div class="res-val" id="grossMargin">0%</div>
+            </div>
+            <div class="res-box">
+                <div class="res-label">Markup</div>
+                <div class="res-val" id="markup">0%</div>
+            </div>
+        </div>
+
+        <div class="dream-section">
+            <div class="dream-title">
+                <i class="fa-solid fa-rocket"></i> Scale Your Business
+            </div>
+            <p style="color:var(--muted); font-size:0.9rem; margin-bottom:15px;">How much will you make if you sell...</p>
+            
+            <div class="slider-container">
+                <span style="color:white; font-weight:700; width:50px;" id="unitDisplay">100</span>
+                <input type="range" id="unitSlider" min="10" max="1000" value="100" step="10" style="flex:1;" oninput="updateDream()">
+                <span style="color:white; font-weight:700;">Units?</span>
+            </div>
+
+            <div class="dream-val">
+                Total Profit: <span id="dreamProfit" style="color:var(--profit)">$0.00</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>Gross Margin vs. Markup: What's the Difference?</h2>
+        <p>
+            If you run a Dropshipping store, Amazon FBA business, or a retail shop, knowing your numbers is the difference between going broke and getting rich. Many entrepreneurs confuse "Margin" and "Markup," which can lead to pricing errors.
+        </p>
+
+        <h3>1. Gross Margin (The "Health" Metric)</h3>
+        <p>
+            Margin is the percentage of the selling price that is profit. If you have a 40% margin, it means you keep $0.40 of every dollar you make.
+            <br><em>Formula: (Price - Cost) / Price</em>
+        </p>
+
+        <h3>2. Markup (The "Pricing" Metric)</h3>
+        <p>
+            Markup is the percentage you add to the cost to get the selling price. If you buy a shirt for $10 and sell it for $15, you marked it up 50%.
+            <br><em>Formula: (Price - Cost) / Cost</em>
+        </p>
+
+        <h3>Why use this tool?</h3>
+        <ul>
+            <li><strong>Visual Clarity:</strong> The Red/Green bar instantly tells you if your costs are too high.</li>
+            <li><strong>Scaling Simulator:</strong> Our "Dream Simulator" helps you visualize the impact of selling 100 or 1,000 units, keeping you motivated.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const price = parseFloat(document.getElementById('price').value) || 0;
+
+        if(price === 0) return;
+
+        const profit = price - cost;
+        const margin = (profit / price) * 100;
+        const markup = cost > 0 ? (profit / cost) * 100 : 100;
+
+        // UI Updates
+        document.getElementById('netProfit').innerText = "$" + profit.toFixed(2);
+        document.getElementById('grossMargin').innerText = margin.toFixed(1) + "%";
+        document.getElementById('markup').innerText = markup.toFixed(1) + "%";
+
+        // Visual Bar Logic
+        let costPct = (cost / price) * 100;
+        let profitPct = 100 - costPct;
+
+        if(profit < 0) { 
+            costPct = 100; 
+            profitPct = 0; 
+            document.getElementById('netProfit').style.color = "#f43f5e"; // Red text for loss
+        } else {
+            document.getElementById('netProfit').style.color = "#10b981"; // Green for gain
+        }
+
+        document.getElementById('barCost').style.width = costPct + "%";
+        document.getElementById('barProfit').style.width = profitPct + "%";
+        
+        document.getElementById('pctCost').innerText = costPct.toFixed(0) + "%";
+        document.getElementById('pctProfit').innerText = profitPct.toFixed(0) + "%";
+
+        updateDream();
+    }
+
+    function updateDream() {
+        const units = document.getElementById('unitSlider').value;
+        document.getElementById('unitDisplay').innerText = units;
+
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const profitPerUnit = price - cost;
+        
+        const totalDream = profitPerUnit * units;
+        
+        const el = document.getElementById('dreamProfit');
+        el.innerText = "$" + totalDream.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        if(totalDream < 0) el.style.color = "#f43f5e";
+        else el.style.color = "#10b981";
+    }
+
+    // Init
+    calculate();
+</script>
+
+</body>
+</html>

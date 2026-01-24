@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator & Birthday Countdown - OmniTools</title>
+    <meta name="description" content="Calculate your exact age in years, months, days, minutes, and seconds. See your Zodiac sign and countdown to your next birthday.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- COSMIC THEME --- */
+        :root { 
+            --bg: #0b0f19;
+            --panel: #151b2b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --gold: #fbbf24;
+            --purple: #8b5cf6;
+            --gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        /* STARS BACKGROUND */
+        .stars {
+            position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.1;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: var(--gold); }
+
+        /* MAIN CARD */
+        .card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 30px; }
+
+        /* DATE INPUT STYLING */
+        .input-area { display: inline-block; position: relative; margin-bottom: 30px; width: 100%; max-width: 400px; }
+        .input-area label { display: block; color: var(--muted); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="date"] {
+            width: 100%; padding: 15px; background: #0b0f19; border: 1px solid #334155; 
+            color: white; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 1.2rem; text-align: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        input[type="date"]:focus { border-color: var(--gold); box-shadow: 0 0 20px rgba(251, 191, 36, 0.2); }
+        
+        /* THE "CALCULATE" BUTTON */
+        .magic-btn {
+            background: var(--gradient); border: none; padding: 15px 40px; border-radius: 50px;
+            color: #000; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px;
+        }
+        .magic-btn:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(251, 191, 36, 0.5); }
+
+        /* RESULTS SECTION (Hidden by default) */
+        .results { display: none; animation: fadeIn 0.8s ease; }
+        
+        .main-age { font-size: 4rem; font-weight: 800; line-height: 1; margin-bottom: 10px; color: white; text-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .main-label { color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 30px; }
+
+        /* GRID STATS */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+        .stat-lbl { font-size: 0.8rem; color: var(--muted); margin-top: 5px; }
+
+        /* COUNTDOWN BAR */
+        .countdown-box { background: #1e293b; padding: 20px; border-radius: 16px; margin-top: 30px; border: 1px solid #334155; }
+        .cd-title { color: var(--purple); font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+        .cd-timer { font-size: 1.8rem; font-weight: 700; color: white; font-variant-numeric: tabular-nums; }
+
+        /* EXTRAS (Zodiac) */
+        .zodiac-badge { 
+            display: inline-flex; align-items: center; gap: 10px; background: rgba(139, 92, 246, 0.2); 
+            color: #c4b5fd; padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 20px; font-weight: 600;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @media(max-width: 600px) { .grid { grid-template-columns: 1fr; } .main-age { font-size: 3rem; } }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="card">
+        <h1>Chronological Age Calculator</h1>
+        <p class="subtitle">Discover your exact age down to the second.</p>
+
+        <div class="input-area">
+            <label>Select Date of Birth</label>
+            <input type="date" id="dob">
+        </div>
+        <br>
+        <button class="magic-btn" onclick="calculateAge()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Calculate
+        </button>
+
+        <div class="results" id="resultSection">
+            
+            <div class="zodiac-badge" id="zodiac">
+                <i class="fa-solid fa-star"></i> Unknown Sign
+            </div>
+
+            <div class="main-age" id="yearsOld">0</div>
+            <div class="main-label">Years Old</div>
+
+            <div class="grid">
+                <div class="stat-box">
+                    <div class="stat-val" id="resMonths">0</div>
+                    <div class="stat-lbl">Months Alive</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="resWeeks">0</div>
+                    <div class="stat-lbl">Weeks Alive</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="resDays">0</div>
+                    <div class="stat-lbl">Days Alive</div>
+                </div>
+            </div>
+
+            <div class="countdown-box">
+                <div class="cd-title">Next Birthday In</div>
+                <div class="cd-timer" id="countdown">000 Days 00:00:00</div>
+            </div>
+        </div>
+
+        <div style="margin-top:50px; text-align:left; color:#cbd5e1; line-height:1.8; border-top:1px solid #334155; padding-top:30px;">
+            <h2 style="color:white; margin-bottom:15px;">How old are you exactly?</h2>
+            <p style="margin-bottom:15px;">
+                Most people say "I am 25 years old." But that is not the whole story. Our <strong>Precision Age Calculator</strong> tells you that you are actually 25 years, 4 months, 12 days, and 30,000 minutes old.
+            </p>
+            <h3 style="color:white; margin-bottom:10px;">Why calculate exact age?</h3>
+            <ul style="padding-left:20px; color:#94a3b8;">
+                <li><strong>Driver's License / Voting:</strong> Check exactly when you turn 18 or 21.</li>
+                <li><strong>Retirement Planning:</strong> Calculate the exact months left until retirement.</li>
+                <li><strong>Fun Facts:</strong> Find out if you have been alive for 1 billion seconds (approx 31.7 years).</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timerInterval;
+
+    function calculateAge() {
+        const inputDate = document.getElementById('dob').value;
+        if(!inputDate) return alert("Please select your birth date!");
+
+        const dob = new Date(inputDate);
+        const now = new Date();
+
+        if(dob > now) return alert("You haven't been born yet!");
+
+        // 1. Calculate Years, Months, Days
+        let years = now.getFullYear() - dob.getFullYear();
+        let months = now.getMonth() - dob.getMonth();
+        let days = now.getDate() - dob.getDate();
+
+        if (days < 0) {
+            months--;
+            days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        }
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        // 2. Total Stats
+        const diffTime = Math.abs(now - dob);
+        const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const totalWeeks = Math.floor(totalDays / 7);
+        const totalMonths = (years * 12) + months;
+
+        // 3. Zodiac Sign
+        const z = getZodiac(dob.getDate(), dob.getMonth() + 1);
+
+        // 4. Update UI
+        document.getElementById('yearsOld').innerText = years;
+        document.getElementById('resMonths').innerText = totalMonths.toLocaleString();
+        document.getElementById('resWeeks').innerText = totalWeeks.toLocaleString();
+        document.getElementById('resDays').innerText = totalDays.toLocaleString();
+        document.getElementById('zodiac').innerHTML = `<i class="fa-solid fa-star"></i> ${z}`;
+        
+        document.getElementById('resultSection').style.display = 'block';
+
+        // 5. Start Countdown
+        startCountdown(dob);
+    }
+
+    function startCountdown(dob) {
+        if(timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+            const now = new Date();
+            let nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+            
+            if(now > nextBday) {
+                nextBday.setFullYear(now.getFullYear() + 1);
+            }
+
+            const diff = nextBday - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerText = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+        }, 1000);
+    }
+
+    function getZodiac(day, month) {
+        const signs = ["Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius"];
+        const cutoff = [19, 18, 20, 19, 20, 20, 22, 22, 22, 22, 21, 21];
+        if (day > cutoff[month-1]) return signs[month % 12];
+        return signs[month-1];
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPM Calculator & AdSense Estimator - OmniTools</title>
+    <meta name="description" content="Calculate your YouTube, TikTok, and AdSense earnings. Convert Views to Money with our free CPM (Cost Per Mille) Calculator.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- DESIGN SYSTEM (Modern Dark) --- */
+        :root { 
+            --bg: #020617; 
+            --panel: #0f172a; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --border: #1e293b; 
+            --primary: #f43f5e; /* Rose/Red for Creators */
+            --primary-glow: rgba(244, 63, 94, 0.4);
+            --gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-glow {
+            position: fixed; width: 500px; height: 500px; background: radial-gradient(circle, rgba(244,63,94,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* GRID */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        
+        .card { 
+            background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 35px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 10px; font-weight: 800; }
+        .subtitle { color: var(--muted); margin-bottom: 30px; }
+
+        /* PLATFORM SELECTOR */
+        .platform-row { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
+        .p-btn { 
+            background: #1e293b; border: 1px solid var(--border); color: var(--muted); 
+            padding: 10px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; transition: 0.2s; white-space: nowrap;
+        }
+        .p-btn:hover { color: white; border-color: white; }
+        .p-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 5px 15px var(--primary-glow); }
+
+        /* INPUTS */
+        .input-group { margin-bottom: 25px; }
+        label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+        input { 
+            width: 100%; background: #020617; border: 1px solid #334155; color: white; 
+            padding: 16px 16px 16px 50px; border-radius: 12px; font-size: 1.2rem; font-weight: 600; transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); }
+
+        .btn { width: 100%; padding: 18px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--primary-glow); }
+
+        /* RESULTS */
+        .result-box { text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: center; }
+        .earning-title { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .big-money { font-size: 4rem; font-weight: 800; color: white; text-shadow: 0 0 30px var(--primary-glow); margin: 10px 0; }
+        
+        .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; width: 100%; }
+        .b-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
+        .b-val { font-size: 1.2rem; font-weight: 700; color: white; }
+        .b-lbl { font-size: 0.8rem; color: var(--muted); }
+
+        /* SEO CONTENT */
+        .seo-section { max-width: 800px; margin: 0 auto; color: #cbd5e1; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section ul { padding-left: 20px; margin-bottom: 20px; }
+        .seo-section li { margin-bottom: 10px; }
+
+        @media(max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h1>CPM Calculator</h1>
+            <p class="subtitle">Estimate your earnings from views.</p>
+
+            <label>Select Platform (Auto-fills CPM)</label>
+            <div class="platform-row">
+                <div class="p-btn active" onclick="setPreset('yt')"><i class="fa-brands fa-youtube"></i> YouTube</div>
+                <div class="p-btn" onclick="setPreset('tt')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
+                <div class="p-btn" onclick="setPreset('ig')"><i class="fa-brands fa-instagram"></i> Instagram</div>
+                <div class="p-btn" onclick="setPreset('web')"><i class="fa-brands fa-google"></i> AdSense</div>
+            </div>
+
+            <div class="input-group">
+                <label>Total Views</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-eye"></i>
+                    <input type="number" id="views" placeholder="e.g. 10000" oninput="calc()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>CPM (Cost Per 1000 Views)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="cpm" placeholder="e.g. 2.50" value="4.00" step="0.10" oninput="calc()">
+                </div>
+                <div style="font-size:0.8rem; color:var(--muted); margin-top:8px;">
+                    <i class="fa-solid fa-circle-info"></i> Industry Avg: <span id="avgText" style="color:white;">$4.00 - $10.00</span>
+                </div>
+            </div>
+
+            <button class="btn" onclick="calc()">Calculate Revenue</button>
+        </div>
+
+        <div class="card">
+            <div class="result-box">
+                <div class="earning-title">Estimated Total Earnings</div>
+                <div class="big-money" id="total">$0.00</div>
+                
+                <div class="breakdown-grid">
+                    <div class="b-item">
+                        <div class="b-val" id="daily">$0.00</div>
+                        <div class="b-lbl">Daily Income (Est)</div>
+                    </div>
+                    <div class="b-item">
+                        <div class="b-val" id="monthly">$0.00</div>
+                        <div class="b-lbl">Monthly Income (Est)</div>
+                    </div>
+                    <div class="b-item">
+                        <div class="b-val" id="yearly">$0.00</div>
+                        <div class="b-lbl">Yearly Projection</div>
+                    </div>
+                    <div class="b-item">
+                        <div class="b-val" id="viewsNeeded">0</div>
+                        <div class="b-lbl">Views needed for $100</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>Free CPM Calculator for YouTubers & Bloggers</h2>
+        <p>
+            Whether you are a YouTube Creator, a TikTok Influencer, or a Website Publisher using Google AdSense, understanding your <strong>CPM (Cost Per Mille)</strong> is the key to maximizing your revenue. Our free calculator helps you estimate exactly how much money you will make based on your view count and CPM rate.
+        </p>
+
+        <h3>How to Use This Tool</h3>
+        <ul>
+            <li><strong>Select Platform:</strong> Click on YouTube, TikTok, or AdSense to automatically load the average industry CPM for that platform.</li>
+            <li><strong>Enter Views:</strong> Input the number of views your video or article received.</li>
+            <li><strong>Adjust CPM:</strong> If you know your specific CPM (found in your analytics dashboard), enter it for precise accuracy.</li>
+        </ul>
+
+        <h3>What is CPM?</h3>
+        <p>
+            CPM stands for <strong>"Cost Per Mille"</strong> (Mille is Latin for Thousand). It represents how much an advertiser pays for every 1,000 impressions (views) of their advertisement.
+        </p>
+        <p>
+            <strong>The Formula:</strong> <code>Earnings = (Total Views / 1000) * CPM Rate</code>
+        </p>
+
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>Q: Why is YouTube CPM higher than TikTok?</strong><br>
+        YouTube videos are longer and can show multiple ads (mid-rolls), whereas TikTok videos are short and ads are easily skipped. Advertisers pay more for the deeper engagement on YouTube.</p>
+
+        <p><strong>Q: Does CPM vary by country?</strong><br>
+        Yes, significantly. Traffic from "Tier 1" countries (USA, UK, Canada, Australia) pays 3x-5x more than traffic from other regions due to higher purchasing power.</p>
+    </div>
+
+</div>
+
+<script>
+    function setPreset(type) {
+        // Reset active buttons
+        document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        const cpmInput = document.getElementById('cpm');
+        const avgText = document.getElementById('avgText');
+
+        if(type === 'yt') {
+            cpmInput.value = "4.00";
+            avgText.innerText = "$4.00 - $15.00 (Long Form)";
+        } else if(type === 'tt') {
+            cpmInput.value = "0.03";
+            avgText.innerText = "$0.02 - $0.04 (Creator Fund)";
+        } else if(type === 'ig') {
+            cpmInput.value = "0.50"; // Reels Bonuses vary wildly
+            avgText.innerText = "$0.20 - $1.00 (Reels Bonus)";
+        } else if(type === 'web') {
+            cpmInput.value = "10.00";
+            avgText.innerText = "$5.00 - $25.00 (Niche Dependent)";
+        }
+        calc();
+    }
+
+    function calc() {
+        const views = parseFloat(document.getElementById('views').value) || 0;
+        const cpm = parseFloat(document.getElementById('cpm').value) || 0;
+
+        // Formula: (Views / 1000) * CPM
+        const earnings = (views / 1000) * cpm;
+
+        // Projections (assuming current views are Daily)
+        const daily = earnings;
+        const monthly = daily * 30;
+        const yearly = daily * 365;
+        
+        // Reverse Calc: How many views for $100?
+        // 100 = (x/1000) * cpm  ->  100/cpm = x/1000 -> x = (100/cpm)*1000
+        let viewsFor100 = 0;
+        if(cpm > 0) viewsFor100 = (100 / cpm) * 1000;
+
+        // Update UI
+        document.getElementById('total').innerText = "$" + earnings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        document.getElementById('daily').innerText = "$" + daily.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('monthly').innerText = "$" + monthly.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('yearly').innerText = "$" + yearly.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        
+        document.getElementById('viewsNeeded').innerText = formatCompact(viewsFor100);
+    }
+
+    function formatCompact(num) {
+        return Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(num);
+    }
+</script>
+
+</body>
+</html>

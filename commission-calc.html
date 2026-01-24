@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Commission Calculator - Revenue & Payout Tool</title>
+    <meta name="description" content="Calculate sales commissions instantly. Determine your payout based on revenue and percentage. Perfect for sales reps, realtors, and affiliates.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ENTERPRISE DARK THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --money: #10b981; /* Green for Commission */
+            --revenue: #3b82f6; /* Blue for Company Revenue */
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        /* HEADER & BACK BUTTON */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { 
+            color: var(--muted); text-decoration: none; font-weight: 600; 
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+            padding: 10px 15px; border-radius: 8px;
+        }
+        .back-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+
+        /* MAIN CARD */
+        .card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+        }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; }
+
+        /* INPUT GRID */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        
+        .input-group { text-align: left; }
+        label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+        
+        input { 
+            width: 100%; padding: 20px 20px 20px 50px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 12px; font-size: 1.5rem; font-weight: 700; transition: 0.3s; font-family: 'Outfit', sans-serif;
+        }
+        input:focus { border-color: var(--money); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+
+        /* VISUAL BAR (Split) */
+        .split-bar-container { margin: 20px 0 40px 0; }
+        .split-labels { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 0.9rem; }
+        
+        .bar-track { width: 100%; height: 20px; background: #334155; border-radius: 10px; overflow: hidden; display: flex; }
+        .bar-comm { height: 100%; background: var(--money); width: 0%; transition: width 0.5s ease; }
+        .bar-rev { height: 100%; background: var(--revenue); width: 0%; transition: width 0.5s ease; }
+
+        /* RESULTS */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .res-box { 
+            background: rgba(255,255,255,0.03); padding: 25px; border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.05); text-align: center;
+        }
+        .res-title { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
+        .res-val { font-size: 2rem; font-weight: 800; color: white; }
+        
+        .val-comm { color: var(--money); text-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; text-align: left; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { .input-grid, .results-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="card">
+        <h1><i class="fa-solid fa-hand-holding-dollar" style="color:var(--money)"></i> Commission Calculator</h1>
+        <p class="subtitle">Calculate your sales commission payout instantly.</p>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Total Sale Amount ($)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="number" id="saleAmount" value="10000" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Commission Rate (%)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-percent"></i>
+                    <input type="number" id="rate" value="15" oninput="calculate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="split-bar-container">
+            <div class="split-labels">
+                <span style="color:var(--money)">Your Commission</span>
+                <span style="color:var(--revenue)">Company Revenue</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-comm" id="barComm"></div>
+                <div class="bar-rev" id="barRev"></div>
+            </div>
+        </div>
+
+        <div class="results-grid">
+            <div class="res-box" style="border-color: rgba(16, 185, 129, 0.3);">
+                <div class="res-title">Commission Payout</div>
+                <div class="res-val val-comm" id="resComm">$1,500.00</div>
+            </div>
+            
+            <div class="res-box">
+                <div class="res-title">Net Revenue</div>
+                <div class="res-val" id="resNet">$8,500.00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>Free Sales Commission Calculator</h2>
+        <p>
+            Whether you are a real estate agent, a SaaS sales representative, or an affiliate marketer, knowing your exact payout is crucial. Our <strong>Commission Calculator</strong> helps you instantly determine how much you will earn from a sale based on your agreed-upon percentage.
+        </p>
+
+        <h3>How is Commission Calculated?</h3>
+        <p>The standard formula for calculating sales commission is:</p>
+        <div style="background:#020617; padding:15px; border-radius:10px; font-family:monospace; margin-bottom:20px; border:1px solid #334155; color:#10b981;">
+            Commission = Sale Price × (Commission Rate ÷ 100)
+        </div>
+        <p>
+            For example, if you sell a house for <strong>$500,000</strong> and your rate is <strong>3%</strong>:<br>
+            $500,000 × 0.03 = <strong>$15,000 Commission</strong>.
+        </p>
+
+        <h3>Common Commission Rates</h3>
+        <ul>
+            <li><strong>Real Estate:</strong> Typically 3% to 6% of the final sale price.</li>
+            <li><strong>SaaS Sales:</strong> Usually 10% to 20% of the Annual Recurring Revenue (ARR).</li>
+            <li><strong>Retail:</strong> Often between 5% and 15% depending on the product margin.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    function calculate() {
+        const amount = parseFloat(document.getElementById('saleAmount').value) || 0;
+        const rate = parseFloat(document.getElementById('rate').value) || 0;
+
+        const commission = amount * (rate / 100);
+        const net = amount - commission;
+
+        // Update Text
+        document.getElementById('resComm').innerText = fmt(commission);
+        document.getElementById('resNet').innerText = fmt(net);
+
+        // Update Bars
+        let commPct = rate;
+        if(commPct > 100) commPct = 100;
+        let revPct = 100 - commPct;
+
+        document.getElementById('barComm').style.width = commPct + "%";
+        document.getElementById('barRev').style.width = revPct + "%";
+    }
+
+    function fmt(num) {
+        return "$" + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    // Init
+    calculate();
+</script>
+
+</body>
+</html>

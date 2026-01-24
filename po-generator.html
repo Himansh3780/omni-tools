@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Purchase Order Generator - Create PO PDFs Online</title>
+    <meta name="description" content="Generate professional Purchase Orders (PO) for free. Create, download, and print standard B2B procurement documents. No sign-up required.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* --- PROCUREMENT THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #0ea5e9; /* Sky Blue (Trust/Logistics) */
+            --paper: #ffffff;
+            --ink: #1e293b;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; }
+
+        /* SPLIT LAYOUT */
+        .workspace { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+
+        /* LEFT: EDITOR */
+        .editor { background: var(--panel); border: var(--border); border-radius: 16px; padding: 25px; height: fit-content; }
+        .section-head { color: var(--brand); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+        input, textarea { 
+            width: 100%; padding: 10px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 8px; font-size: 0.95rem; font-family: 'Inter', sans-serif;
+        }
+        input:focus, textarea:focus { border-color: var(--brand); }
+        textarea { height: 80px; resize: vertical; }
+
+        .btn-action { 
+            width: 100%; padding: 15px; background: var(--brand); color: white; border: none; 
+            border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
+        }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* RIGHT: PREVIEW (A4 Paper) */
+        .preview-area { overflow-x: auto; display: flex; justify-content: center; background: #0b0f19; padding: 40px; border-radius: 16px; border: var(--border); }
+        
+        .paper {
+            background: var(--paper); color: var(--ink); width: 700px; min-height: 900px;
+            padding: 50px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative;
+        }
+
+        /* PO STYLING */
+        .po-header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; }
+        .po-title { font-size: 2rem; font-weight: 800; color: var(--brand); }
+        .po-meta { text-align: right; font-size: 0.9rem; color: #64748b; }
+        
+        .po-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .po-box h3 { font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+        .po-box p { font-size: 0.95rem; line-height: 1.5; white-space: pre-line; }
+
+        /* TABLE */
+        .po-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .po-table th { background: #f1f5f9; text-align: left; padding: 10px; font-size: 0.8rem; text-transform: uppercase; color: #475569; }
+        .po-table td { border-bottom: 1px solid #e2e8f0; padding: 12px 10px; font-size: 0.95rem; }
+        .col-right { text-align: right; }
+
+        .po-total-section { display: flex; justify-content: flex-end; }
+        .po-totals { width: 250px; }
+        .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem; }
+        .total-final { font-weight: 800; font-size: 1.1rem; border-top: 2px solid #e2e8f0; margin-top: 5px; padding-top: 10px; }
+
+        .po-footer { margin-top: 60px; font-size: 0.8rem; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 900px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section ul { padding-left: 20px; margin-bottom: 20px; }
+        .seo-section li { margin-bottom: 10px; }
+
+        @media(max-width: 900px) { .workspace { grid-template-columns: 1fr; } .preview-area { padding: 20px; } .paper { width: 100%; padding: 20px; min-height: auto; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="workspace">
+        
+        <div class="editor">
+            <h1>PO Generator</h1>
+            <p class="subtitle" style="font-size:0.9rem; margin-bottom:20px;">Create B2B Purchase Orders.</p>
+
+            <div class="section-head">1. Order Info</div>
+            <div class="input-group">
+                <label>PO Number</label>
+                <input type="text" id="poNum" value="PO-2025-001" oninput="updatePO()">
+            </div>
+            <div class="input-group">
+                <label>Date</label>
+                <input type="date" id="poDate" oninput="updatePO()">
+            </div>
+
+            <div class="section-head">2. Parties</div>
+            <div class="input-group">
+                <label>Vendor (Seller) Details</label>
+                <textarea id="vendorInfo" placeholder="Vendor Name&#10;123 Supply St&#10;City, Country" oninput="updatePO()"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Ship To (Your Company)</label>
+                <textarea id="shipInfo" placeholder="My Company LLC&#10;456 Business Rd&#10;City, Country" oninput="updatePO()"></textarea>
+            </div>
+
+            <div class="section-head">3. Line Item</div>
+            <div class="input-group">
+                <label>Item Description</label>
+                <input type="text" id="itemName" placeholder="Office Chairs (Model X)" oninput="updatePO()">
+            </div>
+            <div class="input-group" style="display:flex; gap:10px;">
+                <div style="flex:1">
+                    <label>Qty</label>
+                    <input type="number" id="qty" value="10" oninput="updatePO()">
+                </div>
+                <div style="flex:1">
+                    <label>Price ($)</label>
+                    <input type="number" id="price" value="150.00" oninput="updatePO()">
+                </div>
+            </div>
+
+            <button class="btn-action" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download Official PDF</button>
+        </div>
+
+        <div class="preview-area">
+            <div class="paper" id="poContent">
+                
+                <div class="po-header">
+                    <div class="po-title">PURCHASE ORDER</div>
+                    <div class="po-meta">
+                        Date: <span id="dispDate">Oct 24, 2025</span><br>
+                        PO #: <span id="dispNum" style="color:var(--ink); font-weight:700;">PO-2025-001</span>
+                    </div>
+                </div>
+
+                <div class="po-grid">
+                    <div class="po-box">
+                        <h3>Vendor / Supplier</h3>
+                        <p id="dispVendor">Vendor Name<br>123 Supply St<br>City, Country</p>
+                    </div>
+                    <div class="po-box">
+                        <h3>Ship To</h3>
+                        <p id="dispShip">My Company LLC<br>456 Business Rd<br>City, Country</p>
+                    </div>
+                </div>
+
+                <table class="po-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="col-right">Quantity</th>
+                            <th class="col-right">Unit Price</th>
+                            <th class="col-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="dispItem">Office Chairs (Model X)</td>
+                            <td class="col-right" id="dispQty">10</td>
+                            <td class="col-right" id="dispPrice">$150.00</td>
+                            <td class="col-right" id="dispTotal">$1,500.00</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#cbd5e1;">-</td>
+                            <td class="col-right" style="color:#cbd5e1;">-</td>
+                            <td class="col-right" style="color:#cbd5e1;">-</td>
+                            <td class="col-right" style="color:#cbd5e1;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="po-total-section">
+                    <div class="po-totals">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="dispSub">$1,500.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax (0%):</span>
+                            <span>$0.00</span>
+                        </div>
+                        <div class="total-row total-final">
+                            <span>Total:</span>
+                            <span id="dispFinal" style="color:var(--brand);">$1,500.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="po-footer">
+                    Authorized Signature: __________________________<br><br>
+                    This purchase order is subject to the terms and conditions agreed upon by the Vendor and Purchaser.
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>Free Purchase Order (PO) Generator for Small Business</h2>
+        <p>
+            In the world of B2B (Business to Business) commerce, sending an email saying "I want 10 chairs" isn't enough. You need a legal document that formally requests goods and promises payment. That document is a <strong>Purchase Order (PO)</strong>.
+        </p>
+        <p>
+            Our <strong>Online PO Generator</strong> allows freelancers, startups, and procurement managers to create professional, standardized PO PDFs instantly without needing expensive ERP software.
+        </p>
+
+        <h3>Purchase Order vs. Invoice: What is the difference?</h3>
+        <p>This is the most common question in business accounting. Here is the simple breakdown:</p>
+        <ul>
+            <li><strong>Purchase Order (PO):</strong> Sent by the <em>Buyer</em> to the <em>Seller</em> at the <strong>start</strong>. It lists what you want to buy and the price you agree to pay. It is a "Request to Buy."</li>
+            <li><strong>Invoice:</strong> Sent by the <em>Seller</em> to the <em>Buyer</em> at the <strong>end</strong>. It requests payment for the goods that were delivered. It is a "Request for Payment."</li>
+        </ul>
+
+        <h3>Why do you need a PO?</h3>
+        <p>
+            1. <strong>Legal Protection:</strong> Once a vendor accepts your PO, it becomes a legally binding contract. If they deliver the wrong items or change the price later, you have the PO as proof of the original agreement.<br>
+            2. <strong>Budget Control:</strong> POs help businesses track upcoming expenses before the invoice even arrives.<br>
+            3. <strong>Professionalism:</strong> Suppliers prioritize orders that come with an official PO number because it guarantees they will get paid.
+        </p>
+
+        <h3>How to use this tool</h3>
+        <p>
+            Simply fill in your company details ("Ship To"), the vendor's details, and the items you wish to order. Our tool automatically calculates the totals and formats the document into a clean, printable A4 PDF.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    // Set Date
+    document.getElementById('poDate').valueAsDate = new Date();
+    updatePO();
+
+    function updatePO() {
+        // Values
+        const num = document.getElementById('poNum').value;
+        const rawDate = document.getElementById('poDate').value;
+        const vendor = document.getElementById('vendorInfo').value;
+        const ship = document.getElementById('shipInfo').value;
+        const item = document.getElementById('itemName').value;
+        const qty = parseFloat(document.getElementById('qty').value) || 0;
+        const price = parseFloat(document.getElementById('price').value) || 0;
+
+        // Calculations
+        const total = qty * price;
+        const fmtTotal = "$" + total.toLocaleString('en-US', {minimumFractionDigits: 2});
+        const fmtPrice = "$" + price.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+        // Date Fmt
+        let dateStr = "Date";
+        if(rawDate) {
+            dateStr = new Date(rawDate).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'});
+        }
+
+        // Update DOM
+        document.getElementById('dispNum').innerText = num;
+        document.getElementById('dispDate').innerText = dateStr;
+        document.getElementById('dispVendor').innerText = vendor || "Vendor Details...";
+        document.getElementById('dispShip').innerText = ship || "Your Company...";
+        
+        document.getElementById('dispItem').innerText = item || "Item Name";
+        document.getElementById('dispQty').innerText = qty;
+        document.getElementById('dispPrice').innerText = fmtPrice;
+        document.getElementById('dispTotal').innerText = fmtTotal;
+        
+        document.getElementById('dispSub').innerText = fmtTotal;
+        document.getElementById('dispFinal').innerText = fmtTotal;
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('poContent');
+        const opt = {
+            margin: 0,
+            filename: 'PurchaseOrder_' + document.getElementById('poNum').value + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+
+</body>
+</html>
