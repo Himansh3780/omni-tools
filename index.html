@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniTools - Premium Toolkit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CORE CSS --- */
+        :root{--bg:#020617;--panel:#0f172a;--border:#1e293b;--primary:#6366f1;--text:#f8fafc;--muted:#94a3b8;}
+        *{box-sizing:border-box;margin:0;padding:0;outline:0}
+        body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden}
+        
+        /* SIDEBAR */
+        aside{width:260px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px;z-index:50;transition:0.3s}
+        .nav-item{padding:10px;color:var(--muted);cursor:pointer;border-radius:8px;margin-bottom:2px;font-size:0.9rem;display:flex;align-items:center;gap:10px}
+        .nav-item:hover,.nav-item.active{background:rgba(99,102,241,0.15);color:#818cf8}
+        
+        /* MAIN */
+        main{flex:1;display:flex;flex-direction:column;position:relative}
+        header{padding:20px 40px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:rgba(2,6,23,0.8);backdrop-filter:blur(10px)}
+        
+        /* GRID */
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:40px;overflow-y:auto}
+        
+        /* CARDS */
+        .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:25px;text-decoration:none;transition:0.2s;position:relative;display:flex;flex-direction:column;cursor:pointer}
+        .card:hover{transform:translateY(-5px);border-color:var(--primary)}
+        
+        .icon-box{width:45px;height:45px;background:rgba(255,255,255,0.03);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--muted);margin-bottom:15px; transition:0.3s;}
+        .card:hover .icon-box { background: rgba(255,255,255,0.1); }
+
+        /* BRAND COLORS & EFFECTS */
+        .card:hover .icon-insta i { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card:hover .icon-tiktok i { color: #ff0050; text-shadow: 2px 2px 0px #00f2ea; }
+        .card:hover .icon-youtube i { color: #ff0000; }
+        .card:hover .icon-biz i { color: #10b981; }
+        .card:hover .icon-dev i { color: #3b82f6; }
+        .card:hover .icon-student i { color: #f59e0b; } /* Orange for Student Tools */
+
+        .card-title{font-weight:600;margin-bottom:6px; color: white;}
+        .card-desc{color:var(--muted);font-size:0.85rem;line-height:1.5}
+        .badge{position:absolute;top:20px;right:20px;font-size:0.7rem;font-weight:800;padding:3px 8px;border-radius:4px}
+        .hot{background:rgba(244,63,94,0.1);color:#fb7185}.new{background:rgba(34,197,94,0.1);color:#4ade80}
+        
+        .search-box{width:100%;max-width:400px;position:relative}
+        .search-box i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted)}
+        .search-input{width:100%;background:var(--panel);border:1px solid var(--border);padding:12px 12px 12px 45px;border-radius:10px;color:#fff}
+        
+        #error-screen { display: none; padding: 40px; text-align: center; color: #ef4444; }
+        
+        @media(max-width:800px){aside{position:absolute;left:-100%;height:100%}aside.open{left:0}}
+    </style>
+</head>
+<body>
+
+    <aside id="sidebar">
+        <h2 style="margin-bottom:30px;font-size:1.4rem;"><i class="fa-solid fa-layer-group"></i> OmniTools</h2>
+        <div class="nav-item active" onclick="filter('all', this)"><i class="fa-solid fa-border-all"></i> All Tools</div>
+        <div class="nav-item" onclick="filter('social', this)"><i class="fa-brands fa-tiktok"></i> Social Media</div>
+        <div class="nav-item" onclick="filter('business', this)"><i class="fa-solid fa-briefcase"></i> Business</div>
+        <div class="nav-item" onclick="filter('dev', this)"><i class="fa-solid fa-code"></i> Developer</div>
+        <div class="nav-item" onclick="filter('pdf', this)"><i class="fa-solid fa-file-pdf"></i> PDF & Text</div>
+        <div class="nav-item" onclick="filter('image', this)"><i class="fa-solid fa-image"></i> Image Tools</div>
+        
+        <div class="nav-item" onclick="filter('student', this)"><i class="fa-solid fa-graduation-cap"></i> Student Tools</div>
+    </aside>
+
+    <main>
+        <header>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" id="search" placeholder="Search..." onkeyup="searchTools()">
+            </div>
+        </header>
+        
+        <div id="error-screen">
+            <h3>⚠️ Error: Database Not Found</h3>
+            <p>Make sure you have a file named 'database.js' in your folder.</p>
+        </div>
+
+        <div class="grid" id="tools-grid"></div>
+    </main>
+
+    <script src="database.js"></script>
+
+    <script>
+        const grid = document.getElementById('tools-grid');
+        const errScreen = document.getElementById('error-screen');
+
+        function render(cat) {
+            grid.innerHTML = "";
+            
+            // Check if database.js is loaded
+            if(typeof toolsDB === 'undefined') {
+                errScreen.style.display = 'block';
+                return;
+            }
+
+            const filtered = cat === 'all' ? toolsDB : toolsDB.filter(t => t.cat === cat);
+            
+            filtered.forEach(tool => {
+                let badge = tool.tag ? `<span class="badge ${tool.tag.toLowerCase()}">${tool.tag}</span>` : "";
+                
+                // Icon Logic
+                let iconPrefix = "fa-solid";
+                if (tool.icon.includes('tiktok') || tool.icon.includes('instagram') || tool.icon.includes('youtube') || tool.icon.includes('twitter') || tool.icon.includes('facebook') || tool.icon.includes('discord')) {
+                    iconPrefix = "fa-brands";
+                }
+                
+                // Brand Color Logic
+                let brandClass = "icon-dev";
+                if (tool.icon.includes('instagram')) brandClass = "icon-insta";
+                else if (tool.icon.includes('tiktok')) brandClass = "icon-tiktok";
+                else if (tool.icon.includes('youtube')) brandClass = "icon-youtube";
+                else if (tool.cat === 'business') brandClass = "icon-biz";
+                else if (tool.cat === 'student') brandClass = "icon-student"; // New Class
+
+                grid.innerHTML += `
+                    <a href="${tool.url}" class="card"> 
+                        ${badge}
+                        <div class="icon-box ${brandClass}"><i class="${iconPrefix} ${tool.icon}"></i></div>
+                        <div class="card-title">${tool.name}</div>
+                        <div class="card-desc">${tool.desc}</div>
+                    </a>
+                `;
+            });
+        }
+
+        function filter(cat, btn) {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render(cat);
+        }
+        
+        function searchTools() {
+            const q = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(q) ? 'flex' : 'none');
+        }
+
+        // Start
+        render('all');
+    </script>
+</body>
+</html>
