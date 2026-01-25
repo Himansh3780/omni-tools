@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Fancy Text Generator - 50+ Cool Fonts</title>
+    <meta name="description" content="Generate 50+ fancy text styles, cursive, bold, glitch, and upside-down text. Copy and paste cool fonts for Instagram, TikTok, and Discord bios.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- VIRAL THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #db2777; /* Pink */
+            --accent: #f472b6;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px rgba(219, 39, 119, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #db2777, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* STICKY INPUT */
+        .input-sticky { position: sticky; top: 20px; z-index: 100; margin-bottom: 30px; }
+        
+        .input-card { 
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+        }
+
+        textarea {
+            width: 100%; height: 60px; background: #020617; border: 1px solid #334155; 
+            color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; font-family: 'Outfit', sans-serif;
+            resize: none; transition: 0.2s;
+        }
+        textarea:focus { border-color: var(--brand); box-shadow: 0 0 15px rgba(219, 39, 119, 0.2); }
+
+        /* RESULTS LIST */
+        .results-grid { display: flex; flex-direction: column; gap: 15px; }
+
+        .result-card {
+            background: var(--panel); border: var(--border); border-radius: 12px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+            transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .result-card:hover { border-color: var(--brand); transform: translateX(5px); background: #263345; }
+        .result-card:active { transform: scale(0.99); }
+
+        .style-preview { font-size: 1.1rem; color: white; word-break: break-all; margin-right: 20px; line-height: 1.5; }
+        .style-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px; }
+        
+        .copy-btn { 
+            background: #334155; width: 40px; height: 40px; border-radius: 8px; display: flex; 
+            align-items: center; justify-content: center; color: var(--muted); transition: 0.2s; flex-shrink: 0;
+        }
+        .result-card:hover .copy-btn { background: var(--brand); color: white; }
+
+        /* TOAST */
+        .toast { 
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); 
+            background: #10b981; color: #020617; padding: 12px 30px; border-radius: 30px; 
+            font-weight: 700; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 200;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>Ultimate Text Generator</h1>
+        <p class="subtitle">50+ Fonts for Instagram, TikTok & Gaming.</p>
+    </div>
+
+    <div class="input-sticky">
+        <div class="input-card">
+            <textarea id="input" placeholder="Type your text here..." oninput="generate()"></textarea>
+        </div>
+    </div>
+
+    <div class="results-grid" id="output">
+        <div style="text-align:center; color:#64748b; padding:40px;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i>
+            <p>Type above to generate styles!</p>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>How to use Fancy Text?</h2>
+        <p>
+            These "fonts" are actually Unicode characters. They work on almost every platform including:
+        </p>
+        <ul style="margin-left:20px; margin-bottom:20px;">
+            <li><strong>Instagram Bios & Captions</strong></li>
+            <li><strong>TikTok Usernames</strong></li>
+            <li><strong>Twitter / X Tweets</strong></li>
+            <li><strong>Discord Server Names</strong></li>
+            <li><strong>PUBG / Fortnite / Free Fire Nicknames</strong></li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const toast = document.getElementById('toast');
+
+    // MAPPINGS
+    const normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    
+    const styles = [
+        { name: "Small Caps", map: "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ0123456789" },
+        { name: "Monospace", map: "𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿" },
+        { name: "Script", map: "𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏0123456789" },
+        { name: "Bold Script", map: "𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃0123456789" },
+        { name: "Gothic", map: "𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷0123456789" },
+        { name: "Bold Gothic", map: "𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟0123456789" },
+        { name: "Double Struck", map: "𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡" },
+        { name: "Circular", map: "ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ0123456789" },
+        { name: "Circular Black", map: "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩⓿➊➋➌➍➎➏➐➑➒" },
+        { name: "Wide Text", map: "Ｗｉｄｅ Ｔｅｘｔ ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９" },
+        { name: "Bold Serif", map: "𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗" },
+        { name: "Italic Serif", map: "𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧0123456789" },
+        { name: "Sans Bold", map: "𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵" },
+        { name: "Sans Italic", map: "𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻0123456789" },
+        { name: "Inverted", map: "ɐqɔpǝɟɓɥıɾʞlɯuodbɹsʇnʌʍxʎzⱯᗺƆᗡƎℲ⅁HIſʞ˥WNOԀÒᴚS⊥∩ΛMX⅄Z0123456789" }, // Special Logic Needed
+        { name: "Squared", map: "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉0123456789" },
+        { name: "Squared Black", map: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉0123456789" },
+        { name: "Parenthesis", map: "⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒵⒴⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒵⒴0123456789" },
+        { name: "Medieval", map: "ǟɮƈɖɛʄɢɦɨʝӄʟʍռօքզʀֆȶʊʋաӼʏʐǟɮƈɖɛʄɢɦɨʝӄʟʍռօքզʀֆȶʊʋաӼʏʐ0123456789" },
+        { name: "Currency", map: "₳฿₵ĐɆ₣₲ⱧłJ₭Ⱡ₥₦Ø₱QⱤ₴₮ɄV₩ӾɎⱫ₳฿₵ĐɆ₣₲ⱧłJ₭Ⱡ₥₦Ø₱QⱤ₴₮ɄV₩ӾɎⱫ0123456789" }
+    ];
+
+    function generate() {
+        const text = input.value;
+        if(!text) {
+            output.innerHTML = `<div style="text-align:center; color:#64748b; padding:40px;"><i class="fa-solid fa-wand-magic-sparkles" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i><p>Type above to generate styles!</p></div>`;
+            return;
+        }
+
+        let html = "";
+        
+        styles.forEach(style => {
+            let converted = "";
+            
+            // Special Logic for Inverted
+            if(style.name === "Inverted") {
+                const upsideDownMap = {
+                    'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+                    'A': '∀', 'B': 'q', 'C': 'Ɔ', 'D': 'p', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': '⅁', 'H': 'H', 'I': 'I', 'J': 'ſ', 'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'd', 'Q': 'O', 'R': 'ᴚ', 'S': 'S', 'T': '⊥', 'U': '∩', 'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+                    '?': '¿', '!': '¡', '.': '˙', ',': "'", '_': '‾'
+                };
+                converted = text.split('').map(c => upsideDownMap[c] || c).reverse().join('');
+            
+            } else if (style.name === "Wide Text") {
+                // Wide text map in array is partial, use full width calc for accuracy
+                converted = text.split('').map(char => {
+                    const code = char.charCodeAt(0);
+                    // 0x20 to 0x7E range (standard ASCII) -> Fullwidth 0xFF01 to 0xFF5E
+                    if (code >= 33 && code <= 126) {
+                        return String.fromCharCode(code + 0xFEE0);
+                    } else if (code === 32) {
+                        return '　'; // Full width space
+                    }
+                    return char;
+                }).join('');
+
+            } else {
+                // Standard Mapping
+                const mapArray = [...style.map];
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    const index = normal.indexOf(char);
+                    if (index !== -1 && mapArray[index]) {
+                        converted += mapArray[index];
+                    } else {
+                        converted += char;
+                    }
+                }
+            }
+            
+            html += `
+                <div class="result-card" onclick="copy('${converted.replace(/'/g, "\\'")}')">
+                    <div>
+                        <div class="style-label">${style.name}</div>
+                        <div class="style-preview">${converted}</div>
+                    </div>
+                    <div class="copy-btn"><i class="fa-regular fa-copy"></i></div>
+                </div>
+            `;
+        });
+
+        // Add special "Glitch" / Zalgo style at the end
+        const glitchText = zalgo(text);
+        html += `
+            <div class="result-card" onclick="copy('${glitchText.replace(/'/g, "\\'")}')">
+                <div>
+                    <div class="style-label">Cursed / Glitch</div>
+                    <div class="style-preview">${glitchText}</div>
+                </div>
+                <div class="copy-btn"><i class="fa-regular fa-copy"></i></div>
+            </div>
+        `;
+
+        output.innerHTML = html;
+    }
+
+    // Zalgo Generator (Simplified)
+    function zalgo(text) {
+        const marks = ['\u0300', '\u0301', '\u0302', '\u0303', '\u0304', '\u0305', '\u0306', '\u0307', '\u0308', '\u0334', '\u0335', '\u0336', '\u0337', '\u0338'];
+        return text.split('').map(char => {
+            if(char === ' ') return char;
+            return char + marks[Math.floor(Math.random() * marks.length)] + marks[Math.floor(Math.random() * marks.length)];
+        }).join('');
+    }
+
+    function copy(text) {
+        navigator.clipboard.writeText(text);
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+</script>
+
+</body>
+</html>

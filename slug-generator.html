@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Slug Generator - SEO Clean Link Creator</title>
+    <meta name="description" content="Free Online URL Slug Generator. Convert titles into SEO-friendly URLs. Features stop word removal and custom separators.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SEO THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #2dd4bf; /* Teal */
+            --accent: #5eead4;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px rgba(45, 212, 191, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #2dd4bf, #99f6e4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* WORKSPACE */
+        .slug-card { 
+            background: var(--panel); border: var(--border); border-radius: 20px; padding: 30px; 
+            box-shadow: var(--glow); margin-bottom: 30px;
+        }
+
+        .label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        
+        input[type="text"] {
+            width: 100%; padding: 15px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 12px; font-size: 1.1rem; transition: 0.2s; font-family: 'Outfit', sans-serif;
+            margin-bottom: 25px;
+        }
+        input[type="text"]:focus { border-color: var(--brand); box-shadow: 0 0 15px rgba(45, 212, 191, 0.15); }
+
+        .output-wrapper { position: relative; }
+        .result-input { 
+            font-family: 'Fira Code', monospace; color: var(--brand) !important; 
+            background: #0f172a !important; padding-right: 50px !important;
+        }
+        
+        .copy-abs { 
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: #1e293b; border: 1px solid #334155; color: white; width: 35px; height: 35px;
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+        }
+        .copy-abs:hover { background: var(--brand); border-color: var(--brand); }
+
+        /* CONTROLS */
+        .controls { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+        .checkbox-box { 
+            width: 20px; height: 20px; border: 2px solid #334155; border-radius: 4px; display: flex; 
+            align-items: center; justify-content: center; transition: 0.2s; background: #020617;
+        }
+        .checkbox-group input { display: none; }
+        .checkbox-group input:checked + .checkbox-box { background: var(--brand); border-color: var(--brand); }
+        .checkbox-group input:checked + .checkbox-box::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 0.7rem; color: #0f172a; }
+        .checkbox-text { font-size: 0.9rem; color: #cbd5e1; }
+
+        .sep-select {
+            background: #020617; color: white; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.9rem; cursor: pointer;
+        }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { .controls { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>URL Slug Generator</h1>
+        <p class="subtitle">Convert article titles to SEO-friendly links.</p>
+    </div>
+
+    <div class="slug-card">
+        
+        <label>Enter Page Title</label>
+        <input type="text" id="input" placeholder="How to Make $1,000 Online in 2025!" oninput="generate()">
+
+        <div class="controls">
+            <label class="checkbox-group">
+                <input type="checkbox" id="stopWords" onchange="generate()">
+                <div class="checkbox-box"></div>
+                <div class="checkbox-text">Remove Stop Words (and, the, a, of)</div>
+            </label>
+
+            <label class="checkbox-group">
+                <input type="checkbox" id="numbers" onchange="generate()">
+                <div class="checkbox-box"></div>
+                <div class="checkbox-text">Remove Numbers</div>
+            </label>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="checkbox-text">Separator:</span>
+                <select class="sep-select" id="separator" onchange="generate()">
+                    <option value="-">Hyphen (-)</option>
+                    <option value="_">Underscore (_)</option>
+                    <option value="">None</option>
+                </select>
+            </div>
+        </div>
+
+        <label style="margin-top:20px;">Generated Slug</label>
+        <div class="output-wrapper">
+            <input type="text" id="output" class="result-input" readonly placeholder="how-to-make-1000-online-in-2025">
+            <div class="copy-abs" onclick="copySlug()"><i class="fa-regular fa-copy"></i></div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>What is a URL Slug?</h2>
+        <p>
+            A slug is the part of a URL that identifies a specific page on a website in an easy-to-read form. It is the part of the URL that explains the page's content.
+        </p>
+        <p>
+            Example: <code>omnitools.com/<strong>url-slug-generator</strong></code>
+        </p>
+
+        <h3>Why Clean URLs Matter for SEO</h3>
+        <ul>
+            <li><strong>Readability:</strong> Users should be able to predict the content of a page just by looking at the link.</li>
+            <li><strong>Keywords:</strong> Search engines like Google look for keywords in your URL. A slug like <code>/clean-url-tool</code> ranks better than <code>/p=123</code>.</li>
+            <li><strong>Stop Words:</strong> Removing common words like "a", "the", and "of" keeps your URL short and keyword-rich, which is an SEO best practice.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    const stopWordList = ["a", "an", "the", "and", "or", "but", "of", "to", "in", "on", "at", "for", "with", "by", "from", "up", "about", "into", "over", "after", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "do", "does", "did", "can", "could", "should", "would", "will", "may", "might", "must"];
+
+    function generate() {
+        let text = document.getElementById('input').value;
+        const separator = document.getElementById('separator').value;
+        const removeStop = document.getElementById('stopWords').checked;
+        const removeNums = document.getElementById('numbers').checked;
+
+        if(!text) {
+            document.getElementById('output').value = "";
+            return;
+        }
+
+        // 1. Lowercase
+        text = text.toLowerCase();
+
+        // 2. Remove Numbers if checked
+        if(removeNums) {
+            text = text.replace(/[0-9]/g, '');
+        }
+
+        // 3. Remove Special Characters (keep spaces and alphanumeric)
+        text = text.replace(/[^a-z0-9\s]/g, '');
+
+        // 4. Handle Stop Words
+        if(removeStop) {
+            const words = text.split(/\s+/);
+            text = words.filter(w => !stopWordList.includes(w)).join(' ');
+        }
+
+        // 5. Replace Spaces with Separator
+        text = text.trim().replace(/\s+/g, separator);
+
+        document.getElementById('output').value = text;
+    }
+
+    function copySlug() {
+        const output = document.getElementById('output');
+        if(!output.value) return;
+        output.select();
+        navigator.clipboard.writeText(output.value);
+        alert("Slug copied!");
+    }
+</script>
+
+</body>
+</html>
