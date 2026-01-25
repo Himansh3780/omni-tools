@@ -5,7 +5,7 @@ const toolsDB = [
         "url": "commission-calc.html", 
         "cat": "business", 
         "icon": "fa-hand-holding-dollar", 
-        "desc": "Calculate sales commissions & revenue.", 
+        "desc": "Calculate sales commissions.", 
         "tag": "MONEY" 
     },
     { 
@@ -29,14 +29,14 @@ const toolsDB = [
         "url": "loan-calculator.html", 
         "cat": "business", 
         "icon": "fa-sack-dollar", 
-        "desc": "Calculate mortgage & loan payments.", 
+        "desc": "Calculate mortgage payments.", 
         "tag": "" 
     },
     { 
         "name": "PayPal Fee Calculator", 
         "url": "paypal-fee.html", 
         "cat": "business", 
-        "icon": "fa-brands fa-paypal", 
+        "icon": "fa-paypal", 
         "desc": "Calculate fees for transfers.", 
         "tag": "" 
     },
@@ -61,7 +61,7 @@ const toolsDB = [
         "url": "profit-calculator.html", 
         "cat": "business", 
         "icon": "fa-chart-line", 
-        "desc": "Calculate margin, markup & profit.", 
+        "desc": "Calculate margin & markup.", 
         "tag": "" 
     },
     { 
@@ -77,7 +77,7 @@ const toolsDB = [
         "url": "rent-vs-buy.html", 
         "cat": "business", 
         "icon": "fa-house-chimney", 
-        "desc": "Compare renting vs buying a home.", 
+        "desc": "Compare renting vs buying.", 
         "tag": "HOT" 
     },
     { 
@@ -85,7 +85,7 @@ const toolsDB = [
         "url": "resignation-letter.html", 
         "cat": "business", 
         "icon": "fa-envelope-open-text", 
-        "desc": "Write a professional resignation letter.", 
+        "desc": "Write a resignation letter.", 
         "tag": "" 
     },
     { 
@@ -93,7 +93,7 @@ const toolsDB = [
         "url": "salary-converter.html", 
         "cat": "business", 
         "icon": "fa-money-bill-wave", 
-        "desc": "Convert hourly wage to yearly salary.", 
+        "desc": "Convert hourly to yearly salary.", 
         "tag": "NEW" 
     },
     { 
@@ -101,7 +101,7 @@ const toolsDB = [
         "url": "inflation-calc.html", 
         "cat": "business", 
         "icon": "fa-arrow-trend-up", 
-        "desc": "Check USD purchasing power over time.", 
+        "desc": "Check purchasing power.", 
         "tag": "HOT" 
     },
     { 
@@ -109,7 +109,7 @@ const toolsDB = [
         "url": "paycheck-calc.html", 
         "cat": "business", 
         "icon": "fa-money-check-dollar", 
-        "desc": "Estimate take-home pay after taxes.", 
+        "desc": "Estimate take-home pay.", 
         "tag": "HOT" 
     },
     { 
@@ -117,7 +117,7 @@ const toolsDB = [
         "url": "business-name.html", 
         "cat": "business", 
         "icon": "fa-briefcase", 
-        "desc": "AI-powered brand name ideas.", 
+        "desc": "AI-powered brand names.", 
         "tag": "AI" 
     },
     { 
@@ -125,15 +125,15 @@ const toolsDB = [
         "url": "slogan-gen.html", 
         "cat": "business", 
         "icon": "fa-lightbulb", 
-        "desc": "Catchy taglines for your brand.", 
+        "desc": "Catchy taglines for brands.", 
         "tag": "" 
     },
     { 
-        "name": "CPM / CPC Calculator", 
+        "name": "CPM Calculator", 
         "url": "cpm-calc.html", 
         "cat": "business", 
         "icon": "fa-chart-pie", 
-        "desc": "Calculate ad metrics (CPM, CPC, CTR).", 
+        "desc": "Calculate CPM, CPC, CTR.", 
         "tag": "PRO" 
     },
 
@@ -142,15 +142,15 @@ const toolsDB = [
         "name": "Instagram Tools", 
         "url": "instagram.html", 
         "cat": "social", 
-        "icon": "fa-brands fa-instagram", 
-        "desc": "Engagement calculator & tools.", 
+        "icon": "fa-instagram", 
+        "desc": "Engagement calculator.", 
         "tag": "" 
     },
     { 
         "name": "TikTok Money Calc", 
         "url": "tiktok.html", 
         "cat": "social", 
-        "icon": "fa-brands fa-tiktok", 
+        "icon": "fa-tiktok", 
         "desc": "Estimate earnings from views.", 
         "tag": "VIRAL" 
     },
@@ -158,7 +158,7 @@ const toolsDB = [
         "name": "Tweet Generator", 
         "url": "tweet-img.html", 
         "cat": "social", 
-        "icon": "fa-brands fa-twitter", 
+        "icon": "fa-twitter", 
         "desc": "Create fake tweet images.", 
         "tag": "FUN" 
     },
@@ -166,8 +166,8 @@ const toolsDB = [
         "name": "YouTube Thumbnails", 
         "url": "youtube-thumb.html", 
         "cat": "social", 
-        "icon": "fa-brands fa-youtube", 
-        "desc": "Download HD video thumbnails.", 
+        "icon": "fa-youtube", 
+        "desc": "Download HD thumbnails.", 
         "tag": "" 
     },
     { 
@@ -175,7 +175,7 @@ const toolsDB = [
         "url": "yt-tags.html", 
         "cat": "social", 
         "icon": "fa-tags", 
-        "desc": "Extract keywords from videos.", 
+        "desc": "Extract video keywords.", 
         "tag": "SEO" 
     },
 
@@ -201,7 +201,7 @@ const toolsDB = [
         "url": "schema-gen.html", 
         "cat": "dev", 
         "icon": "fa-code", 
-        "desc": "Create structured data JSON-LD.", 
+        "desc": "Create structured JSON-LD.", 
         "tag": "DEV" 
     },
     { 
@@ -209,7 +209,7 @@ const toolsDB = [
         "url": "sitemap-gen.html", 
         "cat": "dev", 
         "icon": "fa-sitemap", 
-        "desc": "Create XML sitemaps for Google.", 
+        "desc": "Create XML sitemaps.", 
         "tag": "" 
     },
     { 
@@ -217,7 +217,7 @@ const toolsDB = [
         "url": "cron-job.html", 
         "cat": "dev", 
         "icon": "fa-clock", 
-        "desc": "Create Linux cron schedules easily.", 
+        "desc": "Create Linux cron schedules.", 
         "tag": "DEV" 
     },
     { 
@@ -225,7 +225,7 @@ const toolsDB = [
         "url": "json-csv.html", 
         "cat": "dev", 
         "icon": "fa-file-csv", 
-        "desc": "Convert JSON arrays to Excel CSV.", 
+        "desc": "Convert JSON to CSV.", 
         "tag": "HOT" 
     },
     { 
@@ -233,7 +233,7 @@ const toolsDB = [
         "url": "csv-json.html", 
         "cat": "dev", 
         "icon": "fa-file-code", 
-        "desc": "Convert CSV rows to JSON objects.", 
+        "desc": "Convert CSV to JSON.", 
         "tag": "" 
     },
     { 
@@ -241,7 +241,7 @@ const toolsDB = [
         "url": "html-minify.html", 
         "cat": "dev", 
         "icon": "fa-compress", 
-        "desc": "Compress HTML code for speed.", 
+        "desc": "Compress HTML code.", 
         "tag": "HOT" 
     },
     { 
@@ -257,7 +257,7 @@ const toolsDB = [
         "url": "sql-format.html", 
         "cat": "dev", 
         "icon": "fa-database", 
-        "desc": "Beautify SQL queries instantly.", 
+        "desc": "Beautify SQL queries.", 
         "tag": "" 
     },
     { 
@@ -265,7 +265,7 @@ const toolsDB = [
         "url": "meta-tag.html", 
         "cat": "dev", 
         "icon": "fa-magnifying-glass", 
-        "desc": "Generate SEO meta tags & preview.", 
+        "desc": "Generate SEO tags.", 
         "tag": "SEO" 
     },
     { 
@@ -273,7 +273,7 @@ const toolsDB = [
         "url": "open-graph.html", 
         "cat": "dev", 
         "icon": "fa-share-nodes", 
-        "desc": "Create social media preview cards.", 
+        "desc": "Create social media cards.", 
         "tag": "SEO" 
     },
     { 
@@ -289,7 +289,7 @@ const toolsDB = [
         "url": "htaccess.html", 
         "cat": "dev", 
         "icon": "fa-server", 
-        "desc": "Generate redirects and security rules.", 
+        "desc": "Generate server rules.", 
         "tag": "PRO" 
     },
     { 
@@ -297,7 +297,7 @@ const toolsDB = [
         "url": "user-agent.html", 
         "cat": "dev", 
         "icon": "fa-fingerprint", 
-        "desc": "Check browser & device info.", 
+        "desc": "Check browser info.", 
         "tag": "" 
     },
     { 
@@ -305,7 +305,7 @@ const toolsDB = [
         "url": "my-ip.html", 
         "cat": "dev", 
         "icon": "fa-laptop-code", 
-        "desc": "Show public IP and location.", 
+        "desc": "Show public IP.", 
         "tag": "HOT" 
     },
     { 
@@ -313,7 +313,7 @@ const toolsDB = [
         "url": "dns-lookup.html", 
         "cat": "dev", 
         "icon": "fa-network-wired", 
-        "desc": "Check A, MX, NS records instantly.", 
+        "desc": "Check DNS records.", 
         "tag": "" 
     },
     { 
@@ -321,7 +321,7 @@ const toolsDB = [
         "url": "screen-res.html", 
         "cat": "dev", 
         "icon": "fa-display", 
-        "desc": "Test responsive design breakpoints.", 
+        "desc": "Test responsive design.", 
         "tag": "PRO" 
     },
     { 
@@ -329,7 +329,7 @@ const toolsDB = [
         "url": "keycode.html", 
         "cat": "dev", 
         "icon": "fa-keyboard", 
-        "desc": "Get JavaScript keycodes on press.", 
+        "desc": "Get JS keycodes.", 
         "tag": "DEV" 
     },
     { 
@@ -337,7 +337,7 @@ const toolsDB = [
         "url": "base64-tool.html", 
         "cat": "dev", 
         "icon": "fa-file-shield", 
-        "desc": "Encode text & images to Base64.", 
+        "desc": "Encode text & images.", 
         "tag": "HOT" 
     },
     { 
@@ -345,7 +345,7 @@ const toolsDB = [
         "url": "url-encode.html", 
         "cat": "dev", 
         "icon": "fa-link", 
-        "desc": "Encode/Decode URL strings.", 
+        "desc": "Encode/Decode URLs.", 
         "tag": "" 
     },
     { 
@@ -353,7 +353,7 @@ const toolsDB = [
         "url": "uuid-gen.html", 
         "cat": "dev", 
         "icon": "fa-fingerprint", 
-        "desc": "Generate Version 1 & 4 UUIDs.", 
+        "desc": "Generate Unique IDs.", 
         "tag": "PRO" 
     },
 
@@ -363,7 +363,7 @@ const toolsDB = [
         "url": "case-converter.html", 
         "cat": "text", 
         "icon": "fa-font", 
-        "desc": "Convert text to Upper/Lower case.", 
+        "desc": "Convert text case.", 
         "tag": "" 
     },
     { 
@@ -379,17 +379,17 @@ const toolsDB = [
         "url": "word-counter.html", 
         "cat": "text", 
         "icon": "fa-pen-nib", 
-        "desc": "Count words, chars & reading time.", 
+        "desc": "Count words & chars.", 
         "tag": "" 
     },
 
-    // --- STUDENT & LIFESTYLE ---
+    // --- STUDENT ---
     { 
         "name": "Age Calculator", 
         "url": "age-calculator.html", 
         "cat": "student", 
         "icon": "fa-hourglass-start", 
-        "desc": "Calculate exact age & countdown.", 
+        "desc": "Calculate exact age.", 
         "tag": "FUN" 
     },
     { 
@@ -397,7 +397,7 @@ const toolsDB = [
         "url": "citation.html", 
         "cat": "student", 
         "icon": "fa-quote-right", 
-        "desc": "Generate APA/MLA citations.", 
+        "desc": "Generate citations.", 
         "tag": "" 
     },
     { 
@@ -405,17 +405,18 @@ const toolsDB = [
         "url": "gpa-calc.html", 
         "cat": "student", 
         "icon": "fa-graduation-cap", 
-        "desc": "Calculate college/high school GPA.", 
+        "desc": "Calculate GPA.", 
         "tag": "" 
     },
 
-    // --- IMAGE TOOLS ---
+    // --- IMAGE ---
     { 
         "name": "Image Compressor", 
         "url": "img-compress.html", 
         "cat": "image", 
         "icon": "fa-file-zipper", 
-        "desc": "Reduce image size (KB/MB).", 
+        "desc": "Reduce image size.", 
         "tag": "HOT" 
     }
 ];
+// End of database.js
