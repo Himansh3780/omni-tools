@@ -1,6 +1,3 @@
-// --- OMNITOOLS DATABASE ---
-// Auto-generated based on your file list
-
 const toolsDB = [
     // --- BUSINESS & FINANCE ---
     { 
@@ -10,14 +7,6 @@ const toolsDB = [
         "icon": "fa-hand-holding-dollar", 
         "desc": "Calculate sales commissions & revenue.", 
         "tag": "MONEY" 
-    },
-    { 
-        "name": "CPM Calculator", 
-        "url": "cpm-calc.html", 
-        "cat": "business", 
-        "icon": "fa-chart-pie", 
-        "desc": "Calculate YouTube & AdSense CPM.", 
-        "tag": "" 
     },
     { 
         "name": "GST / VAT Calculator", 
@@ -200,27 +189,11 @@ const toolsDB = [
         "tag": "SEO" 
     },
     { 
-        "name": "Open Graph Gen", 
-        "url": "og-generator.html", 
-        "cat": "dev", 
-        "icon": "fa-share-nodes", 
-        "desc": "Create social media preview cards.", 
-        "tag": "" 
-    },
-    { 
         "name": "QR Code Generator", 
         "url": "qr-code.html", 
         "cat": "dev", 
         "icon": "fa-qrcode", 
         "desc": "Create custom QR codes.", 
-        "tag": "" 
-    },
-    { 
-        "name": "Robots.txt Gen", 
-        "url": "robots-gen.html", 
-        "cat": "dev", 
-        "icon": "fa-robot", 
-        "desc": "Generate robots.txt files.", 
         "tag": "" 
     },
     { 
@@ -239,7 +212,7 @@ const toolsDB = [
         "desc": "Create XML sitemaps for Google.", 
         "tag": "" 
     },
-     { 
+    { 
         "name": "Cron Job Generator", 
         "url": "cron-job.html", 
         "cat": "dev", 
@@ -382,7 +355,7 @@ const toolsDB = [
         "icon": "fa-fingerprint", 
         "desc": "Generate Version 1 & 4 UUIDs.", 
         "tag": "PRO" 
-    }
+    },
 
     // --- TEXT TOOLS ---
     { 
