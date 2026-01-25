@@ -3,115 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Proof Robots.txt Generator - OmniTools</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Robots.txt Generator - Free SEO Tool for Webmasters</title>
+    <meta name="description" content="Generate a robots.txt file for your website instantly. Control Googlebot, Bingbot, and other crawlers. Protect your admin pages and optimize crawl budget.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --bg: #0f172a; --panel: #1e293b; --text: #f8fafc; --muted: #94a3b8; --border: #334155; --primary: #3b82f6; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .card { background: var(--panel); padding: 30px; border-radius: 20px; border: 1px solid var(--border); }
+        /* --- SERVER THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #6366f1; /* Indigo (Tech/Server) */
+            --code-bg: #0b0f19;
+            --success: #10b981;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
         
-        h2 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #6366f1, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         
-        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--muted); }
-        select, input { width: 100%; padding: 12px; background: #020617; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 20px; }
+        /* INPUT PANEL */
+        .input-panel { background: var(--panel); border: var(--border); border-radius: 16px; padding: 30px; height: fit-content; }
         
-        /* TOGGLES FOR BOTS */
-        .bot-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; }
-        .bot-row:hover { border-color: var(--primary); }
-        .bot-name { font-weight: 600; font-size: 0.9rem; }
-        .bot-desc { font-size: 0.75rem; color: var(--muted); }
+        .section-label { 
+            color: var(--brand); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
+            font-size: 0.85rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; 
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; }
         
-        textarea { width: 100%; height: 400px; background: #020617; color: #a5d6ff; padding: 20px; border-radius: 10px; font-family: monospace; border: 1px solid var(--border); resize: vertical; }
+        input, textarea, select { 
+            width: 100%; padding: 12px 15px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 10px; font-size: 1rem; transition: 0.2s; font-family: 'Fira Code', monospace;
+        }
+        input:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
+        textarea { height: 120px; resize: vertical; }
+
+        .radio-group { display: flex; gap: 20px; }
+        .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; }
+        .radio-label input { width: 16px; height: 16px; accent-color: var(--brand); }
+
+        /* OUTPUT PANEL */
+        .output-panel { position: sticky; top: 20px; }
         
-        .btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn:hover { opacity: 0.9; }
+        .code-card { 
+            background: var(--code-bg); border: var(--border); border-radius: 12px; overflow: hidden; 
+            box-shadow: var(--glow); height: 500px; display: flex; flex-direction: column;
+        }
+        .code-header { 
+            padding: 10px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.02);
+        }
+        .file-name { font-family: 'Fira Code', monospace; color: var(--muted); font-size: 0.9rem; }
         
-        @media(max-width: 800px) { .container { grid-template-columns: 1fr; } }
+        .code-display { 
+            padding: 20px; font-family: 'Fira Code', monospace; color: #e2e8f0; font-size: 0.9rem; 
+            line-height: 1.6; white-space: pre; overflow: auto; flex: 1;
+        }
+        
+        .keyword { color: #f472b6; } /* Pink */
+        .value { color: #a78bfa; } /* Purple */
+
+        .action-btns { display: flex; gap: 10px; }
+        .btn-act { 
+            padding: 6px 15px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: 0.2s; border: none;
+        }
+        .btn-copy { background: #334155; color: white; }
+        .btn-copy:hover { background: #475569; }
+        .btn-dl { background: var(--brand); color: white; }
+        .btn-dl:hover { opacity: 0.9; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 850px) { .workspace { grid-template-columns: 1fr; } .output-panel { position: static; } }
     </style>
 </head>
 <body>
-    <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-block;"><i class="fa-solid fa-arrow-left"></i> Back</a>
-    
-    <div class="container">
-        <div class="card">
-            <h2><i class="fa-solid fa-shield-halved"></i> Bot Security</h2>
-            
-            <label>General Access</label>
-            <select id="defaultAccess" onchange="gen()">
-                <option value="allow">Allow All Robots (Default)</option>
-                <option value="disallow">Block All Robots (Private)</option>
-            </select>
 
-            <label>Block AI Scrapers (Protect Content)</label>
-            <div class="bot-row" onclick="toggle('gpt')">
-                <div><div class="bot-name">ChatGPT (GPTBot)</div><div class="bot-desc">Blocks OpenAI from training on your site.</div></div>
-                <input type="checkbox" id="gpt" onchange="gen()">
-            </div>
-            <div class="bot-row" onclick="toggle('cc')">
-                <div><div class="bot-name">Common Crawl (CCBot)</div><div class="bot-desc">Blocks massive dataset scrapers.</div></div>
-                <input type="checkbox" id="cc" onchange="gen()">
-            </div>
-            <div class="bot-row" onclick="toggle('anthro')">
-                <div><div class="bot-name">Anthropic (Claude)</div><div class="bot-desc">Blocks Claude AI crawler.</div></div>
-                <input type="checkbox" id="anthro" onchange="gen()">
-            </div>
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
 
-            <label style="margin-top:20px;">Sitemap URL</label>
-            <input type="text" id="sitemap" placeholder="https://mysite.com/sitemap.xml" oninput="gen()">
-        </div>
-
-        <div class="card">
-            <h2><i class="fa-solid fa-code"></i> Generated File</h2>
-            <textarea id="output" readonly></textarea>
-            <button class="btn" onclick="download()"><i class="fa-solid fa-download"></i> Download robots.txt</button>
-            <button class="btn" style="background:#334155; margin-top:10px;" onclick="copy()"><i class="fa-regular fa-copy"></i> Copy to Clipboard</button>
-        </div>
+    <div class="header-title">
+        <h1>Robots.txt Generator</h1>
+        <p class="subtitle">Tell Google which pages to crawl and which to ignore.</p>
     </div>
 
-<script>
-    function toggle(id) {
-        const el = document.getElementById(id);
-        el.checked = !el.checked;
-        gen();
-    }
+    <div class="workspace">
+        
+        <div class="input-panel">
+            
+            <div class="section-label"><i class="fa-solid fa-earth-americas"></i> Default Rules (All Robots)</div>
+            
+            <div class="form-group">
+                <label>Default Access</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="access" value="allow" checked onchange="update()"> Allow Everything
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="access" value="disallow" onchange="update()"> Disallow Everything
+                    </label>
+                </div>
+            </div>
 
-    function gen() {
+            <div class="form-group">
+                <label>Crawl Delay (Seconds)</label>
+                <select id="delay" onchange="update()">
+                    <option value="">None (Default)</option>
+                    <option value="5">5 Seconds</option>
+                    <option value="10">10 Seconds</option>
+                    <option value="20">20 Seconds</option>
+                    <option value="60">60 Seconds</option>
+                </select>
+                <div style="font-size:0.75rem; color:var(--muted); margin-top:5px;">Useful if your server is slow.</div>
+            </div>
+
+            <div class="form-group">
+                <label>Disallow Specific Folders (One per line)</label>
+                <textarea id="disallowList" placeholder="/admin/&#10;/private/&#10;/tmp/" oninput="update()"></textarea>
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-sitemap"></i> Sitemap</div>
+            
+            <div class="form-group">
+                <label>Sitemap URL (XML)</label>
+                <input type="text" id="sitemap" placeholder="https://example.com/sitemap.xml" oninput="update()">
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-robot"></i> Specific Bots</div>
+            <div class="form-group">
+                <label style="margin-bottom:10px;">Quick Block (Disallow):</label>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <label class="radio-label"><input type="checkbox" id="blockGPT" onchange="update()"> GPTBot (OpenAI)</label>
+                    <label class="radio-label"><input type="checkbox" id="blockCC" onchange="update()"> CCBot (CommonCrawl)</label>
+                    <label class="radio-label"><input type="checkbox" id="blockMJ12" onchange="update()"> MJ12bot (SEO Tools)</label>
+                    <label class="radio-label"><input type="checkbox" id="blockAhrefs" onchange="update()"> AhrefsBot</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="output-panel">
+            <div class="code-card">
+                <div class="code-header">
+                    <span class="file-name"><i class="fa-regular fa-file-code"></i> robots.txt</span>
+                    <div class="action-btns">
+                        <button class="btn-act btn-copy" onclick="copyCode()">Copy</button>
+                        <button class="btn-act btn-dl" onclick="downloadFile()">Download</button>
+                    </div>
+                </div>
+                <div class="code-display" id="output"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>What is a robots.txt file?</h2>
+        <p>
+            A <code>robots.txt</code> file is a simple text file that sits in the root directory of your website (e.g., <em>www.yoursite.com/robots.txt</em>). It provides instructions to "web robots" (like Googlebot) about which pages they are allowed to scan and index.
+        </p>
+        
+
+        <h3>Why is it important for SEO?</h3>
+        <ul>
+            <li><strong>Crawl Budget:</strong> Google doesn't have infinite resources. If you have thousands of useless pages (like admin panels or print versions of pages), you don't want Google wasting time crawling them.</li>
+            <li><strong>Security:</strong> It keeps private directories (like <code>/cgi-bin/</code> or <code>/admin/</code>) out of public search results.</li>
+            <li><strong>Sitemap Discovery:</strong> It tells crawlers exactly where your Sitemap XML file is located.</li>
+        </ul>
+
+        <h3>Common Commands</h3>
+        <p>
+            <strong>User-agent: *</strong> (Applies to all robots)<br>
+            <strong>Disallow: /admin/</strong> (Do not look in the admin folder)<br>
+            <strong>Allow: /</strong> (You are allowed to look everywhere else)
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function update() {
+        const access = document.querySelector('input[name="access"]:checked').value;
+        const delay = document.getElementById('delay').value;
+        const disallowList = document.getElementById('disallowList').value;
+        const sitemap = document.getElementById('sitemap').value;
+        
         let txt = "";
 
-        // 1. AI BLOCKERS (Specific bots first)
-        const gpt = document.getElementById('gpt').checked;
-        const cc = document.getElementById('cc').checked;
-        const anthro = document.getElementById('anthro').checked;
-
-        if(gpt) txt += "User-agent: GPTBot\nDisallow: /\n\n";
-        if(cc) txt += "User-agent: CCBot\nDisallow: /\n\n";
-        if(anthro) txt += "User-agent: anthropic-ai\nDisallow: /\n\n";
-
-        // 2. GENERAL RULES
+        // 1. Default User Agent
         txt += "User-agent: *\n";
-        const access = document.getElementById('defaultAccess').value;
-        if(access === 'disallow') txt += "Disallow: /\n";
-        else txt += "Allow: /\n";
+        
+        if(delay) {
+            txt += `Crawl-delay: ${delay}\n`;
+        }
 
-        // 3. SITEMAP
-        const sitemap = document.getElementById('sitemap').value;
-        if(sitemap) txt += `\nSitemap: ${sitemap}`;
+        if(access === 'disallow') {
+            txt += "Disallow: /\n";
+        } else {
+            // Processing Custom Disallows
+            const lines = disallowList.split('\n');
+            let hasCustom = false;
+            lines.forEach(line => {
+                if(line.trim()) {
+                    txt += `Disallow: ${line.trim()}\n`;
+                    hasCustom = true;
+                }
+            });
+            
+            // If nothing specifically disallowed and access is allow, explicit allow isn't strictly needed but good for clarity
+            if(!hasCustom) {
+                txt += "Allow: /\n";
+            }
+        }
 
-        document.getElementById('output').value = txt;
+        txt += "\n";
+
+        // 2. Specific Bot Blocks
+        if(document.getElementById('blockGPT').checked) {
+            txt += "User-agent: GPTBot\nDisallow: /\n\n";
+        }
+        if(document.getElementById('blockCC').checked) {
+            txt += "User-agent: CCBot\nDisallow: /\n\n";
+        }
+        if(document.getElementById('blockMJ12').checked) {
+            txt += "User-agent: MJ12bot\nDisallow: /\n\n";
+        }
+        if(document.getElementById('blockAhrefs').checked) {
+            txt += "User-agent: AhrefsBot\nDisallow: /\n\n";
+        }
+
+        // 3. Sitemap
+        if(sitemap) {
+            txt += `Sitemap: ${sitemap}\n`;
+        }
+
+        // Render with Syntax Highlighting (Fake)
+        const html = txt
+            .replace(/User-agent:/g, '<span class="keyword">User-agent:</span>')
+            .replace(/Disallow:/g, '<span class="keyword">Disallow:</span>')
+            .replace(/Allow:/g, '<span class="keyword">Allow:</span>')
+            .replace(/Sitemap:/g, '<span class="keyword">Sitemap:</span>')
+            .replace(/Crawl-delay:/g, '<span class="keyword">Crawl-delay:</span>');
+
+        document.getElementById('output').innerHTML = html;
     }
 
-    function copy() { navigator.clipboard.writeText(document.getElementById('output').value); alert("Copied!"); }
-    function download() {
-        const el = document.createElement('a');
-        el.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(document.getElementById('output').value);
-        el.download = 'robots.txt';
-        el.click();
+    function copyCode() {
+        const text = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Copied to clipboard!");
     }
-    
+
+    function downloadFile() {
+        const text = document.getElementById('output').innerText;
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "robots.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
     // Init
-    gen();
+    update();
 </script>
+
 </body>
 </html>
