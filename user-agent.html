@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My User Agent - Browser & Device Info</title>
+    <meta name="description" content="What is my User Agent? Instantly check your browser, operating system, and device details. Free tool for developers and QA testing.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SYSTEM INFO THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #0ea5e9; /* Sky Blue */
+            --key: #a78bfa;   /* Purple */
+            --val: #2dd4bf;   /* Teal */
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(14, 165, 233, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* RAW UA BOX */
+        .raw-box { 
+            background: #020617; border: var(--border); border-radius: 16px; padding: 30px; 
+            text-align: center; margin-bottom: 40px; box-shadow: var(--glow); position: relative;
+        }
+        .raw-label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .ua-string { 
+            font-family: 'Fira Code', monospace; color: white; font-size: 1.1rem; line-height: 1.6; 
+            word-break: break-all; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;
+        }
+        .copy-btn {
+            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); color: white;
+            border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .copy-btn:hover { background: var(--brand); }
+
+        /* DETAILS GRID */
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        
+        .detail-card { 
+            background: var(--panel); border: var(--border); border-radius: 16px; padding: 25px; 
+            display: flex; align-items: center; gap: 20px; transition: 0.3s;
+        }
+        .detail-card:hover { transform: translateY(-5px); border-color: var(--brand); }
+
+        .icon-box { 
+            width: 60px; height: 60px; background: rgba(14, 165, 233, 0.1); border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--brand);
+        }
+        
+        .info-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
+        .info-val { font-size: 1.4rem; font-weight: 700; color: white; }
+
+        /* JSON VIEW */
+        .json-box { background: #0b0f19; padding: 20px; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; border: var(--border); }
+        .json-key { color: var(--key); }
+        .json-val { color: var(--val); }
+
+        /* TOAST */
+        .status-msg { 
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 25px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+            background: rgba(16, 185, 129, 0.9); color: #020617; 
+        }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 700px) { .details-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>User Agent Analyzer</h1>
+        <p class="subtitle">Detailed breakdown of your Browser, OS, and Device capabilities.</p>
+    </div>
+
+    <div class="raw-box">
+        <div class="raw-label">Your User Agent String</div>
+        <button class="copy-btn" onclick="copyUA()" title="Copy to Clipboard"><i class="fa-regular fa-copy"></i></button>
+        <div class="ua-string" id="rawUA">Loading...</div>
+    </div>
+
+    <div class="details-grid">
+        <div class="detail-card">
+            <div class="icon-box"><i class="fa-brands fa-chrome"></i></div>
+            <div>
+                <div class="info-label">Browser</div>
+                <div class="info-val" id="browserName">Chrome</div>
+            </div>
+        </div>
+        
+        <div class="detail-card">
+            <div class="icon-box"><i class="fa-brands fa-windows"></i></div>
+            <div>
+                <div class="info-label">Operating System</div>
+                <div class="info-val" id="osName">Windows 10</div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <div class="icon-box"><i class="fa-solid fa-laptop"></i></div>
+            <div>
+                <div class="info-label">Device Type</div>
+                <div class="info-val" id="deviceType">Desktop</div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <div class="icon-box"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+            <div>
+                <div class="info-label">Screen Resolution</div>
+                <div class="info-val" id="screenRes">1920 x 1080</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom:15px; color:var(--muted); font-weight:700; text-transform:uppercase; font-size:0.85rem;">Developer JSON Format</div>
+    <div class="json-box" id="jsonOutput">
+        {<br>
+        &nbsp;&nbsp;"browser": "Chrome",<br>
+        &nbsp;&nbsp;"version": "120.0.0.0",<br>
+        &nbsp;&nbsp;"os": "Windows",<br>
+        &nbsp;&nbsp;"platform": "Win32"<br>
+        }
+    </div>
+
+    <div class="seo-section">
+        <h2>What is a User Agent?</h2>
+        <p>
+            A <strong>User Agent (UA)</strong> is a string of text that your web browser sends to every website you visit. It acts like a digital ID card, telling the server which browser you are using, its version number, and your operating system.
+        </p>
+        
+
+        <h3>Why do developers need this?</h3>
+        <ul>
+            <li><strong>Debugging:</strong> If a user reports a bug, the developer needs to know if it's happening on Chrome, Safari, or Firefox to fix it.</li>
+            <li><strong>Responsive Design:</strong> Websites use the UA string to decide whether to serve the "Mobile" version or the "Desktop" version of a page.</li>
+            <li><strong>Bot Detection:</strong> Servers check the UA to identify if a visitor is a human or a crawler (like Googlebot).</li>
+        </ul>
+
+        <h3>Common User Agent Tokens</h3>
+        <p>
+            You might see strange words like "Mozilla/5.0" or "AppleWebKit" in your string even if you use Chrome. This is for historical compatibility reasons. Modern browsers include these tokens so that older websites render correctly.
+        </p>
+    </div>
+
+</div>
+
+<div id="toast" class="status-msg">Copied to Clipboard!</div>
+
+<script>
+    function analyze() {
+        const ua = navigator.userAgent;
+        document.getElementById('rawUA').innerText = ua;
+
+        // Simple Detection Logic (Client Side)
+        let browser = "Unknown";
+        let os = "Unknown";
+        let device = "Desktop";
+        let icon = "fa-globe";
+        let osIcon = "fa-microchip";
+
+        // Browser
+        if(ua.includes("Firefox")) { browser = "Firefox"; icon = "fa-firefox"; }
+        else if(ua.includes("SamsungBrowser")) { browser = "Samsung Internet"; icon = "fa-android"; }
+        else if(ua.includes("Opera") || ua.includes("OPR")) { browser = "Opera"; icon = "fa-opera"; }
+        else if(ua.includes("Trident")) { browser = "Internet Explorer"; icon = "fa-internet-explorer"; }
+        else if(ua.includes("Edge")) { browser = "Edge"; icon = "fa-edge"; }
+        else if(ua.includes("Chrome")) { browser = "Chrome"; icon = "fa-chrome"; }
+        else if(ua.includes("Safari")) { browser = "Safari"; icon = "fa-safari"; }
+
+        // OS
+        if(ua.includes("Win")) { os = "Windows"; osIcon = "fa-windows"; }
+        else if(ua.includes("Mac")) { os = "MacOS"; osIcon = "fa-apple"; }
+        else if(ua.includes("Linux")) { os = "Linux"; osIcon = "fa-linux"; }
+        else if(ua.includes("Android")) { os = "Android"; osIcon = "fa-android"; device = "Mobile"; }
+        else if(ua.includes("iPhone") || ua.includes("iPad")) { os = "iOS"; osIcon = "fa-apple"; device = "Mobile"; }
+
+        // Mobile Check
+        if(/Mobi|Android/i.test(ua)) {
+            device = "Mobile";
+        }
+
+        // Screen
+        const res = window.screen.width + " x " + window.screen.height;
+
+        // Render
+        document.getElementById('browserName').innerText = browser;
+        document.querySelector('.fa-chrome').className = `fa-brands ${icon}`;
+        
+        document.getElementById('osName').innerText = os;
+        document.querySelector('.fa-windows').className = `fa-brands ${osIcon}`;
+        
+        document.getElementById('deviceType').innerText = device;
+        if(device === 'Mobile') document.querySelector('.fa-laptop').className = "fa-solid fa-mobile-screen";
+
+        document.getElementById('screenRes').innerText = res;
+
+        // JSON
+        const data = {
+            userAgent: ua,
+            browser: browser,
+            os: os,
+            device: device,
+            resolution: res,
+            language: navigator.language,
+            cookiesEnabled: navigator.cookieEnabled
+        };
+        
+        // Pretty Print JSON
+        let jsonHtml = "{\n";
+        for (const [key, value] of Object.entries(data)) {
+            jsonHtml += `&nbsp;&nbsp;<span class="json-key">"${key}"</span>: <span class="json-val">"${value}"</span>,\n`;
+        }
+        jsonHtml = jsonHtml.slice(0, -2) + "\n}"; // Remove last comma
+        document.getElementById('jsonOutput').innerHTML = jsonHtml;
+    }
+
+    function copyUA() {
+        navigator.clipboard.writeText(navigator.userAgent);
+        const t = document.getElementById('toast');
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2000);
+    }
+
+    analyze();
+</script>
+
+</body>
+</html>

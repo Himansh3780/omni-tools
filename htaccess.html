@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free .htaccess Generator - Redirects, HTTPS & Security</title>
+    <meta name="description" content="Generate .htaccess files instantly. Create 301 redirects, force HTTPS, block hotlinking, and improve website security.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SERVER CONFIG THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #f97316; /* Orange (Apache) */
+            --code-bg: #0b0f19;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(249, 115, 22, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #f97316, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        
+        /* INPUT PANEL */
+        .input-panel { background: var(--panel); border: var(--border); border-radius: 16px; padding: 30px; height: fit-content; }
+        
+        .section-label { 
+            color: var(--brand); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; 
+            font-size: 0.85rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; 
+            display: flex; align-items: center; gap: 8px; margin-top: 20px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; background: #020617; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
+        .toggle-info { font-size: 0.9rem; font-weight: 600; color: white; }
+        .toggle-sub { font-size: 0.75rem; color: var(--muted); display: block; }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--brand); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; }
+        input[type="text"] { 
+            width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; 
+            color: white; border-radius: 8px; font-size: 0.9rem; font-family: 'Fira Code', monospace;
+        }
+
+        /* OUTPUT PANEL */
+        .output-panel { position: sticky; top: 20px; }
+        
+        .code-card { 
+            background: var(--code-bg); border: var(--border); border-radius: 12px; overflow: hidden; 
+            box-shadow: var(--glow); min-height: 400px; display: flex; flex-direction: column;
+        }
+        .code-header { 
+            padding: 10px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.02);
+        }
+        .file-name { font-family: 'Fira Code', monospace; color: var(--muted); font-size: 0.9rem; }
+        
+        .code-display { 
+            padding: 20px; font-family: 'Fira Code', monospace; color: #e2e8f0; font-size: 0.85rem; 
+            line-height: 1.6; white-space: pre; overflow: auto; flex: 1;
+        }
+        
+        .comment { color: #64748b; font-style: italic; }
+        .cmd { color: #f97316; } 
+
+        .btn-copy { 
+            background: var(--brand); color: white; border: none; padding: 6px 15px; 
+            border-radius: 6px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+        }
+        .btn-copy:hover { opacity: 0.9; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 850px) { .workspace { grid-template-columns: 1fr; } .output-panel { position: static; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>.htaccess Generator</h1>
+        <p class="subtitle">Configuration tool for Apache servers. Redirects, HTTPS, and Security.</p>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="input-panel">
+            
+            <div class="section-label"><i class="fa-solid fa-lock"></i> Security & SSL</div>
+            
+            <div class="toggle-row">
+                <div>
+                    <span class="toggle-info">Force HTTPS</span>
+                    <span class="toggle-sub">Redirect http:// to https://</span>
+                </div>
+                <label class="switch"><input type="checkbox" id="forceHttps" onchange="generate()"><span class="slider"></span></label>
+            </div>
+
+            <div class="toggle-row">
+                <div>
+                    <span class="toggle-info">Force "www"</span>
+                    <span class="toggle-sub">Redirect example.com to www.example.com</span>
+                </div>
+                <label class="switch"><input type="checkbox" id="forceWWW" onchange="generate()"><span class="slider"></span></label>
+            </div>
+
+            <div class="toggle-row">
+                <div>
+                    <span class="toggle-info">Disable Directory Browsing</span>
+                    <span class="toggle-sub">Hide file lists in folders</span>
+                </div>
+                <label class="switch"><input type="checkbox" id="disableBrowse" onchange="generate()"><span class="slider"></span></label>
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-shield-halved"></i> Protection</div>
+
+            <div class="toggle-row">
+                <div>
+                    <span class="toggle-info">Block Hotlinking</span>
+                    <span class="toggle-sub">Prevent others stealing your images</span>
+                </div>
+                <label class="switch"><input type="checkbox" id="blockHotlink" onchange="toggleHotlink()"><span class="slider"></span></label>
+            </div>
+            
+            <div id="hotlinkInput" style="display:none; margin-bottom:15px;">
+                <label>Your Domain (without http)</label>
+                <input type="text" id="domain" placeholder="mysite.com" oninput="generate()">
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-diamond-turn-right"></i> Custom Redirect (301)</div>
+            <div class="form-group">
+                <label>Old Page (Relative Path)</label>
+                <input type="text" id="oldPage" placeholder="/old-page.html" oninput="generate()">
+            </div>
+            <div class="form-group">
+                <label>New Page (Relative Path)</label>
+                <input type="text" id="newPage" placeholder="/new-page" oninput="generate()">
+            </div>
+
+            <div class="section-label"><i class="fa-solid fa-file-circle-xmark"></i> Custom Error Pages</div>
+            <div class="form-group">
+                <label>404 Page (Not Found)</label>
+                <input type="text" id="err404" placeholder="/404.html" oninput="generate()">
+            </div>
+
+        </div>
+
+        <div class="output-panel">
+            <div class="code-card">
+                <div class="code-header">
+                    <span class="file-name"><i class="fa-solid fa-server"></i> .htaccess</span>
+                    <button class="btn-copy" onclick="copyCode()">Copy Code</button>
+                </div>
+                <div class="code-display" id="output"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>What is an .htaccess file?</h2>
+        <p>
+            An <strong>.htaccess</strong> (Hypertext Access) file is a configuration file used on web servers running the Apache software. It allows you to modify server settings for specific directories without needing access to the main server configuration file.
+        </p>
+        
+
+        <h3>Why use .htaccess?</h3>
+        <ul>
+            <li><strong>301 Redirects:</strong> Permanently move a URL from one place to another. Essential for maintaining SEO when you change your site structure.</li>
+            <li><strong>Security:</strong> You can password protect folders, block specific IP addresses, or disable directory listings so hackers can't see your files.</li>
+            <li><strong>Performance:</strong> You can enable GZIP compression and browser caching to make your site load faster.</li>
+        </ul>
+
+        <h3>Warning</h3>
+        <p>
+            The .htaccess file is extremely powerful. A single syntax error (like a missing space) can cause your entire website to crash with a "500 Internal Server Error." Always back up your existing file before uploading a new one.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function toggleHotlink() {
+        const check = document.getElementById('blockHotlink').checked;
+        document.getElementById('hotlinkInput').style.display = check ? 'block' : 'none';
+        generate();
+    }
+
+    function generate() {
+        let txt = "# .htaccess generated by OmniTools\n";
+        txt += "RewriteEngine On\n\n";
+
+        // 1. Directory Browsing
+        if(document.getElementById('disableBrowse').checked) {
+            txt += "# Disable Directory Browsing\n";
+            txt += "Options -Indexes\n\n";
+        }
+
+        // 2. HTTPS
+        if(document.getElementById('forceHttps').checked) {
+            txt += "# Force HTTPS\n";
+            txt += "RewriteCond %{HTTPS} off\n";
+            txt += "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\n\n";
+        }
+
+        // 3. Force WWW
+        if(document.getElementById('forceWWW').checked) {
+            txt += "# Force WWW\n";
+            txt += "RewriteCond %{HTTP_HOST} !^www\\.\n";
+            txt += "RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\n\n";
+        }
+
+        // 4. Hotlink Protection
+        if(document.getElementById('blockHotlink').checked) {
+            const domain = document.getElementById('domain').value || "mysite.com";
+            txt += "# Prevent Image Hotlinking\n";
+            txt += "RewriteCond %{HTTP_REFERER} !^$\n";
+            txt += `RewriteCond %{HTTP_REFERER} !^http(s)?://(www\\.)?${domain} [NC]\n`;
+            txt += "RewriteRule \\.(jpg|jpeg|png|gif)$ - [NC,F,L]\n\n";
+        }
+
+        // 5. Custom Redirect
+        const oldP = document.getElementById('oldPage').value;
+        const newP = document.getElementById('newPage').value;
+        if(oldP && newP) {
+            txt += "# Custom 301 Redirect\n";
+            txt += `Redirect 301 ${oldP} ${newP}\n\n`;
+        }
+
+        // 6. 404 Page
+        const err404 = document.getElementById('err404').value;
+        if(err404) {
+            txt += "# Custom Error Pages\n";
+            txt += `ErrorDocument 404 ${err404}\n`;
+        }
+
+        // Syntax Highlighting (Simple)
+        const html = txt
+            .replace(/^#.*/gm, '<span class="comment">$&</span>')
+            .replace(/Rewrite(Engine|Cond|Rule)|Options|Redirect|ErrorDocument/g, '<span class="cmd">$&</span>');
+
+        document.getElementById('output').innerHTML = html;
+    }
+
+    function copyCode() {
+        const text = document.getElementById('output').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Code copied!");
+    }
+
+    // Init
+    generate();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Resolution Simulator - Responsive Design Tester</title>
+    <meta name="description" content="Test your website on different screen resolutions. Simulate iPhone, iPad, Laptop, and Desktop viewports instantly. Free responsive design checker.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- DESIGNER THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #d946ef; /* Magenta (Design) */
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(217, 70, 239, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #d946ef, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* CONTROLS BAR */
+        .controls-bar { 
+            background: var(--panel); padding: 20px; border-radius: 16px; border: var(--border); 
+            display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 30px; box-shadow: var(--glow);
+        }
+
+        .url-input { flex: 1; position: relative; min-width: 250px; }
+        .url-input i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+        .url-input input { 
+            width: 100%; padding: 12px 15px 12px 40px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 10px; font-size: 1rem; font-family: 'Outfit', sans-serif;
+        }
+        
+        .device-select { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .device-btn { 
+            background: #0f172a; border: 1px solid #334155; color: var(--muted); padding: 10px 15px; 
+            border-radius: 10px; cursor: pointer; font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .device-btn:hover, .device-btn.active { background: var(--brand); color: white; border-color: var(--brand); }
+
+        .rotate-btn { 
+            width: 42px; height: 42px; border-radius: 10px; background: #334155; color: white; border: none; cursor: pointer; font-size: 1.2rem;
+        }
+        .rotate-btn:hover { background: white; color: black; }
+
+        /* PREVIEW AREA */
+        .preview-stage { 
+            background: #020617; padding: 40px; border-radius: 20px; border: var(--border); 
+            display: flex; justify-content: center; min-height: 600px; overflow: auto;
+            background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        .device-frame {
+            background: black; border-radius: 30px; padding: 10px; border: 4px solid #334155; 
+            transition: 0.5s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+        }
+        
+        .screen { 
+            background: white; border-radius: 20px; overflow: hidden; flex: 1; position: relative;
+        }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
+
+        .frame-header { height: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 5px; }
+        .camera { width: 60px; height: 6px; background: #334155; border-radius: 10px; }
+
+        .info-msg { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            text-align: center; color: #333; width: 80%;
+        }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+
+        @media(max-width: 800px) { .controls-bar { flex-direction: column; align-items: stretch; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>Screen Resolution Simulator</h1>
+        <p class="subtitle">Test how your website looks on mobile, tablet, and desktop.</p>
+    </div>
+
+    <div class="controls-bar">
+        <div class="url-input">
+            <i class="fa-solid fa-link"></i>
+            <input type="text" id="urlInput" placeholder="Enter URL (e.g. https://example.com)" value="https://www.wikipedia.org">
+        </div>
+        <button class="device-btn active" style="background:var(--brand); color:white; border:none;" onclick="loadFrame()">Load</button>
+
+        <div class="device-select">
+            <button class="device-btn active" onclick="setSize(375, 812, this)"><i class="fa-solid fa-mobile-screen"></i> iPhone X</button>
+            <button class="device-btn" onclick="setSize(414, 896, this)"><i class="fa-solid fa-mobile"></i> iPhone Max</button>
+            <button class="device-btn" onclick="setSize(768, 1024, this)"><i class="fa-solid fa-tablet-screen-button"></i> iPad Mini</button>
+            <button class="device-btn" onclick="setSize(1366, 768, this)"><i class="fa-solid fa-laptop"></i> Laptop</button>
+            <button class="device-btn" onclick="setSize(1920, 1080, this)"><i class="fa-solid fa-desktop"></i> Desktop</button>
+        </div>
+
+        <button class="rotate-btn" title="Rotate" onclick="rotate()"><i class="fa-solid fa-rotate-right"></i></button>
+    </div>
+
+    <div class="preview-stage">
+        <div class="device-frame" id="frame" style="width: 395px; height: 832px;"> <div class="frame-header"><div class="camera"></div></div>
+            <div class="screen">
+                <div class="info-msg" id="placeholderMsg">
+                    <h3>Preview Loading...</h3>
+                    <p style="font-size:0.8rem; margin-top:10px;">Note: Many major sites (Google, Facebook) block iframes for security. Try a personal blog or small site.</p>
+                </div>
+                <iframe id="viewer" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>Why Responsive Design Testing Matters</h2>
+        <p>
+            In 2025, over 60% of all web traffic comes from mobile devices. If your website looks broken on an iPhone, you are losing more than half of your potential customers. Google also uses "Mobile-First Indexing," meaning they rank your site based on its mobile version, not the desktop one.
+        </p>
+        
+
+        <h3>Common Breakpoints</h3>
+        <ul>
+            <li><strong>Mobile (Portrait):</strong> 320px - 480px</li>
+            <li><strong>Tablet (Portrait):</strong> 768px - 1024px</li>
+            <li><strong>Laptop:</strong> 1366px - 1440px</li>
+            <li><strong>Desktop:</strong> 1920px+</li>
+        </ul>
+
+        <h3>How to use this tool</h3>
+        <p>
+            Simply enter your URL above. Our tool simulates the viewport size of popular devices. You can also use the "Rotate" button to switch between Portrait and Landscape modes to check your layout flexibility.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    let currentW = 375;
+    let currentH = 812;
+
+    function loadFrame() {
+        let url = document.getElementById('urlInput').value;
+        if(!url) return;
+        if(!url.startsWith('http')) url = 'https://' + url;
+        
+        document.getElementById('viewer').src = url;
+        document.getElementById('placeholderMsg').style.display = 'none';
+    }
+
+    function setSize(w, h, btn) {
+        currentW = w;
+        currentH = h;
+        
+        // Update Buttons
+        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        applySize();
+    }
+
+    function rotate() {
+        // Swap dimensions
+        let temp = currentW;
+        currentW = currentH;
+        currentH = temp;
+        applySize();
+    }
+
+    function applySize() {
+        const frame = document.getElementById('frame');
+        // Add padding for the "Bezel"
+        frame.style.width = (currentW + 20) + "px";
+        frame.style.height = (currentH + 20) + "px";
+    }
+
+    // Init with Wikipedia (Usually allows iframing)
+    loadFrame();
+</script>
+
+</body>
+</html>

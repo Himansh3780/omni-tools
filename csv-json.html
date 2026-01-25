@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to JSON Converter - Free Excel to JSON Tool</title>
+    <meta name="description" content="Convert CSV files to JSON format instantly. Handles commas inside quotes correctly. Free, secure, and client-side conversion for developers.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- TECH THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --code: #3b82f6;  /* Blue */
+            --success: #10b981;
+            --error: #f43f5e;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 10px; height: 600px; }
+        
+        /* PANELS */
+        .panel { display: flex; flex-direction: column; background: var(--panel); border: var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--glow); }
+        .panel-header { background: rgba(0,0,0,0.2); padding: 15px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .panel-title { font-weight: 700; color: var(--success); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .code-area { 
+            flex: 1; width: 100%; background: #0b0f19; border: none; color: #e2e8f0; 
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; resize: none;
+        }
+        .code-area::placeholder { color: rgba(255,255,255,0.1); }
+
+        /* MIDDLE CONTROLS */
+        .controls { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        .control-btn { 
+            width: 50px; height: 50px; border-radius: 50%; border: var(--border); background: var(--panel); 
+            color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; transition: 0.2s;
+        }
+        .control-btn:hover { background: var(--success); color: #020617; transform: scale(1.1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); border-color: var(--success); }
+
+        /* ACTION BAR */
+        .action-bar { display: flex; gap: 10px; }
+        .sm-btn { 
+            padding: 5px 12px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #334155; 
+            background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s;
+        }
+        .sm-btn:hover { color: white; border-color: white; }
+        .download-btn { background: var(--code); color: white; border: none; font-weight: 700; }
+        .download-btn:hover { background: #60a5fa; border: none; }
+
+        /* TOAST */
+        .status-msg { 
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 25px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+        }
+        .error { background: rgba(244, 63, 94, 0.9); color: white; }
+        .success { background: rgba(16, 185, 129, 0.9); color: #020617; }
+
+        /* SAMPLE LINK */
+        .sample-link { text-align: center; margin-bottom: 20px; }
+        .sample-link a { color: var(--success); text-decoration: none; font-size: 0.9rem; cursor: pointer; border-bottom: 1px dashed var(--success); }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--muted); margin-bottom: 20px; font-size: 0.85rem; }
+
+        @media(max-width: 900px) { 
+            .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr auto 1fr; height: auto; } 
+            .controls { flex-direction: row; padding: 20px 0; }
+            .code-area { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>CSV to JSON Converter</h1>
+        <p class="subtitle">Convert Comma Separated Values (Excel) to JSON arrays instantly.</p>
+    </div>
+
+    <div class="sample-link">
+        <a onclick="loadSample()">Load Sample CSV</a>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Input CSV</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="clearAll()" title="Clear"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+            <textarea id="csvInput" class="code-area" placeholder="id,name,role&#10;1,Alice,Dev&#10;2,Bob,Design"></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="convert()" title="Convert CSV to JSON">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Output JSON</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="copyJSON()" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                    <button class="sm-btn download-btn" onclick="downloadJSON()" title="Download"><i class="fa-solid fa-download"></i> JSON</button>
+                </div>
+            </div>
+            <textarea id="jsonOutput" class="code-area" placeholder='[{"id":"1", "name":"Alice"...}]' readonly></textarea>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>How to Convert Excel CSV to JSON?</h2>
+        <p>
+            <strong>CSV</strong> (Comma Separated Values) is the default format for exporting data from spreadsheets like Microsoft Excel and Google Sheets. However, modern web applications and APIs communicate using <strong>JSON</strong> (JavaScript Object Notation).
+        </p>
+        
+        
+        <p>
+            Our tool acts as the bridge. It parses your CSV text, identifies the first row as the "Headers" (keys), and converts every subsequent row into a JSON object using those keys.
+        </p>
+
+        <h3>Features</h3>
+        <ul>
+            <li><strong>Intelligent Parsing:</strong> Handles complex cases like `"New York, NY"` where commas are inside quotes.</li>
+            <li><strong>Privacy Focused:</strong> No data is uploaded. Conversion happens locally in your browser.</li>
+            <li><strong>Formatting:</strong> Output JSON is automatically indented (beautified) for readability.</li>
+        </ul>
+
+        <h3>Common Issues</h3>
+        <p>Ensure your CSV has a <strong>Header Row</strong>. The first line of your text is used to name the fields in the JSON object.</p>
+        <div class="code-block">
+            <strong>Input CSV:</strong><br>
+            ID,Name<br>
+            1,John<br><br>
+            <strong>Output JSON:</strong><br>
+            [ { "ID": "1", "Name": "John" } ]
+        </div>
+    </div>
+
+</div>
+
+<div id="toast" class="status-msg"></div>
+
+<script>
+    function showToast(msg, type) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.className = `status-msg ${type}`;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function loadSample() {
+        const sample = `id,name,email,role
+101,"Doe, John",john@example.com,Admin
+102,Jane Smith,jane@test.com,User
+103,Sam Wilson,sam@demo.co,Guest`;
+        document.getElementById('csvInput').value = sample;
+    }
+
+    function clearAll() {
+        document.getElementById('csvInput').value = '';
+        document.getElementById('jsonOutput').value = '';
+    }
+
+    function convert() {
+        const raw = document.getElementById('csvInput').value.trim();
+        if(!raw) return;
+
+        try {
+            const lines = raw.split(/\r?\n/);
+            if(lines.length < 2) {
+                showToast('CSV must have header and data', 'error');
+                return;
+            }
+
+            // Parse Headers
+            const headers = parseCSVLine(lines[0]);
+            const jsonResult = [];
+
+            // Parse Body
+            for(let i=1; i<lines.length; i++) {
+                if(!lines[i].trim()) continue;
+                
+                const currentLine = parseCSVLine(lines[i]);
+                const obj = {};
+
+                headers.forEach((header, index) => {
+                    // Map header to value, handle missing trailing commas
+                    obj[header] = currentLine[index] || ""; 
+                });
+
+                jsonResult.push(obj);
+            }
+
+            document.getElementById('jsonOutput').value = JSON.stringify(jsonResult, null, 2);
+            showToast('Conversion Successful!', 'success');
+
+        } catch(e) {
+            showToast('Error parsing CSV', 'error');
+            console.error(e);
+        }
+    }
+
+    // Robust CSV Splitter (Handles "Value, With Comma")
+    function parseCSVLine(text) {
+        const result = [];
+        let cur = '';
+        let inQuote = false;
+
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            
+            if (char === '"' && text[i+1] === '"') {
+                // Escaped quote ("") -> skip one and add quote
+                cur += '"';
+                i++; 
+            } else if (char === '"') {
+                // Toggle quote state
+                inQuote = !inQuote;
+            } else if (char === ',' && !inQuote) {
+                // Delimiter found
+                result.push(cur);
+                cur = '';
+            } else {
+                cur += char;
+            }
+        }
+        result.push(cur); // Push last value
+        return result;
+    }
+
+    function copyJSON() {
+        const val = document.getElementById('jsonOutput').value;
+        if(!val) return;
+        navigator.clipboard.writeText(val);
+        showToast('Copied to Clipboard!', 'success');
+    }
+
+    function downloadJSON() {
+        const val = document.getElementById('jsonOutput').value;
+        if(!val) return;
+
+        const blob = new Blob([val], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'data.json');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is My IP Address? - Free Location & ISP Checker</title>
+    <meta name="description" content="Check your public IP address instantly. See your geolocation, ISP, City, and Country. Detect if your VPN is working correctly.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CYBER SECURITY THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #22d3ee; /* Cyan */
+            --safe: #10b981;
+            --danger: #f43f5e;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px rgba(34, 211, 238, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #22d3ee, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* IP HERO CARD */
+        .hero-card {
+            background: #020617; border: var(--border); border-radius: 20px; padding: 40px;
+            text-align: center; box-shadow: var(--glow); position: relative; overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        /* Scanning Animation */
+        .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--brand); box-shadow: 0 0 10px var(--brand);
+            animation: scan 3s infinite linear; opacity: 0.5;
+        }
+
+        .ip-label { font-size: 0.9rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        
+        .ip-display { 
+            font-family: 'Fira Code', monospace; font-size: 3.5rem; font-weight: 700; color: white; 
+            margin-bottom: 20px; text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+            word-break: break-all;
+        }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 8px; background: rgba(244, 63, 94, 0.1); 
+            color: var(--danger); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+        .pulse { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; box-shadow: 0 0 10px var(--danger); animation: pulse 2s infinite; }
+
+        /* DATA GRID */
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        
+        .data-card { 
+            background: var(--panel); border: var(--border); border-radius: 16px; padding: 25px; 
+            display: flex; flex-direction: column; gap: 5px; transition: 0.3s;
+        }
+        .data-card:hover { transform: translateY(-5px); border-color: var(--brand); }
+
+        .d-icon { font-size: 1.5rem; color: var(--brand); margin-bottom: 10px; }
+        .d-label { font-size: 0.8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+        .d-val { font-size: 1.2rem; font-weight: 700; color: white; }
+
+        /* MAP PLACEHOLDER */
+        .map-box {
+            background: #1e293b; border-radius: 16px; height: 300px; border: var(--border);
+            display: flex; align-items: center; justify-content: center; color: var(--muted);
+            background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        @media(max-width: 768px) { .ip-display { font-size: 2rem; } .data-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>What Is My IP?</h1>
+        <p class="subtitle">Analyze your public network connection details.</p>
+    </div>
+
+    <div class="hero-card">
+        <div class="scan-line"></div>
+        <div class="ip-label">Your Public IPv4 Address</div>
+        <div class="ip-display" id="ipAddress">Loading...</div>
+        
+        <div class="status-badge" id="securityStatus">
+            <div class="pulse"></div> Exposed (No VPN Detected)
+        </div>
+    </div>
+
+    <div class="data-grid">
+        <div class="data-card">
+            <div class="d-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="d-label">ISP (Provider)</div>
+            <div class="d-val" id="isp">...</div>
+        </div>
+        <div class="data-card">
+            <div class="d-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="d-label">Location</div>
+            <div class="d-val" id="location">...</div>
+        </div>
+        <div class="data-card">
+            <div class="d-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="d-label">Timezone</div>
+            <div class="d-val" id="timezone">...</div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>Understanding IP Addresses and Privacy</h2>
+        <p>
+            An <strong>IP (Internet Protocol) Address</strong> is a unique string of numbers separated by periods that identifies each computer using the Internet Protocol to communicate over a network. Think of it as your computer's "home address" on the web.
+        </p>
+
+        <h3>Public vs. Private IP</h3>
+        <p>
+            Most devices have two IP addresses:
+        </p>
+        
+        <ul>
+            <li><strong>Private IP:</strong> Used inside your home network (e.g., <code>192.168.1.5</code>). This is how your phone talks to your printer. It is not visible to the outside world.</li>
+            <li><strong>Public IP:</strong> Assigned by your ISP (Internet Service Provider). This is the address websites see when you visit them. <strong>This tool shows your Public IP.</strong></li>
+        </ul>
+
+        <h3>IPv4 vs. IPv6</h3>
+        <p>
+            We are running out of IP addresses! The old standard, <strong>IPv4</strong> (e.g., <code>192.0.2.1</code>), allows for 4.3 billion unique addresses. The new standard, <strong>IPv6</strong> (e.g., <code>2001:0db8:85a3...</code>), allows for 340 undecillion addresses, solving the shortage.
+        </p>
+        
+
+        <h3>Why hide your IP?</h3>
+        <p>
+            Your IP address reveals your approximate physical location (City/State) and your ISP. Hackers or advertisers can use this data to track your online activity. Using a <strong>VPN (Virtual Private Network)</strong> masks your real IP, replacing it with one from a secure server.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    async function fetchIP() {
+        try {
+            // Using ipapi.co (Free tier, no key required for client-side limited use)
+            const response = await fetch('https://ipapi.co/json/');
+            const data = await response.json();
+
+            if(data.error) throw new Error("Rate Limited");
+
+            document.getElementById('ipAddress').innerText = data.ip;
+            document.getElementById('isp').innerText = data.org || "Unknown ISP";
+            document.getElementById('location').innerText = `${data.city}, ${data.country_name}`;
+            document.getElementById('timezone').innerText = data.timezone;
+            
+        } catch (e) {
+            // Fallback if rate limited
+            fallbackIP();
+        }
+    }
+
+    async function fallbackIP() {
+        try {
+            // Very basic IP fetch, no location data
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            document.getElementById('ipAddress').innerText = data.ip;
+            document.getElementById('isp').innerText = "Unknown (API Limit)";
+            document.getElementById('location').innerText = "Unknown";
+        } catch(e) {
+            document.getElementById('ipAddress').innerText = "Unavailable";
+        }
+    }
+
+    // Init
+    fetchIP();
+</script>
+
+</body>
+</html>

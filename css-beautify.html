@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Beautifier - Unminify & Format CSS Code Online</title>
+    <meta name="description" content="Free CSS Beautifier and Formatter. Instantly unminify messy CSS code. Add indentation, newlines, and fix spacing for better readability.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- DEV THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #ec4899; /* Pink (Creative/Design) */
+            --code: #3b82f6;  /* Blue */
+            --success: #10b981;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(236, 72, 153, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #ec4899, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* SETTINGS BAR */
+        .settings-bar { 
+            display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; 
+            background: #020617; padding: 15px; border-radius: 12px; border: var(--border); width: fit-content; margin: 0 auto 30px auto;
+        }
+        .toggle { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.85rem; cursor: pointer; }
+        .toggle input { accent-color: var(--brand); cursor: pointer; }
+        
+        /* WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 10px; height: 600px; }
+        
+        /* PANELS */
+        .panel { display: flex; flex-direction: column; background: var(--panel); border: var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--glow); }
+        .panel-header { background: rgba(0,0,0,0.2); padding: 15px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .panel-title { font-weight: 700; color: var(--brand); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .code-area { 
+            flex: 1; width: 100%; background: #0b0f19; border: none; color: #e2e8f0; 
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; resize: none;
+        }
+        .code-area::placeholder { color: rgba(255,255,255,0.1); }
+
+        /* MIDDLE CONTROLS */
+        .controls { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        .control-btn { 
+            width: 50px; height: 50px; border-radius: 50%; border: var(--border); background: var(--panel); 
+            color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; transition: 0.2s;
+        }
+        .control-btn:hover { background: var(--brand); color: white; transform: scale(1.1); box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); border-color: var(--brand); }
+
+        /* ACTION BAR */
+        .action-bar { display: flex; gap: 10px; }
+        .sm-btn { 
+            padding: 5px 12px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #334155; 
+            background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s;
+        }
+        .sm-btn:hover { color: white; border-color: white; }
+
+        /* TOAST */
+        .status-msg { 
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 25px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+        }
+        .success { background: rgba(16, 185, 129, 0.9); color: #020617; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--muted); margin-bottom: 20px; font-size: 0.85rem; }
+
+        @media(max-width: 900px) { 
+            .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr auto 1fr; height: auto; } 
+            .controls { flex-direction: row; padding: 20px 0; }
+            .code-area { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>CSS Beautifier</h1>
+        <p class="subtitle">Clean, format, and organize your Cascading Style Sheets.</p>
+    </div>
+
+    <div class="settings-bar">
+        <label class="toggle"><input type="radio" name="indent" value="space" checked> 4 Spaces</label>
+        <label class="toggle"><input type="radio" name="indent" value="tab"> Tab Indent</label>
+        <label class="toggle" style="margin-left:15px;"><input type="checkbox" id="addBrackets" checked> Open Bracket on New Line</label>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Messy CSS / Minified</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="clearAll()" title="Clear"><i class="fa-solid fa-trash"></i></button>
+                    <button class="sm-btn" onclick="pasteCode()" title="Paste"><i class="fa-regular fa-clipboard"></i></button>
+                </div>
+            </div>
+            <textarea id="inputCode" class="code-area" placeholder="body{background:#fff;color:#000}h1{font-size:2rem}"></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="beautify()" title="Format CSS">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Beautified CSS</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="copyCode()" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+            <textarea id="outputCode" class="code-area" readonly></textarea>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>What is CSS Beautification?</h2>
+        <p>
+            CSS (Cascading Style Sheets) is often "minified" (compressed) to make websites load faster. While this is great for browsers, it is terrible for humans. Minified code looks like one giant block of text with no spaces or line breaks.
+        </p>
+        
+        <p>
+            A <strong>CSS Beautifier</strong> takes that messy code and reformats it with proper indentation, line breaks, and spacing, making it easy to read and edit again.
+        </p>
+
+        <h3>When should you use this tool?</h3>
+        <ul>
+            <li><strong>Debugging:</strong> If you inspect a website and the CSS is minified, paste it here to understand how it works.</li>
+            <li><strong>Learning:</strong> See how professional templates structure their styling.</li>
+            <li><strong>Legacy Code:</strong> If you inherit an old project where the original source files are lost, this tool can recover readable CSS from the production files.</li>
+        </ul>
+
+        <h3>Best Practices for Clean CSS</h3>
+        <p>
+            1. <strong>Consistent Indentation:</strong> Always stick to either 2 spaces, 4 spaces, or Tabs. Do not mix them.<br>
+            2. <strong>Grouping:</strong> Group related selectors (e.g., all Header styles together) to make maintenance easier.<br>
+            3. <strong>Shorthand Properties:</strong> Instead of writing `margin-top`, `margin-right`, etc., use the shorthand `margin: 10px 20px;` to keep code concise.
+        </p>
+    </div>
+
+</div>
+
+<div id="toast" class="status-msg success">Copied to Clipboard!</div>
+
+<script>
+    function showToast() {
+        const t = document.getElementById('toast');
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 2000);
+    }
+
+    function clearAll() {
+        document.getElementById('inputCode').value = '';
+        document.getElementById('outputCode').value = '';
+    }
+
+    async function pasteCode() {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('inputCode').value = text;
+    }
+
+    function beautify() {
+        let code = document.getElementById('inputCode').value;
+        if(!code) return;
+
+        // Settings
+        const useTab = document.querySelector('input[name="indent"]:checked').value === 'tab';
+        const indent = useTab ? '\t' : '    ';
+        const openNewLine = document.getElementById('addBrackets').checked;
+
+        // Basic Formatting Logic (Regex)
+        // 1. Add newlines after semicolons
+        code = code.replace(/;/g, ';\n');
+        
+        // 2. Add newlines after opening bracket
+        code = code.replace(/{/g, '{\n');
+        
+        // 3. Add newlines after closing bracket
+        code = code.replace(/}/g, '\n}\n\n');
+
+        // 4. Remove extra whitespace
+        code = code.replace(/^\s+/gm, ''); // Trim start of lines
+
+        // 5. Apply Indentation
+        const lines = code.split('\n');
+        let formatted = '';
+        
+        lines.forEach(line => {
+            line = line.trim();
+            if(!line) return;
+
+            if(line.includes('{')) {
+                // Selector line
+                if(openNewLine) {
+                    const parts = line.split('{');
+                    formatted += parts[0].trim() + '\n{\n';
+                } else {
+                    formatted += line + '\n';
+                }
+            } 
+            else if(line.includes('}')) {
+                // Closing line
+                formatted += '}\n\n';
+            } 
+            else {
+                // Property line (Indent it)
+                formatted += indent + line + '\n';
+            }
+        });
+
+        document.getElementById('outputCode').value = formatted.trim();
+    }
+
+    function copyCode() {
+        const code = document.getElementById('outputCode').value;
+        if(!code) return;
+        navigator.clipboard.writeText(code);
+        showToast();
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder & Decoder - Free Online Converter</title>
+    <meta name="description" content="Free URL Encoder and Decoder. Convert text to percent-encoded URL format. Fix broken links and debug query strings instantly.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CONNECTIVITY THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #6366f1; /* Indigo (Links) */
+            --accent: #818cf8;
+            --code-bg: #0b0f19;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #6366f1, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* CONVERTER GRID */
+        .converter-grid { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 20px; align-items: center; }
+        
+        .io-panel { 
+            background: var(--panel); border: var(--border); border-radius: 16px; padding: 20px; 
+            display: flex; flex-direction: column; box-shadow: var(--glow);
+        }
+        .panel-label { font-size: 0.9rem; font-weight: 700; color: var(--brand); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        textarea {
+            flex: 1; min-height: 350px; background: #020617; border: 1px solid #334155; 
+            color: #e2e8f0; padding: 20px; border-radius: 10px; font-family: 'Fira Code', monospace; 
+            font-size: 1rem; resize: none; line-height: 1.6;
+        }
+        textarea:focus { border-color: var(--brand); box-shadow: 0 0 15px rgba(99, 102, 241, 0.1); }
+
+        /* MIDDLE CONTROLS */
+        .middle-actions { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+        .action-btn {
+            width: 60px; height: 60px; border-radius: 16px; background: #334155; color: white;
+            border: 1px solid #475569; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            font-size: 0.8rem; transition: 0.2s; gap: 5px;
+        }
+        .action-btn i { font-size: 1.2rem; }
+        .action-btn:hover { background: var(--brand); border-color: var(--brand); transform: scale(1.1); }
+        .btn-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+
+        /* SAMPLE BUTTONS */
+        .sample-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .pill-btn { 
+            background: rgba(255,255,255,0.05); color: var(--muted); padding: 8px 15px; border-radius: 20px;
+            font-size: 0.85rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+        }
+        .pill-btn:hover { border-color: var(--brand); color: white; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 800px) { .converter-grid { grid-template-columns: 1fr; } .middle-actions { flex-direction: row; padding: 20px 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>URL Encoder / Decoder</h1>
+        <p class="subtitle">Convert text to URL-safe format and back.</p>
+    </div>
+
+    <div class="sample-row">
+        <div class="pill-btn" onclick="loadSample('encode')">Load Sample Text</div>
+        <div class="pill-btn" onclick="loadSample('decode')">Load Sample URL</div>
+        <div class="pill-btn" onclick="clearAll()" style="color:#f43f5e;"><i class="fa-solid fa-trash"></i> Clear</div>
+    </div>
+
+    <div class="converter-grid">
+        <div class="io-panel">
+            <div class="panel-label">Input</div>
+            <textarea id="input" placeholder="Enter text or URL here..."></textarea>
+            <div style="margin-top:10px; font-size:0.8rem; color:#64748b; text-align:right;">
+                <i class="fa-regular fa-copy" style="cursor:pointer;" onclick="copy('input')" title="Copy"></i>
+            </div>
+        </div>
+
+        <div class="middle-actions">
+            <button class="action-btn" onclick="convert('encode')" title="Convert Text -> URL">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span class="btn-label">Encode</span>
+            </button>
+
+            <button class="action-btn" onclick="convert('decode')" title="Convert URL -> Text">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span class="btn-label">Decode</span>
+            </button>
+        </div>
+
+        <div class="io-panel">
+            <div class="panel-label">Output</div>
+            <textarea id="output" placeholder="Result..." readonly></textarea>
+            <div style="margin-top:10px; font-size:0.8rem; color:#64748b; text-align:right;">
+                <i class="fa-regular fa-copy" style="cursor:pointer;" onclick="copy('output')" title="Copy"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>What is URL Encoding?</h2>
+        <p>
+            URL Encoding (also known as Percent-Encoding) is a mechanism for encoding information in a Uniform Resource Identifier (URI). Characters that are not allowed in a URL (like spaces, emojis, or special symbols) must be converted into a valid ASCII format.
+        </p>
+        
+
+        <h3>Why do spaces become %20?</h3>
+        <p>
+            The internet protocol does not allow spaces in URLs. Therefore, a space character is replaced by a percent sign followed by its hexadecimal ASCII code. For a space (ASCII 32), the hex value is 20, resulting in <code>%20</code>.
+        </p>
+
+        <h3>Common Encoded Characters</h3>
+        <ul>
+            <li><strong>Space</strong> -> %20</li>
+            <li><strong>@ (At Symbol)</strong> -> %40</li>
+            <li><strong>/ (Forward Slash)</strong> -> %2F</li>
+            <li><strong>: (Colon)</strong> -> %3A</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    function loadSample(type) {
+        if(type === 'encode') {
+            document.getElementById('input').value = "Hello World! How are you? @2025 #coding";
+        } else {
+            document.getElementById('output').value = "Hello%20World!%20How%20are%20you%3F%20%402025%20%23coding";
+            // For decoding demo, we put encoded string in right, user clicks decode to move left? 
+            // Better UX: Put encoded in Left for decoding flow
+            document.getElementById('input').value = "https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dhello%20world";
+        }
+    }
+
+    function clearAll() {
+        document.getElementById('input').value = '';
+        document.getElementById('output').value = '';
+    }
+
+    function convert(mode) {
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const val = input.value;
+
+        try {
+            if(mode === 'encode') {
+                // encodeURIComponent is safer for query strings than encodeURI
+                output.value = encodeURIComponent(val);
+            } else {
+                output.value = decodeURIComponent(val);
+            }
+        } catch(e) {
+            output.value = "Error: Invalid URL format.";
+        }
+    }
+
+    function copy(id) {
+        const el = document.getElementById(id);
+        el.select();
+        navigator.clipboard.writeText(el.value);
+        alert("Copied to clipboard!");
+    }
+</script>
+
+</body>
+</html>

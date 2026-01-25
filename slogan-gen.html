@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Slogan Generator - Catchy Taglines for Business</title>
+    <meta name="description" content="Generate catchy slogans and taglines for your brand instantly. Free AI-powered slogan maker for startups, marketing campaigns, and social media.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CREATIVE THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #f472b6; /* Pink (Playful) */
+            --accent: #8b5cf6; /* Purple */
+            --gradient: linear-gradient(135deg, #f472b6 0%, #8b5cf6 100%);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* HERO INPUT */
+        .hero { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.2rem; margin-bottom: 40px; }
+
+        .search-box { 
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 50px; border: var(--border);
+            display: inline-flex; width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(244, 114, 182, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .search-box input {
+            flex: 1; background: transparent; border: none; padding: 15px 25px; font-size: 1.2rem; color: white; font-weight: 600; outline: none;
+        }
+        .search-box input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .generate-btn {
+            background: var(--gradient); color: white; border: none; padding: 15px 40px; border-radius: 40px;
+            font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+        }
+        .generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(244, 114, 182, 0.5); }
+
+        /* RESULTS LIST */
+        .results-container { max-width: 700px; margin: 0 auto; min-height: 200px; }
+
+        .slogan-card {
+            background: var(--panel); border: var(--border); border-radius: 12px; padding: 20px 30px;
+            margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .slogan-card:hover { transform: translateX(10px); border-color: var(--brand); background: rgba(30, 41, 59, 0.8); }
+        
+        .slogan-text { font-size: 1.2rem; font-weight: 600; color: white; }
+        
+        .copy-icon { 
+            width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center; color: var(--muted); transition: 0.2s;
+        }
+        .slogan-card:hover .copy-icon { background: var(--brand); color: white; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; color: var(--muted); padding: 40px; }
+        .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { h1 { font-size: 2rem; } .search-box { flex-direction: column; border-radius: 20px; } .search-box input { text-align: center; } .generate-btn { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="hero">
+        <h1>Slogan Generator</h1>
+        <p class="subtitle">Enter a keyword to generate hundreds of catchy taglines.</p>
+
+        <div class="search-box">
+            <input type="text" id="keyword" placeholder="e.g. Coffee, Marketing, Speed..." onkeypress="handleEnter(event)">
+            <button class="generate-btn" onclick="generateSlogans()">Create Slogans</button>
+        </div>
+    </div>
+
+    <div class="results-container" id="results">
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-quote-left"></i></div>
+            <p>Your slogan is waiting. Enter a keyword above.</p>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>How to Create a Memorable Slogan</h2>
+        <p>
+            A great slogan (or tagline) acts as the "hook" that stays in your customer's mind. Think of Nike's "Just Do It" or Apple's "Think Different." These short phrases encapsulate the entire philosophy of the brand.
+        </p>
+
+        <h3>3 Rules for a Sticky Tagline</h3>
+        <ul>
+            <li><strong>Keep it Short:</strong> The best slogans are usually 3 to 5 words long.</li>
+            <li><strong>Focus on Benefit:</strong> Don't just say what you do; say how it <em>feels</em>. Instead of "We sell fast cars," try "The Ultimate Driving Machine."</li>
+            <li><strong>Be Honest:</strong> Ensure your slogan aligns with your actual brand promise.</li>
+        </ul>
+
+        <h3>Why use a Slogan Generator?</h3>
+        <p>
+            Writer's block is real. Our tool uses proven marketing formulas to mix your keyword with powerful verbs and adjectives. Even if you don't use the exact result, it will spark the creative idea that leads to your perfect tagline.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    // --- TEMPLATES ---
+    const templates = [
+        "The Spirit of {key}.",
+        "{key}. Just do it.",
+        "Your {key}, Reimagined.",
+        "Simply {key}.",
+        "I'm Lovin' {key}.",
+        "The Ultimate {key} Machine.",
+        "Maybe she's born with it. Maybe it's {key}.",
+        "Be {key}.",
+        "Think {key}.",
+        "Driven by {key}.",
+        "Quality {key} you can trust.",
+        "{key} for the rest of us.",
+        "Make the most of {key}.",
+        "Get your {key} on.",
+        "Nothing tastes like {key}.",
+        "The {key} of champions.",
+        "Live. Love. {key}.",
+        "Pure {key}.",
+        "Start your day with {key}.",
+        "Smart. Beautiful. {key}.",
+        "The future of {key}.",
+        "{key} - It's a lifestyle.",
+        "Because you deserve {key}.",
+        "Excellence in {key}.",
+        "Let's talk {key}.",
+        "Unlock your {key}.",
+        "Passion for {key}.",
+        "Everything is better with {key}."
+    ];
+
+    function handleEnter(e) {
+        if(e.key === 'Enter') generateSlogans();
+    }
+
+    function generateSlogans() {
+        const input = document.getElementById('keyword').value.trim();
+        if(!input) return;
+
+        const container = document.getElementById('results');
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin empty-icon"></i><p>Spinning the creative wheels...</p></div>';
+
+        // Simulate thinking time
+        setTimeout(() => {
+            const capKey = input.charAt(0).toUpperCase() + input.slice(1);
+            const list = [];
+            
+            // Randomize templates and fill
+            const shuffled = templates.sort(() => 0.5 - Math.random());
+            shuffled.slice(0, 15).forEach(t => {
+                list.push(t.replace(/{key}/g, capKey));
+            });
+
+            renderSlogans(list);
+        }, 500);
+    }
+
+    function renderSlogans(list) {
+        const container = document.getElementById('results');
+        container.innerHTML = "";
+
+        list.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'slogan-card';
+            card.onclick = () => copyText(s);
+            card.innerHTML = `
+                <div class="slogan-text">"${s}"</div>
+                <div class="copy-icon"><i class="fa-regular fa-copy"></i></div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text);
+        alert("Slogan copied!");
+    }
+</script>
+
+</body>
+</html>

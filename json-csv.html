@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to CSV Converter - Free Online Data Tool</title>
+    <meta name="description" content="Convert JSON to CSV instantly. Paste your JSON array and get a downloadable CSV file for Excel or Google Sheets. 100% Client-side privacy.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- TECH THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --code: #3b82f6;  /* Blue */
+            --success: #10b981;
+            --error: #f43f5e;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-title { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* EDITOR WORKSPACE */
+        .workspace { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 10px; height: 600px; }
+        
+        /* PANELS */
+        .panel { display: flex; flex-direction: column; background: var(--panel); border: var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--glow); }
+        .panel-header { background: rgba(0,0,0,0.2); padding: 15px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .panel-title { font-weight: 700; color: var(--code); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .code-area { 
+            flex: 1; width: 100%; background: #0b0f19; border: none; color: #e2e8f0; 
+            padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; resize: none;
+        }
+        .code-area::placeholder { color: rgba(255,255,255,0.1); }
+
+        /* MIDDLE CONTROLS */
+        .controls { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        .control-btn { 
+            width: 50px; height: 50px; border-radius: 50%; border: var(--border); background: var(--panel); 
+            color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; transition: 0.2s;
+        }
+        .control-btn:hover { background: var(--code); color: white; transform: scale(1.1); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); border-color: var(--code); }
+
+        /* ACTION BAR */
+        .action-bar { display: flex; gap: 10px; }
+        .sm-btn { 
+            padding: 5px 12px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #334155; 
+            background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s;
+        }
+        .sm-btn:hover { color: white; border-color: white; }
+        .download-btn { background: var(--success); color: #020617; border: none; font-weight: 700; }
+        .download-btn:hover { background: #34d399; color: black; border: none; }
+
+        /* ERROR TOAST */
+        .status-msg { 
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 25px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+        }
+        .error { background: rgba(244, 63, 94, 0.9); color: white; }
+        .success { background: rgba(16, 185, 129, 0.9); color: #020617; }
+
+        /* SAMPLE DATA LINK */
+        .sample-link { text-align: center; margin-bottom: 20px; }
+        .sample-link a { color: var(--code); text-decoration: none; font-size: 0.9rem; cursor: pointer; border-bottom: 1px dashed var(--code); }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--muted); margin-bottom: 20px; font-size: 0.85rem; }
+
+        @media(max-width: 900px) { 
+            .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr auto 1fr; height: auto; } 
+            .controls { flex-direction: row; padding: 20px 0; }
+            .code-area { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-title">
+        <h1>JSON to CSV Converter</h1>
+        <p class="subtitle">Convert JSON arrays to Excel-ready CSV files securely in your browser.</p>
+    </div>
+
+    <div class="sample-link">
+        <a onclick="loadSample()">Load Sample Data</a>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Input JSON</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="formatJSON()" title="Beautify"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                    <button class="sm-btn" onclick="clearJSON()" title="Clear"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+            <textarea id="jsonInput" class="code-area" placeholder='[
+  { "id": 1, "name": "Alice", "role": "Dev" },
+  { "id": 2, "name": "Bob", "role": "Designer" }
+]'></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="convert()" title="Convert JSON to CSV">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Output CSV</span>
+                <div class="action-bar">
+                    <button class="sm-btn" onclick="copyCSV()" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                    <button class="sm-btn download-btn" onclick="downloadCSV()" title="Download"><i class="fa-solid fa-download"></i> CSV</button>
+                </div>
+            </div>
+            <textarea id="csvOutput" class="code-area" placeholder="id,name,role..." readonly></textarea>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>How to Convert JSON to CSV?</h2>
+        <p>
+            <strong>JSON</strong> (JavaScript Object Notation) is the language of the web APIs, but <strong>CSV</strong> (Comma Separated Values) is the language of spreadsheets like Microsoft Excel and Google Sheets.
+        </p>
+        <p>
+            Developers and data analysts often need to bridge this gap. Our tool flattens complex JSON structures into simple rows and columns.
+        </p>
+        
+
+        <h3>Privacy First: Serverless Conversion</h3>
+        <p>
+            Most online converters upload your sensitive data to their servers to process it. <strong>We do not do that.</strong> Our converter runs entirely in your browser using JavaScript. Your data never leaves your computer, making it safe for corporate or private data.
+        </p>
+
+        <h3>JSON Structure Requirements</h3>
+        <p>To convert successfully, your JSON should be an <strong>Array of Objects</strong>. Example:</p>
+        <div class="code-block">
+            [<br>
+            &nbsp;&nbsp;{ "id": 1, "product": "Laptop", "price": 999 },<br>
+            &nbsp;&nbsp;{ "id": 2, "product": "Phone", "price": 499 }<br>
+            ]
+        </div>
+        <p>Nested objects will be stringified or flattened depending on complexity.</p>
+    </div>
+
+</div>
+
+<div id="toast" class="status-msg"></div>
+
+<script>
+    function showToast(msg, type) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.className = `status-msg ${type}`;
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function loadSample() {
+        const sample = [
+            { "id": 101, "name": "John Doe", "email": "john@example.com", "active": true },
+            { "id": 102, "name": "Jane Smith", "email": "jane@test.com", "active": false },
+            { "id": 103, "name": "Sam Wilson", "email": "sam@demo.co", "active": true }
+        ];
+        document.getElementById('jsonInput').value = JSON.stringify(sample, null, 2);
+    }
+
+    function formatJSON() {
+        const input = document.getElementById('jsonInput').value;
+        try {
+            const obj = JSON.parse(input);
+            document.getElementById('jsonInput').value = JSON.stringify(obj, null, 2);
+            showToast('JSON Formatted!', 'success');
+        } catch(e) {
+            showToast('Invalid JSON', 'error');
+        }
+    }
+
+    function clearJSON() {
+        document.getElementById('jsonInput').value = '';
+        document.getElementById('csvOutput').value = '';
+    }
+
+    function convert() {
+        const raw = document.getElementById('jsonInput').value;
+        if(!raw.trim()) return;
+
+        try {
+            let data = JSON.parse(raw);
+            
+            // Ensure it's an array
+            if (!Array.isArray(data)) {
+                // If single object, convert to array
+                data = [data];
+            }
+
+            if(data.length === 0) {
+                showToast('JSON Array is empty', 'error');
+                return;
+            }
+
+            // Get Headers
+            const headers = Object.keys(data[0]);
+            
+            // Build CSV
+            const csvRows = [];
+            
+            // 1. Header Row
+            csvRows.push(headers.join(','));
+
+            // 2. Data Rows
+            for (const row of data) {
+                const values = headers.map(header => {
+                    const escaped = ('' + row[header]).replace(/"/g, '\\"');
+                    return `"${escaped}"`;
+                });
+                csvRows.push(values.join(','));
+            }
+
+            document.getElementById('csvOutput').value = csvRows.join('\n');
+            showToast('Conversion Successful!', 'success');
+
+        } catch(e) {
+            showToast('Error: Invalid JSON Format', 'error');
+            console.error(e);
+        }
+    }
+
+    function copyCSV() {
+        const csv = document.getElementById('csvOutput').value;
+        if(!csv) return;
+        navigator.clipboard.writeText(csv);
+        showToast('Copied to Clipboard!', 'success');
+    }
+
+    function downloadCSV() {
+        const csv = document.getElementById('csvOutput').value;
+        if(!csv) return;
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'data.csv');
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>

@@ -3,252 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPM Calculator & AdSense Estimator - OmniTools</title>
-    <meta name="description" content="Calculate your YouTube, TikTok, and AdSense earnings. Convert Views to Money with our free CPM (Cost Per Mille) Calculator.">
+    <title>CPM, CPC & CTR Calculator - Online Advertising Metrics</title>
+    <meta name="description" content="Calculate Cost Per Mille (CPM), Cost Per Click (CPC), and Click Through Rate (CTR) instantly. The essential tool for Facebook Ads, Google Ads, and AdSense calculations.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- DESIGN SYSTEM (Modern Dark) --- */
+        /* --- AD TECH THEME --- */
         :root { 
-            --bg: #020617; 
-            --panel: #0f172a; 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
             --text: #f8fafc; 
             --muted: #94a3b8; 
-            --border: #1e293b; 
-            --primary: #f43f5e; /* Rose/Red for Creators */
-            --primary-glow: rgba(244, 63, 94, 0.4);
-            --gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            --cpm: #8b5cf6;   /* Purple */
+            --cpc: #3b82f6;   /* Blue */
+            --ctr: #10b981;   /* Green */
+            --bad: #f43f5e;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(139, 92, 246, 0.2);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .bg-glow {
-            position: fixed; width: 500px; height: 500px; background: radial-gradient(circle, rgba(244,63,94,0.15) 0%, rgba(0,0,0,0) 70%);
-            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
-        }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
         /* HEADER */
         nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
         .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .back-btn:hover { color: white; }
 
-        /* GRID */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px; }
-        
+        /* HERO CARD */
         .card { 
-            background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 35px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); position: relative; overflow: hidden;
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); margin-bottom: 40px;
         }
 
-        h1 { font-size: 2rem; margin-bottom: 10px; font-weight: 800; }
-        .subtitle { color: var(--muted); margin-bottom: 30px; }
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; font-size: 1.1rem; }
 
-        /* PLATFORM SELECTOR */
-        .platform-row { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 5px; }
-        .p-btn { 
-            background: #1e293b; border: 1px solid var(--border); color: var(--muted); 
-            padding: 10px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; transition: 0.2s; white-space: nowrap;
-        }
-        .p-btn:hover { color: white; border-color: white; }
-        .p-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 5px 15px var(--primary-glow); }
-
-        /* INPUTS */
-        .input-group { margin-bottom: 25px; }
-        label { display: block; color: var(--muted); font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; }
-        .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--primary); }
-        input { 
-            width: 100%; background: #020617; border: 1px solid #334155; color: white; 
-            padding: 16px 16px 16px 50px; border-radius: 12px; font-size: 1.2rem; font-weight: 600; transition: 0.2s;
-        }
-        input:focus { border-color: var(--primary); }
-
-        .btn { width: 100%; padding: 18px; background: var(--gradient); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--primary-glow); }
-
-        /* RESULTS */
-        .result-box { text-align: center; display: flex; flex-direction: column; height: 100%; justify-content: center; }
-        .earning-title { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .big-money { font-size: 4rem; font-weight: 800; color: white; text-shadow: 0 0 30px var(--primary-glow); margin: 10px 0; }
+        /* INPUT GRID */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         
-        .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; width: 100%; }
-        .b-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
-        .b-val { font-size: 1.2rem; font-weight: 700; color: white; }
-        .b-lbl { font-size: 0.8rem; color: var(--muted); }
+        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; opacity: 0.5; font-size: 1.1rem; }
+        
+        input { 
+            width: 100%; padding: 15px 15px 15px 45px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 12px; font-size: 1.1rem; font-weight: 600; transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        input:focus { border-color: var(--cpm); box-shadow: var(--glow); }
 
-        /* SEO CONTENT */
-        .seo-section { max-width: 800px; margin: 0 auto; color: #cbd5e1; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 50px; }
+        /* RESULTS DASHBOARD */
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        
+        .res-box { 
+            background: rgba(255,255,255,0.03); padding: 25px; border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.05); text-align: center; position: relative; overflow: hidden;
+        }
+        
+        .res-label { font-size: 0.85rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+        .res-val { font-size: 2rem; font-weight: 800; color: white; }
+        .res-sub { font-size: 0.8rem; color: #64748b; margin-top: 5px; }
+
+        .cpm-text { color: var(--cpm); }
+        .cpc-text { color: var(--cpc); }
+        .ctr-text { color: var(--ctr); }
+
+        /* CTR BAR */
+        .ctr-container { grid-column: span 3; background: #020617; padding: 20px; border-radius: 12px; margin-top: 20px; border: var(--border); }
+        .bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+        .bar-track { height: 8px; background: #1e293b; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--ctr); width: 0%; transition: width 0.5s ease; border-radius: 5px; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
         .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
         .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
         .seo-section ul { padding-left: 20px; margin-bottom: 20px; }
         .seo-section li { margin-bottom: 10px; }
 
-        @media(max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+        @media(max-width: 768px) { .input-grid, .results-grid { grid-template-columns: 1fr; } .ctr-container { grid-column: span 1; } }
     </style>
 </head>
 <body>
-
-<div class="bg-glow"></div>
 
 <div class="container">
     <nav>
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
     </nav>
 
-    <div class="grid">
-        
-        <div class="card">
-            <h1>CPM Calculator</h1>
-            <p class="subtitle">Estimate your earnings from views.</p>
+    <div class="card">
+        <h1>Ad Metric Calculator</h1>
+        <p class="subtitle">Analyze your campaign efficiency: CPM, CPC, and CTR.</p>
 
-            <label>Select Platform (Auto-fills CPM)</label>
-            <div class="platform-row">
-                <div class="p-btn active" onclick="setPreset('yt')"><i class="fa-brands fa-youtube"></i> YouTube</div>
-                <div class="p-btn" onclick="setPreset('tt')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
-                <div class="p-btn" onclick="setPreset('ig')"><i class="fa-brands fa-instagram"></i> Instagram</div>
-                <div class="p-btn" onclick="setPreset('web')"><i class="fa-brands fa-google"></i> AdSense</div>
-            </div>
-
+        <div class="input-grid">
             <div class="input-group">
-                <label>Total Views</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-eye"></i>
-                    <input type="number" id="views" placeholder="e.g. 10000" oninput="calc()">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>CPM (Cost Per 1000 Views)</label>
+                <label>Total Cost ($)</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-dollar-sign"></i>
-                    <input type="number" id="cpm" placeholder="e.g. 2.50" value="4.00" step="0.10" oninput="calc()">
-                </div>
-                <div style="font-size:0.8rem; color:var(--muted); margin-top:8px;">
-                    <i class="fa-solid fa-circle-info"></i> Industry Avg: <span id="avgText" style="color:white;">$4.00 - $10.00</span>
+                    <input type="number" id="cost" value="500" oninput="calculate()">
                 </div>
             </div>
 
-            <button class="btn" onclick="calc()">Calculate Revenue</button>
+            <div class="input-group">
+                <label>Impressions (Views)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-eye"></i>
+                    <input type="number" id="impressions" value="50000" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Clicks</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-computer-mouse"></i>
+                    <input type="number" id="clicks" value="750" oninput="calculate()">
+                </div>
+            </div>
         </div>
 
-        <div class="card">
-            <div class="result-box">
-                <div class="earning-title">Estimated Total Earnings</div>
-                <div class="big-money" id="total">$0.00</div>
-                
-                <div class="breakdown-grid">
-                    <div class="b-item">
-                        <div class="b-val" id="daily">$0.00</div>
-                        <div class="b-lbl">Daily Income (Est)</div>
-                    </div>
-                    <div class="b-item">
-                        <div class="b-val" id="monthly">$0.00</div>
-                        <div class="b-lbl">Monthly Income (Est)</div>
-                    </div>
-                    <div class="b-item">
-                        <div class="b-val" id="yearly">$0.00</div>
-                        <div class="b-lbl">Yearly Projection</div>
-                    </div>
-                    <div class="b-item">
-                        <div class="b-val" id="viewsNeeded">0</div>
-                        <div class="b-lbl">Views needed for $100</div>
-                    </div>
+        <div class="results-grid">
+            <div class="res-box" style="border-color: rgba(139, 92, 246, 0.3);">
+                <div class="res-label">CPM (Cost Per Mille)</div>
+                <div class="res-val cpm-text" id="resCPM">$0.00</div>
+                <div class="res-sub">Cost per 1,000 views</div>
+            </div>
+
+            <div class="res-box" style="border-color: rgba(59, 130, 246, 0.3);">
+                <div class="res-label">CPC (Cost Per Click)</div>
+                <div class="res-val cpc-text" id="resCPC">$0.00</div>
+                <div class="res-sub">Cost per user action</div>
+            </div>
+
+            <div class="res-box" style="border-color: rgba(16, 185, 129, 0.3);">
+                <div class="res-label">CTR (Click Rate)</div>
+                <div class="res-val ctr-text" id="resCTR">0%</div>
+                <div class="res-sub">Clicks / Impressions</div>
+            </div>
+
+            <div class="ctr-container">
+                <div class="bar-label">
+                    <span>Campaign Health</span>
+                    <span id="healthText">Good</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" id="healthBar"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="seo-section">
-        <h2>Free CPM Calculator for YouTubers & Bloggers</h2>
+        <h2>Understanding Digital Advertising Metrics</h2>
         <p>
-            Whether you are a YouTube Creator, a TikTok Influencer, or a Website Publisher using Google AdSense, understanding your <strong>CPM (Cost Per Mille)</strong> is the key to maximizing your revenue. Our free calculator helps you estimate exactly how much money you will make based on your view count and CPM rate.
+            Digital marketing runs on data. Whether you are running Facebook Ads, buying banner space, or analyzing your AdSense revenue, three acronyms rule them all: CPM, CPC, and CTR. Understanding the relationship between these numbers is the key to lowering your ad costs and increasing profit.
+        </p>
+        
+
+        <h3>1. What is CPM? (Cost Per Mille)</h3>
+        <p>
+            "Mille" is Latin for thousand. <strong>CPM</strong> measures how much it costs to show your ad 1,000 times.
+        </p>
+        <div style="background:#020617; padding:15px; border-radius:10px; font-family:monospace; margin-bottom:20px; border:1px solid #334155;">
+            Formula: CPM = (Total Cost / Impressions) × 1,000
+        </div>
+        <p>
+            <em>Why it matters:</em> CPM is the industry standard for brand awareness campaigns. A lower CPM means you are reaching more people for less money.
         </p>
 
-        <h3>How to Use This Tool</h3>
-        <ul>
-            <li><strong>Select Platform:</strong> Click on YouTube, TikTok, or AdSense to automatically load the average industry CPM for that platform.</li>
-            <li><strong>Enter Views:</strong> Input the number of views your video or article received.</li>
-            <li><strong>Adjust CPM:</strong> If you know your specific CPM (found in your analytics dashboard), enter it for precise accuracy.</li>
-        </ul>
-
-        <h3>What is CPM?</h3>
+        <h3>2. What is CPC? (Cost Per Click)</h3>
         <p>
-            CPM stands for <strong>"Cost Per Mille"</strong> (Mille is Latin for Thousand). It represents how much an advertiser pays for every 1,000 impressions (views) of their advertisement.
+            <strong>CPC</strong> tells you exactly how much you pay every time a user clicks your ad. This is the most critical metric for performance marketers driving traffic to a landing page.
+        </p>
+        <div style="background:#020617; padding:15px; border-radius:10px; font-family:monospace; margin-bottom:20px; border:1px solid #334155;">
+            Formula: CPC = Total Cost / Total Clicks
+        </div>
+
+        <h3>3. What is CTR? (Click Through Rate)</h3>
+        <p>
+            <strong>CTR</strong> is the percentage of people who see your ad and decide to click on it. It measures the "quality" or "relevance" of your ad creative.
         </p>
         <p>
-            <strong>The Formula:</strong> <code>Earnings = (Total Views / 1000) * CPM Rate</code>
+            <strong>What is a good CTR?</strong><br>
+            • <strong>Display Ads:</strong> 0.5% - 1.0%<br>
+            • <strong>Facebook Newsfeed:</strong> 1.5% - 3.0%<br>
+            • <strong>Google Search:</strong> 3.0% - 5.0%+
         </p>
-
-        <h3>Frequently Asked Questions</h3>
-        <p><strong>Q: Why is YouTube CPM higher than TikTok?</strong><br>
-        YouTube videos are longer and can show multiple ads (mid-rolls), whereas TikTok videos are short and ads are easily skipped. Advertisers pay more for the deeper engagement on YouTube.</p>
-
-        <p><strong>Q: Does CPM vary by country?</strong><br>
-        Yes, significantly. Traffic from "Tier 1" countries (USA, UK, Canada, Australia) pays 3x-5x more than traffic from other regions due to higher purchasing power.</p>
     </div>
 
 </div>
 
 <script>
-    function setPreset(type) {
-        // Reset active buttons
-        document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+    function calculate() {
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const imp = parseFloat(document.getElementById('impressions').value) || 0;
+        const clicks = parseFloat(document.getElementById('clicks').value) || 0;
 
-        const cpmInput = document.getElementById('cpm');
-        const avgText = document.getElementById('avgText');
+        // 1. CPM
+        let cpm = 0;
+        if(imp > 0) cpm = (cost / imp) * 1000;
+        document.getElementById('resCPM').innerText = "$" + cpm.toFixed(2);
 
-        if(type === 'yt') {
-            cpmInput.value = "4.00";
-            avgText.innerText = "$4.00 - $15.00 (Long Form)";
-        } else if(type === 'tt') {
-            cpmInput.value = "0.03";
-            avgText.innerText = "$0.02 - $0.04 (Creator Fund)";
-        } else if(type === 'ig') {
-            cpmInput.value = "0.50"; // Reels Bonuses vary wildly
-            avgText.innerText = "$0.20 - $1.00 (Reels Bonus)";
-        } else if(type === 'web') {
-            cpmInput.value = "10.00";
-            avgText.innerText = "$5.00 - $25.00 (Niche Dependent)";
+        // 2. CPC
+        let cpc = 0;
+        if(clicks > 0) cpc = cost / clicks;
+        document.getElementById('resCPC').innerText = "$" + cpc.toFixed(2);
+
+        // 3. CTR
+        let ctr = 0;
+        if(imp > 0) ctr = (clicks / imp) * 100;
+        document.getElementById('resCTR').innerText = ctr.toFixed(2) + "%";
+
+        // 4. Health Bar Logic
+        const bar = document.getElementById('healthBar');
+        const txt = document.getElementById('healthText');
+        
+        // Scale CTR visually (0 to 5%)
+        let fill = (ctr / 5) * 100;
+        if(fill > 100) fill = 100;
+        bar.style.width = fill + "%";
+
+        if(ctr < 1) {
+            bar.style.backgroundColor = "var(--bad)";
+            txt.innerText = "Poor Relevance (Try new image)";
+            txt.style.color = "var(--bad)";
+        } else if (ctr < 2) {
+            bar.style.backgroundColor = "#fbbf24"; // Gold/Warning
+            txt.innerText = "Average Performance";
+            txt.style.color = "#fbbf24";
+        } else {
+            bar.style.backgroundColor = "var(--ctr)";
+            txt.innerText = "Excellent Performance!";
+            txt.style.color = "var(--ctr)";
         }
-        calc();
     }
 
-    function calc() {
-        const views = parseFloat(document.getElementById('views').value) || 0;
-        const cpm = parseFloat(document.getElementById('cpm').value) || 0;
-
-        // Formula: (Views / 1000) * CPM
-        const earnings = (views / 1000) * cpm;
-
-        // Projections (assuming current views are Daily)
-        const daily = earnings;
-        const monthly = daily * 30;
-        const yearly = daily * 365;
-        
-        // Reverse Calc: How many views for $100?
-        // 100 = (x/1000) * cpm  ->  100/cpm = x/1000 -> x = (100/cpm)*1000
-        let viewsFor100 = 0;
-        if(cpm > 0) viewsFor100 = (100 / cpm) * 1000;
-
-        // Update UI
-        document.getElementById('total').innerText = "$" + earnings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        
-        document.getElementById('daily').innerText = "$" + daily.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-        document.getElementById('monthly').innerText = "$" + monthly.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-        document.getElementById('yearly').innerText = "$" + yearly.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
-        
-        document.getElementById('viewsNeeded').innerText = formatCompact(viewsFor100);
-    }
-
-    function formatCompact(num) {
-        return Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(num);
-    }
+    // Init
+    calculate();
 </script>
 
 </body>

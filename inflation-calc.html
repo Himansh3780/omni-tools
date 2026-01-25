@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inflation Calculator - US Dollar Purchasing Power (1913-2025)</title>
+    <meta name="description" content="Calculate the value of the US Dollar over time. See how inflation has changed purchasing power from 1913 to today based on CPI data.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ECONOMICS THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --up: #f43f5e;   /* Red (Inflation Up) */
+            --stable: #3b82f6; 
+            --gold: #fbbf24; 
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* MAIN CARD */
+        .card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; font-size: 1.1rem; }
+
+        /* INPUT ROW */
+        .calc-row { 
+            display: flex; gap: 20px; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; 
+            background: #020617; padding: 20px; border-radius: 20px; border: var(--border);
+        }
+        
+        .group { flex: 1; min-width: 140px; }
+        label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        input, select { 
+            width: 100%; padding: 15px; background: #0f172a; border: 1px solid #334155; 
+            color: white; border-radius: 12px; font-size: 1.3rem; font-weight: 700; transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        input:focus, select:focus { border-color: var(--gold); }
+        
+        .arrow-icon { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--muted); padding-bottom: 10px; }
+
+        /* RESULTS */
+        .result-box { text-align: center; margin-top: 20px; }
+        .main-val { font-size: 4rem; font-weight: 800; color: white; margin-bottom: 10px; line-height: 1; }
+        .percent-change { 
+            font-size: 1.2rem; font-weight: 700; color: var(--up); 
+            background: rgba(244, 63, 94, 0.1); display: inline-block; padding: 5px 15px; border-radius: 30px;
+        }
+
+        /* FUN FACTS (BURGER INDEX) */
+        .fun-fact { 
+            margin-top: 40px; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; 
+            display: flex; align-items: center; gap: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .icon-circle { 
+            width: 60px; height: 60px; background: #334155; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--gold);
+        }
+        .fact-text { font-size: 0.95rem; color: #cbd5e1; line-height: 1.5; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { .calc-row { flex-direction: column; gap: 15px; } .arrow-icon { transform: rotate(90deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="card">
+        <h1>Inflation Calculator</h1>
+        <p class="subtitle">See how the value of the US Dollar has changed over time.</p>
+
+        <div class="calc-row">
+            <div class="group">
+                <label>Amount ($)</label>
+                <input type="number" id="amount" value="100" oninput="calculate()">
+            </div>
+            
+            <div class="group">
+                <label>Start Year</label>
+                <select id="startYear" onchange="calculate()"></select>
+            </div>
+
+            <div class="arrow-icon"><i class="fa-solid fa-arrow-right"></i></div>
+
+            <div class="group">
+                <label>End Year</label>
+                <select id="endYear" onchange="calculate()"></select>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div style="color:var(--muted); font-weight:600; margin-bottom:10px;">IS WORTH APPROXIMATELY</div>
+            <div class="main-val" id="resultVal">$0.00</div>
+            <div class="percent-change" id="pctChange">Cumulative Inflation: 0%</div>
+        </div>
+
+        <div class="fun-fact">
+            <div class="icon-circle"><i class="fa-solid fa-burger"></i></div>
+            <div class="fact-text">
+                <strong>Purchasing Power Context:</strong><br>
+                What you could buy for <span id="txtStart">$100</span> in <span id="txtYear1">1980</span> now costs <span id="txtEnd">$350</span>. That means your money has lost significant value due to the rising Cost of Living.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>US Dollar Inflation Calculator (CPI Data)</h2>
+        <p>
+            "In my day, a movie ticket cost a nickel!" We have all heard it. But exactly how much has the value of money changed? Our <strong>Inflation Calculator</strong> uses historical Consumer Price Index (CPI) data to measure the purchasing power of the dollar over time.
+        </p>
+
+        <h3>How does this work?</h3>
+        <p>
+            We use the official <strong>Consumer Price Index (CPI)</strong> published by the US Bureau of Labor Statistics. The CPI tracks the price of a "basket of goods" (food, housing, transport) across different years.
+        </p>
+        <p>
+            <strong>The Formula:</strong><br>
+            <em>Value in Future Dollars = Value in Past Dollars × (CPI Future / CPI Past)</em>
+        </p>
+
+        <h3>Why does Inflation happen?</h3>
+        <ul>
+            <li><strong>Demand-Pull:</strong> When demand for goods exceeds supply, prices rise.</li>
+            <li><strong>Cost-Push:</strong> When the cost of production (wages, materials) increases, companies raise prices.</li>
+            <li><strong>Monetary Expansion:</strong> When the government prints more money, the value of each existing dollar decreases.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // Simplified CPI Data (Approximation for demo purposes)
+    // In a real production app, you might want to fetch this from an API or a more granular JSON.
+    const cpiData = {
+        1913: 9.9, 1920: 20.0, 1930: 16.7, 1940: 14.0, 1950: 24.1, 
+        1960: 29.6, 1970: 38.8, 1980: 82.4, 1990: 130.7, 2000: 172.2, 
+        2010: 218.0, 2020: 258.8, 2021: 270.9, 2022: 292.6, 2023: 304.7, 2024: 314.1, 2025: 320.5
+    };
+
+    // Helper to interpolate missing years (Linear)
+    function getCPI(year) {
+        if (cpiData[year]) return cpiData[year];
+        
+        // Find closest known years
+        const years = Object.keys(cpiData).map(Number).sort((a,b)=>a-b);
+        let prev = years[0];
+        let next = years[years.length-1];
+
+        for(let y of years) {
+            if(y <= year) prev = y;
+            if(y >= year && next === years[years.length-1]) next = y; // Fix logic slightly
+        }
+        for(let y of years) { if(y >= year) { next = y; break; } } // Correct next finding
+
+        if(prev === next) return cpiData[prev];
+
+        // Interpolate
+        const range = next - prev;
+        const valRange = cpiData[next] - cpiData[prev];
+        const factor = (year - prev) / range;
+        return cpiData[prev] + (valRange * factor);
+    }
+
+    function init() {
+        const startSel = document.getElementById('startYear');
+        const endSel = document.getElementById('endYear');
+        
+        const currentYear = new Date().getFullYear();
+        for(let y = currentYear; y >= 1913; y--) {
+            let opt1 = new Option(y, y);
+            let opt2 = new Option(y, y);
+            startSel.add(opt1);
+            endSel.add(opt2);
+        }
+
+        // Defaults
+        startSel.value = "1990";
+        endSel.value = currentYear;
+        
+        calculate();
+    }
+
+    function calculate() {
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
+        const startY = parseInt(document.getElementById('startYear').value);
+        const endY = parseInt(document.getElementById('endYear').value);
+
+        const cpiStart = getCPI(startY);
+        const cpiEnd = getCPI(endY);
+
+        const result = amount * (cpiEnd / cpiStart);
+        const pct = ((result - amount) / amount) * 100;
+
+        // UI Updates
+        document.getElementById('resultVal').innerText = "$" + result.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        const pctEl = document.getElementById('pctChange');
+        if(pct >= 0) {
+            pctEl.innerText = "Cumulative Inflation: +" + pct.toFixed(1) + "%";
+            pctEl.style.color = "#f43f5e";
+            pctEl.style.background = "rgba(244, 63, 94, 0.1)";
+        } else {
+            pctEl.innerText = "Deflation: " + pct.toFixed(1) + "%";
+            pctEl.style.color = "#10b981";
+            pctEl.style.background = "rgba(16, 185, 129, 0.1)";
+        }
+
+        // Fun Fact Text
+        document.getElementById('txtStart').innerText = "$" + amount;
+        document.getElementById('txtYear1').innerText = startY;
+        document.getElementById('txtEnd').innerText = "$" + result.toLocaleString('en-US', {maximumFractionDigits:0});
+    }
+
+    // Start
+    init();
+</script>
+
+</body>
+</html>

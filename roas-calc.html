@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoAS Calculator - Return on Ad Spend & Break Even Tool</title>
+    <meta name="description" content="Calculate your Return on Ad Spend (RoAS). Determine if your Facebook, Google, or TikTok ads are profitable. Essential tool for dropshippers and marketers.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- MARKETING DASHBOARD THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --spend: #f43f5e; /* Red (Cost) */
+            --revenue: #3b82f6; /* Blue (Income) */
+            --profit: #10b981; /* Green (Success) */
+            --gold: #fbbf24;   /* Gold (High RoAS) */
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* MAIN CARD */
+        .card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); position: relative; overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); margin-bottom: 40px; font-size: 1.1rem; }
+
+        /* INPUT GRID */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+        
+        .input-group label { display: block; color: var(--muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: white; opacity: 0.5; font-size: 1.2rem; }
+        
+        input { 
+            width: 100%; padding: 20px 20px 20px 50px; background: #020617; border: 1px solid #334155; 
+            color: white; border-radius: 16px; font-size: 1.5rem; font-weight: 700; transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        input:focus { border-color: var(--revenue); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+
+        /* RESULTS DASHBOARD */
+        .dashboard { 
+            background: #020617; border-radius: 20px; padding: 30px; border: var(--border); 
+            text-align: center; position: relative;
+        }
+
+        .roas-display { margin-bottom: 30px; }
+        .roas-label { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+        .roas-val { font-size: 5rem; font-weight: 900; line-height: 1; transition: 0.3s; }
+        .roas-tag { font-size: 1rem; font-weight: 700; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; }
+
+        /* DYNAMIC COLORS */
+        .bad { color: var(--spend); text-shadow: 0 0 30px rgba(244, 63, 94, 0.3); }
+        .bad-tag { background: rgba(244, 63, 94, 0.1); color: var(--spend); border: 1px solid var(--spend); }
+        
+        .good { color: var(--profit); text-shadow: 0 0 30px rgba(16, 185, 129, 0.3); }
+        .good-tag { background: rgba(16, 185, 129, 0.1); color: var(--profit); border: 1px solid var(--profit); }
+        
+        .unicorn { color: var(--gold); text-shadow: 0 0 30px rgba(251, 191, 36, 0.3); }
+        .unicorn-tag { background: rgba(251, 191, 36, 0.1); color: var(--gold); border: 1px solid var(--gold); }
+
+        /* STATS ROW */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid #1e293b; padding-top: 20px; }
+        .stat-item { text-align: left; padding: 10px; }
+        .stat-title { font-size: 0.8rem; color: var(--muted); }
+        .stat-num { font-size: 1.5rem; font-weight: 700; color: white; }
+
+        /* THERMOMETER BAR */
+        .bar-track { height: 10px; background: #1e293b; border-radius: 10px; margin-top: 30px; position: relative; overflow: hidden; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, #f43f5e, #fbbf24, #10b981); width: 0%; transition: width 0.5s ease; border-radius: 10px; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="card">
+        <h1>RoAS Calculator</h1>
+        <p class="subtitle">Return on Ad Spend Calculator for Facebook & Google Ads.</p>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Total Ad Spend ($)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <input type="number" id="spend" value="1000" oninput="calculate()">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Total Revenue ($)</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                    <input type="number" id="revenue" value="3500" oninput="calculate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="roas-display">
+                <div class="roas-label">Your RoAS Score</div>
+                <div class="roas-val unicorn" id="roasVal">3.50x</div>
+                <div class="roas-tag unicorn-tag" id="roasTag">Profitable</div>
+            </div>
+
+            <div class="bar-track">
+                <div class="bar-fill" id="roasBar"></div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-title">Return on Investment (ROI)</div>
+                    <div class="stat-num" id="roiVal">+250%</div>
+                </div>
+                <div class="stat-item" style="text-align:right;">
+                    <div class="stat-title">Net Profit (Est)</div>
+                    <div class="stat-num" style="color:var(--profit);" id="profitVal">$2,500</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="seo-section">
+        <h2>What is RoAS? (Return on Ad Spend)</h2>
+        <p>
+            RoAS stands for <strong>Return on Ad Spend</strong>. It is the most critical metric for online marketers, dropshippers, and e-commerce store owners. It tells you exactly how much money you make for every dollar you spend on advertising.
+        </p>
+
+        <h3>The RoAS Formula</h3>
+        <p>Calculating RoAS is simple division:</p>
+        <div style="background:#020617; padding:15px; border-radius:10px; font-family:monospace; margin-bottom:20px; border:1px solid #334155;">
+            RoAS = Total Conversion Revenue / Total Ad Spend
+        </div>
+        <p>
+            Example: If you spend <strong>$1,000</strong> on Facebook Ads and generate <strong>$4,000</strong> in sales:<br>
+            $4,000 / $1,000 = <strong>4.0 RoAS</strong> (or "4X").
+        </p>
+
+        <h3>What is a "Good" RoAS?</h3>
+        <ul>
+            <li><strong>Under 2.0x:</strong> Generally considered poor or break-even, depending on your profit margins.</li>
+            <li><strong>3.0x - 4.0x:</strong> Healthy profitability. This is the goal for most e-commerce brands.</li>
+            <li><strong>Over 5.0x:</strong> Exceptional performance ("Unicorn" status). Scale your budget immediately!</li>
+        </ul>
+
+        <h3>RoAS vs. ROI: What's the difference?</h3>
+        <p>
+            RoAS only looks at the efficiency of your <em>Ad Spend</em>. ROI (Return on Investment) accounts for <em>all expenses</em> (product cost, shipping, employees, etc.). You can have a positive RoAS but a negative ROI if your product costs are too high.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function calculate() {
+        const spend = parseFloat(document.getElementById('spend').value) || 0;
+        const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+
+        if(spend === 0) return;
+
+        // Calculations
+        const roas = revenue / spend;
+        const profit = revenue - spend;
+        const roi = (profit / spend) * 100;
+
+        // UI Updates
+        const roasEl = document.getElementById('roasVal');
+        const tagEl = document.getElementById('roasTag');
+        const barEl = document.getElementById('roasBar');
+
+        roasEl.innerText = roas.toFixed(2) + "x";
+        document.getElementById('profitVal').innerText = "$" + profit.toLocaleString();
+        document.getElementById('roiVal').innerText = (roi > 0 ? "+" : "") + roi.toFixed(0) + "%";
+
+        // Logic for Color/Text
+        // Bar Calculation (Max out at 8x for visual scaling)
+        let fillPct = (roas / 8) * 100;
+        if(fillPct > 100) fillPct = 100;
+        barEl.style.width = fillPct + "%";
+
+        roasEl.className = "roas-val";
+        tagEl.className = "roas-tag";
+
+        if(roas < 2) {
+            roasEl.classList.add('bad');
+            tagEl.classList.add('bad-tag');
+            tagEl.innerText = "Losing Money / Low";
+        } else if (roas >= 2 && roas < 4) {
+            roasEl.classList.add('good');
+            tagEl.classList.add('good-tag');
+            tagEl.innerText = "Profitable";
+        } else {
+            roasEl.classList.add('unicorn');
+            tagEl.classList.add('unicorn-tag');
+            tagEl.innerText = "UNICORN 🚀";
+        }
+    }
+
+    // Init
+    calculate();
+</script>
+
+</body>
+</html>

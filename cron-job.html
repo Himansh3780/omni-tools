@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Job Generator - Visual Crontab Editor</title>
+    <meta name="description" content="Generate Cron job syntax easily. Visual editor for Linux Crontab schedules. Convert clicks to cron expressions instantly.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- DEV THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --code: #3b82f6;  /* Blue */
+            --highlight: #8b5cf6; /* Purple */
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* MAIN OUTPUT BOX (The "Terminal") */
+        .terminal-box { 
+            background: #020617; border: 1px solid #334155; border-radius: 16px; padding: 30px; 
+            margin-bottom: 40px; text-align: center; position: relative;
+            box-shadow: var(--glow);
+        }
+
+        .cron-display { 
+            font-family: 'Fira Code', monospace; font-size: 3rem; color: var(--code); 
+            font-weight: 600; margin: 20px 0; letter-spacing: 5px; text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+        
+        .human-readable { font-size: 1.1rem; color: var(--muted); background: rgba(255,255,255,0.05); display: inline-block; padding: 8px 20px; border-radius: 20px; }
+
+        .copy-btn {
+            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); 
+            border: none; color: white; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .copy-btn:hover { background: var(--code); }
+
+        /* FIELD EXPLAINER */
+        .field-labels { display: flex; justify-content: center; gap: 15px; margin-top: -10px; margin-bottom: 20px; color: #64748b; font-size: 0.8rem; font-family: 'Fira Code', monospace; }
+        .lbl-item { width: 50px; text-align: center; }
+
+        /* EDITOR UI */
+        .editor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        
+        .col-panel { background: var(--panel); border: var(--border); border-radius: 12px; padding: 15px; height: 400px; display: flex; flex-direction: column; }
+        .col-title { font-weight: 700; text-align: center; margin-bottom: 10px; color: white; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        .scroll-area { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 5px; padding-right: 5px; }
+        
+        /* Custom Scrollbar */
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-track { background: #0f172a; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+        .select-opt { 
+            padding: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; border-radius: 6px; transition: 0.2s; text-align: center; 
+        }
+        .select-opt:hover { background: rgba(255,255,255,0.05); color: white; }
+        .select-opt.active { background: var(--code); color: white; font-weight: 700; }
+        .select-opt.every { color: var(--highlight); font-weight: 700; border: 1px dashed var(--highlight); }
+
+        /* PRESETS */
+        .presets { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
+        .preset-btn { 
+            background: #1e293b; border: 1px solid #334155; color: white; padding: 10px 20px; 
+            border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s;
+        }
+        .preset-btn:hover { border-color: var(--code); color: var(--code); }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--code); margin-bottom: 20px; }
+
+        @media(max-width: 900px) { 
+            .editor-grid { grid-template-columns: 1fr; } 
+            .col-panel { height: auto; max-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div style="text-align:center; margin-bottom:30px;">
+        <h1>Cron Job Generator</h1>
+        <p style="color:#94a3b8;">Create Linux crontab syntax quickly and easily.</p>
+    </div>
+
+    <div class="presets">
+        <div class="preset-btn" onclick="loadPreset('* * * * *')">Every Minute</div>
+        <div class="preset-btn" onclick="loadPreset('0 * * * *')">Every Hour</div>
+        <div class="preset-btn" onclick="loadPreset('0 0 * * *')">Every Day</div>
+        <div class="preset-btn" onclick="loadPreset('0 0 * * 0')">Every Sunday</div>
+        <div class="preset-btn" onclick="loadPreset('0 0 1 * *')">1st of Month</div>
+    </div>
+
+    <div class="terminal-box">
+        <button class="copy-btn" onclick="copyCron()"><i class="fa-regular fa-copy"></i></button>
+        <div class="cron-display">
+            <span id="dMin">*</span> <span id="dHour">*</span> <span id="dDay">*</span> <span id="dMonth">*</span> <span id="dWeek">*</span>
+        </div>
+        <div class="field-labels">
+            <div class="lbl-item">MIN</div>
+            <div class="lbl-item">HOUR</div>
+            <div class="lbl-item">DAY</div>
+            <div class="lbl-item">MON</div>
+            <div class="lbl-item">WEEK</div>
+        </div>
+        <div class="human-readable" id="humanText">Runs every minute</div>
+    </div>
+
+    <div class="editor-grid">
+        <div class="col-panel">
+            <div class="col-title">Minute</div>
+            <div class="scroll-area" id="listMin"></div>
+        </div>
+        <div class="col-panel">
+            <div class="col-title">Hour</div>
+            <div class="scroll-area" id="listHour"></div>
+        </div>
+        <div class="col-panel">
+            <div class="col-title">Day</div>
+            <div class="scroll-area" id="listDay"></div>
+        </div>
+        <div class="col-panel">
+            <div class="col-title">Month</div>
+            <div class="scroll-area" id="listMonth"></div>
+        </div>
+        <div class="col-panel">
+            <div class="col-title">Weekday</div>
+            <div class="scroll-area" id="listWeek"></div>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>What is a Cron Job?</h2>
+        <p>
+            Cron is a time-based job scheduler in Unix-like computer operating systems (like Linux and macOS). Developers use cron to schedule jobs (commands or scripts) to run periodically at fixed times, dates, or intervals.
+        </p>
+        
+
+        <h3>Understanding Crontab Syntax</h3>
+        <p>A standard cron expression consists of five fields separated by whitespace:</p>
+        <div class="code-block">
+            * * * * * command_to_execute
+            <br>| | | | |
+            <br>| | | | +----- Day of Week (0 - 7) (Sunday=0 or 7)
+            <br>| | | +------- Month (1 - 12)
+            <br>| | +--------- Day of Month (1 - 31)
+            <br>| +----------- Hour (0 - 23)
+            <br>+------------- Minute (0 - 59)
+        </div>
+
+        <h3>Common Cron Examples</h3>
+        <ul>
+            <li><strong>0 0 * * *</strong> - Run once a day at midnight.</li>
+            <li><strong>*/5 * * * *</strong> - Run every 5 minutes.</li>
+            <li><strong>0 0 1 * *</strong> - Run on the first day of every month.</li>
+            <li><strong>0 0 * * 5</strong> - Run every Friday at midnight.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    const state = { min: '*', hour: '*', day: '*', month: '*', week: '*' };
+
+    function init() {
+        buildList('listMin', 0, 59, 'min');
+        buildList('listHour', 0, 23, 'hour');
+        buildList('listDay', 1, 31, 'day');
+        
+        // Months
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        buildListCustom('listMonth', months, 'month', 1);
+
+        // Weekdays
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        buildListCustom('listWeek', days, 'week', 0);
+
+        updateUI();
+    }
+
+    function buildList(id, start, end, key) {
+        const container = document.getElementById(id);
+        
+        // Add "Every" option
+        const everyBtn = document.createElement('div');
+        everyBtn.className = 'select-opt every active';
+        everyBtn.innerText = 'Every ' + key;
+        everyBtn.onclick = () => selectItem(key, '*', everyBtn);
+        container.appendChild(everyBtn);
+
+        for(let i=start; i<=end; i++) {
+            const btn = document.createElement('div');
+            btn.className = 'select-opt';
+            btn.innerText = i < 10 ? '0'+i : i;
+            btn.onclick = () => selectItem(key, i.toString(), btn);
+            container.appendChild(btn);
+        }
+    }
+
+    function buildListCustom(id, arr, key, startIdx) {
+        const container = document.getElementById(id);
+        
+        // Add "Every" option
+        const everyBtn = document.createElement('div');
+        everyBtn.className = 'select-opt every active';
+        everyBtn.innerText = 'Every ' + key;
+        everyBtn.onclick = () => selectItem(key, '*', everyBtn);
+        container.appendChild(everyBtn);
+
+        arr.forEach((label, idx) => {
+            const val = idx + startIdx;
+            const btn = document.createElement('div');
+            btn.className = 'select-opt';
+            btn.innerText = label;
+            btn.onclick = () => selectItem(key, val.toString(), btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectItem(key, val, btnElement) {
+        // Simple logic: Single selection for now (expandable to multi later)
+        state[key] = val;
+        
+        // Visual update
+        const parent = btnElement.parentElement;
+        Array.from(parent.children).forEach(c => c.classList.remove('active'));
+        btnElement.classList.add('active');
+
+        updateDisplay();
+    }
+
+    function loadPreset(str) {
+        const parts = str.split(' ');
+        state.min = parts[0];
+        state.hour = parts[1];
+        state.day = parts[2];
+        state.month = parts[3];
+        state.week = parts[4];
+        
+        // Reset visual state (Simplified: reload)
+        // For a full app, we would match buttons to state
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById('dMin').innerText = state.min;
+        document.getElementById('dHour').innerText = state.hour;
+        document.getElementById('dDay').innerText = state.day;
+        document.getElementById('dMonth').innerText = state.month;
+        document.getElementById('dWeek').innerText = state.week;
+
+        generateHumanText();
+    }
+
+    function generateHumanText() {
+        let text = "Runs ";
+        if(state.min === '*' && state.hour === '*') text += "every minute.";
+        else if(state.min === '0' && state.hour === '*') text += "every hour.";
+        else if(state.min !== '*' && state.hour === '*') text += `at minute ${state.min} of every hour.`;
+        else if(state.min !== '*' && state.hour !== '*') text += `at ${state.hour}:${state.min < 10 ? '0'+state.min : state.min}.`;
+        else text += "custom schedule.";
+
+        document.getElementById('humanText').innerText = text;
+    }
+
+    function copyCron() {
+        const str = `${state.min} ${state.hour} ${state.day} ${state.month} ${state.week}`;
+        navigator.clipboard.writeText(str);
+        alert("Copied to clipboard!");
+    }
+
+    init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free AI Business Name Generator - Brand & Startup Name Ideas</title>
+    <meta name="description" content="Generate catchy, creative, and premium business names instantly. Free AI-powered brand name generator for startups, shops, and agencies.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- BRANDING THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --brand: #8b5cf6; /* Violet (Creative) */
+            --accent: #d946ef; /* Pink */
+            --gradient: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        /* HERO INPUT */
+        .hero { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--muted); font-size: 1.2rem; margin-bottom: 40px; }
+
+        .search-box { 
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 50px; border: var(--border);
+            display: inline-flex; width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .search-box input {
+            flex: 1; background: transparent; border: none; padding: 15px 25px; font-size: 1.2rem; color: white; font-weight: 600; outline: none;
+        }
+        .search-box input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .generate-btn {
+            background: var(--gradient); color: white; border: none; padding: 15px 40px; border-radius: 40px;
+            font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+        }
+        .generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(217, 70, 239, 0.5); }
+
+        /* FILTERS */
+        .filters { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn {
+            background: #1e293b; border: 1px solid #334155; color: var(--muted); padding: 8px 20px;
+            border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.2s;
+        }
+        .filter-btn.active { border-color: var(--brand); color: white; background: rgba(139, 92, 246, 0.1); }
+
+        /* RESULTS GRID */
+        .results-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; 
+            min-height: 200px;
+        }
+
+        .name-card {
+            background: var(--panel); border: var(--border); border-radius: 16px; padding: 25px;
+            text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .name-card:hover { transform: translateY(-5px); border-color: var(--brand); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        
+        .name-text { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 5px; }
+        .name-tag { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .action-row { 
+            margin-top: 15px; display: flex; gap: 10px; opacity: 0; transform: translateY(10px); transition: 0.3s;
+        }
+        .name-card:hover .action-row { opacity: 1; transform: translateY(0); }
+        
+        .icon-btn { 
+            width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); 
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;
+        }
+        .icon-btn:hover { background: var(--brand); }
+
+        /* EMPTY STATE */
+        .empty-state { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px; }
+        .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+        /* SEO SECTION */
+        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
+        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+
+        @media(max-width: 600px) { h1 { font-size: 2rem; } .search-box { flex-direction: column; border-radius: 20px; } .search-box input { text-align: center; } .generate-btn { width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="hero">
+        <h1>AI Business Name Generator</h1>
+        <p class="subtitle">Enter a keyword and let our AI build your brand identity.</p>
+
+        <div class="search-box">
+            <input type="text" id="keyword" placeholder="e.g. Tech, Coffee, Fitness..." onkeypress="handleEnter(event)">
+            <button class="generate-btn" onclick="generateNames()">Generate Names</button>
+        </div>
+    </div>
+
+    <div class="filters">
+        <div class="filter-btn active" onclick="setStyle('all', this)">All Styles</div>
+        <div class="filter-btn" onclick="setStyle('tech', this)">Modern / Tech</div>
+        <div class="filter-btn" onclick="setStyle('short', this)">Short & Punchy</div>
+        <div class="filter-btn" onclick="setStyle('creative', this)">Creative</div>
+    </div>
+
+    <div class="results-grid" id="results">
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-lightbulb"></i></div>
+            <p>Enter a keyword above to generate ideas.</p>
+        </div>
+    </div>
+
+    <div class="seo-section">
+        <h2>How to Choose the Perfect Business Name</h2>
+        <p>
+            Your business name is the first thing customers see. It needs to be memorable, easy to spell, and relevant to your industry. Our <strong>AI Name Generator</strong> uses algorithms to combine popular prefixes, suffixes, and industry terms to create thousands of unique brandable names in seconds.
+        </p>
+
+        <h3>Types of Brand Names</h3>
+        <ul>
+            <li><strong>Descriptive:</strong> Tells you exactly what they do (e.g., General Motors).</li>
+            <li><strong>Evocative:</strong> Suggests a feeling or metaphor (e.g., Nike, Amazon).</li>
+            <li><strong>Invented:</strong> Completely made-up words (e.g., Kodak, Xerox). These are great for trademarking.</li>
+        </ul>
+
+        <h3>Checking Domain Availability</h3>
+        <p>
+            Once you find a name you love, the next step is to secure the <strong>.com domain</strong>. If the .com is taken, consider modern extensions like .io (for tech), .co, or .store.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    let currentStyle = 'all';
+
+    // --- PSEUDO AI DATASETS ---
+    const prefixes = ["Novus", "Apex", "Zen", "Aero", "Lumina", "Hyper", "Omni", "Flux", "Core", "Velox", "Strata", "Nex", "Vysion", "Quant", "Syn"];
+    const suffixes = ["ly", "ify", "io", "gen", "sys", "ops", "lab", "hub", "box", "flow", "base", "works", "zone", "nest", "verse"];
+    const adjectives = ["Smart", "Rapid", "Blue", "Iron", "Urban", "Global", "Prime", "Elite", "Pro", "Master", "Daily", "Pure", "Bright"];
+    const techWords = ["Code", "Soft", "Data", "Net", "Byte", "Pixel", "Cyber", "Link", "Cloud", "Logic"];
+
+    function handleEnter(e) {
+        if(e.key === 'Enter') generateNames();
+    }
+
+    function setStyle(style, btn) {
+        currentStyle = style;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // If keyword exists, regenerate
+        if(document.getElementById('keyword').value) generateNames();
+    }
+
+    function generateNames() {
+        const input = document.getElementById('keyword').value.trim();
+        if(!input) return;
+
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin empty-icon"></i><p>Generating Brand Ideas...</p></div>';
+
+        // Simulate AI Thinking Delay
+        setTimeout(() => {
+            const names = createNames(input);
+            renderNames(names);
+        }, 600);
+    }
+
+    function createNames(key) {
+        let list = [];
+        const capKey = key.charAt(0).toUpperCase() + key.slice(1);
+
+        // 1. Compound (Key + Suffix)
+        suffixes.forEach(s => list.push({name: capKey + s, tag: "Modern"}));
+        
+        // 2. Prefix + Key
+        prefixes.forEach(p => list.push({name: p + capKey, tag: "Premium"}));
+
+        // 3. Adjective + Key
+        adjectives.forEach(a => list.push({name: a + " " + capKey, tag: "Classic"}));
+
+        // 4. Tech Mix (if tech style)
+        if(currentStyle === 'tech' || currentStyle === 'all') {
+            techWords.forEach(t => list.push({name: t + capKey, tag: "Tech"}));
+            list.push({name: capKey + " AI", tag: "Tech"});
+            list.push({name: capKey + " Systems", tag: "Corporate"});
+        }
+
+        // 5. Short/Punchy (Invented)
+        if(currentStyle === 'short' || currentStyle === 'all') {
+            list.push({name: key.slice(0,3) + "o", tag: "Short"});
+            list.push({name: key.slice(0,3) + "ex", tag: "Short"});
+            list.push({name: "Go" + capKey, tag: "Action"});
+        }
+
+        // Shuffle
+        return list.sort(() => Math.random() - 0.5).slice(0, 12);
+    }
+
+    function renderNames(names) {
+        const container = document.getElementById('results');
+        container.innerHTML = "";
+
+        names.forEach(n => {
+            const card = document.createElement('div');
+            card.className = 'name-card';
+            card.innerHTML = `
+                <div class="name-text">${n.name}</div>
+                <div class="name-tag">${n.tag}</div>
+                <div class="action-row">
+                    <div class="icon-btn" title="Copy" onclick="copyName('${n.name}')"><i class="fa-regular fa-copy"></i></div>
+                    <div class="icon-btn" title="Check Domain" onclick="checkDomain('${n.name}')"><i class="fa-solid fa-globe"></i></div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function copyName(text) {
+        navigator.clipboard.writeText(text);
+        alert(text + " copied!");
+    }
+
+    function checkDomain(name) {
+        // Affiliate Link Placeholder (GoDaddy Search)
+        const cleanName = name.replace(/\s/g, '');
+        window.open(`https://www.godaddy.com/domainsearch/find?checkAvail=1&domainToCheck=${cleanName}.com`, '_blank');
+    }
+</script>
+
+</body>
+</html>
