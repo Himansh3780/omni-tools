@@ -1,185 +1,7 @@
 const toolsDB = [
-    // --- BUSINESS & FINANCE ---
-    { 
-        "name": "Commission Calculator", 
-        "url": "commission-calc.html", 
-        "cat": "business", 
-        "icon": "fa-hand-holding-dollar", 
-        "desc": "Calculate sales commissions.", 
-        "tag": "MONEY" 
-    },
-    { 
-        "name": "GST / VAT Calculator", 
-        "url": "gst-calc.html", 
-        "cat": "business", 
-        "icon": "fa-calculator", 
-        "desc": "Add or remove tax instantly.", 
-        "tag": "" 
-    },
-    { 
-        "name": "Invoice Generator", 
-        "url": "invoice-generator.html", 
-        "cat": "business", 
-        "icon": "fa-file-invoice-dollar", 
-        "desc": "Create professional PDF invoices.", 
-        "tag": "PRO" 
-    },
-    { 
-        "name": "Loan Calculator", 
-        "url": "loan-calculator.html", 
-        "cat": "business", 
-        "icon": "fa-sack-dollar", 
-        "desc": "Calculate mortgage payments.", 
-        "tag": "" 
-    },
-    { 
-        "name": "PayPal Fee Calculator", 
-        "url": "paypal-fee.html", 
-        "cat": "business", 
-        "icon": "fa-paypal", 
-        "desc": "Calculate fees for transfers.", 
-        "tag": "" 
-    },
-    { 
-        "name": "PO Generator", 
-        "url": "po-generator.html", 
-        "cat": "business", 
-        "icon": "fa-file-signature", 
-        "desc": "Create B2B Purchase Orders.", 
-        "tag": "" 
-    },
-    { 
-        "name": "Privacy Policy Gen", 
-        "url": "privacy-policy.html", 
-        "cat": "business", 
-        "icon": "fa-shield-halved", 
-        "desc": "Generate legal privacy policies.", 
-        "tag": "LEGAL" 
-    },
-    { 
-        "name": "Profit Margin Tool", 
-        "url": "profit-calculator.html", 
-        "cat": "business", 
-        "icon": "fa-chart-line", 
-        "desc": "Calculate margin & markup.", 
-        "tag": "" 
-    },
-    { 
-        "name": "Receipt Maker", 
-        "url": "receipt-maker.html", 
-        "cat": "business", 
-        "icon": "fa-receipt", 
-        "desc": "Generate rent & cash receipts.", 
-        "tag": "FREE" 
-    },
-    { 
-        "name": "Rent vs. Buy", 
-        "url": "rent-vs-buy.html", 
-        "cat": "business", 
-        "icon": "fa-house-chimney", 
-        "desc": "Compare renting vs buying.", 
-        "tag": "HOT" 
-    },
-    { 
-        "name": "Resignation Letter", 
-        "url": "resignation-letter.html", 
-        "cat": "business", 
-        "icon": "fa-envelope-open-text", 
-        "desc": "Write a resignation letter.", 
-        "tag": "" 
-    },
-    { 
-        "name": "Hourly to Salary", 
-        "url": "salary-converter.html", 
-        "cat": "business", 
-        "icon": "fa-money-bill-wave", 
-        "desc": "Convert hourly to yearly salary.", 
-        "tag": "NEW" 
-    },
-    { 
-        "name": "Inflation Calculator", 
-        "url": "inflation-calc.html", 
-        "cat": "business", 
-        "icon": "fa-arrow-trend-up", 
-        "desc": "Check purchasing power.", 
-        "tag": "HOT" 
-    },
-    { 
-        "name": "Paycheck Calculator", 
-        "url": "paycheck-calc.html", 
-        "cat": "business", 
-        "icon": "fa-money-check-dollar", 
-        "desc": "Estimate take-home pay.", 
-        "tag": "HOT" 
-    },
-    { 
-        "name": "Business Name Gen", 
-        "url": "business-name.html", 
-        "cat": "business", 
-        "icon": "fa-briefcase", 
-        "desc": "AI-powered brand names.", 
-        "tag": "AI" 
-    },
-    { 
-        "name": "Slogan Generator", 
-        "url": "slogan-gen.html", 
-        "cat": "business", 
-        "icon": "fa-lightbulb", 
-        "desc": "Catchy taglines for brands.", 
-        "tag": "" 
-    },
-    { 
-        "name": "CPM Calculator", 
-        "url": "cpm-calc.html", 
-        "cat": "business", 
-        "icon": "fa-chart-pie", 
-        "desc": "Calculate CPM, CPC, CTR.", 
-        "tag": "PRO" 
-    },
-
-    // --- SOCIAL MEDIA ---
-    { 
-        "name": "Instagram Tools", 
-        "url": "instagram.html", 
-        "cat": "social", 
-        "icon": "fa-instagram", 
-        "desc": "Engagement calculator.", 
-        "tag": "" 
-    },
-    { 
-        "name": "TikTok Money Calc", 
-        "url": "tiktok.html", 
-        "cat": "social", 
-        "icon": "fa-tiktok", 
-        "desc": "Estimate earnings from views.", 
-        "tag": "VIRAL" 
-    },
-    { 
-        "name": "Tweet Generator", 
-        "url": "tweet-img.html", 
-        "cat": "social", 
-        "icon": "fa-twitter", 
-        "desc": "Create fake tweet images.", 
-        "tag": "FUN" 
-    },
-    { 
-        "name": "YouTube Thumbnails", 
-        "url": "youtube-thumb.html", 
-        "cat": "social", 
-        "icon": "fa-youtube", 
-        "desc": "Download HD thumbnails.", 
-        "tag": "" 
-    },
-    { 
-        "name": "YouTube Tags", 
-        "url": "yt-tags.html", 
-        "cat": "social", 
-        "icon": "fa-tags", 
-        "desc": "Extract video keywords.", 
-        "tag": "SEO" 
-    },
-
-    // --- DEVELOPER & SEO ---
+    // =========================================
+    // CATEGORY 1: DEVELOPER TOOLS (cat: 'dev')
+    // =========================================
     { 
         "name": "Meta Tag Analyzer", 
         "url": "meta-analyzer.html", 
@@ -356,8 +178,198 @@ const toolsDB = [
         "desc": "Generate Unique IDs.", 
         "tag": "PRO" 
     },
+    { 
+        "name": "Hash Generator", 
+        "url": "hash-generator.html", 
+        "cat": "dev", 
+        "icon": "fa-file-shield", 
+        "desc": "Calculate SHA checksums.", 
+        "tag": "SECURE" 
+    },
 
-    // --- TEXT TOOLS ---
+    // =========================================
+    // CATEGORY 2: BUSINESS TOOLS (cat: 'business')
+    // =========================================
+    { 
+        "name": "Commission Calculator", 
+        "url": "commission-calc.html", 
+        "cat": "business", 
+        "icon": "fa-hand-holding-dollar", 
+        "desc": "Calculate sales commissions.", 
+        "tag": "MONEY" 
+    },
+    { 
+        "name": "GST / VAT Calculator", 
+        "url": "gst-calc.html", 
+        "cat": "business", 
+        "icon": "fa-calculator", 
+        "desc": "Add or remove tax instantly.", 
+        "tag": "" 
+    },
+    { 
+        "name": "Invoice Generator", 
+        "url": "invoice-generator.html", 
+        "cat": "business", 
+        "icon": "fa-file-invoice-dollar", 
+        "desc": "Create professional PDF invoices.", 
+        "tag": "PRO" 
+    },
+    { 
+        "name": "Loan Calculator", 
+        "url": "loan-calculator.html", 
+        "cat": "business", 
+        "icon": "fa-sack-dollar", 
+        "desc": "Calculate mortgage payments.", 
+        "tag": "" 
+    },
+    { 
+        "name": "PayPal Fee Calculator", 
+        "url": "paypal-fee.html", 
+        "cat": "business", 
+        "icon": "fa-paypal", 
+        "desc": "Calculate fees for transfers.", 
+        "tag": "" 
+    },
+    { 
+        "name": "PO Generator", 
+        "url": "po-generator.html", 
+        "cat": "business", 
+        "icon": "fa-file-signature", 
+        "desc": "Create B2B Purchase Orders.", 
+        "tag": "" 
+    },
+    { 
+        "name": "Privacy Policy Gen", 
+        "url": "privacy-policy.html", 
+        "cat": "business", 
+        "icon": "fa-shield-halved", 
+        "desc": "Generate legal privacy policies.", 
+        "tag": "LEGAL" 
+    },
+    { 
+        "name": "Profit Margin Tool", 
+        "url": "profit-calculator.html", 
+        "cat": "business", 
+        "icon": "fa-chart-line", 
+        "desc": "Calculate margin & markup.", 
+        "tag": "" 
+    },
+    { 
+        "name": "Receipt Maker", 
+        "url": "receipt-maker.html", 
+        "cat": "business", 
+        "icon": "fa-receipt", 
+        "desc": "Generate rent & cash receipts.", 
+        "tag": "FREE" 
+    },
+    { 
+        "name": "Rent vs. Buy", 
+        "url": "rent-vs-buy.html", 
+        "cat": "business", 
+        "icon": "fa-house-chimney", 
+        "desc": "Compare renting vs buying.", 
+        "tag": "HOT" 
+    },
+    { 
+        "name": "Resignation Letter", 
+        "url": "resignation-letter.html", 
+        "cat": "business", 
+        "icon": "fa-envelope-open-text", 
+        "desc": "Write a resignation letter.", 
+        "tag": "" 
+    },
+    { 
+        "name": "Hourly to Salary", 
+        "url": "salary-converter.html", 
+        "cat": "business", 
+        "icon": "fa-money-bill-wave", 
+        "desc": "Convert hourly to yearly salary.", 
+        "tag": "NEW" 
+    },
+    { 
+        "name": "Inflation Calculator", 
+        "url": "inflation-calc.html", 
+        "cat": "business", 
+        "icon": "fa-arrow-trend-up", 
+        "desc": "Check purchasing power.", 
+        "tag": "HOT" 
+    },
+    { 
+        "name": "Paycheck Calculator", 
+        "url": "paycheck-calc.html", 
+        "cat": "business", 
+        "icon": "fa-money-check-dollar", 
+        "desc": "Estimate take-home pay.", 
+        "tag": "HOT" 
+    },
+    { 
+        "name": "CPM Calculator", 
+        "url": "cpm-calc.html", 
+        "cat": "business", 
+        "icon": "fa-chart-pie", 
+        "desc": "Calculate CPM, CPC, CTR.", 
+        "tag": "PRO" 
+    },
+
+    // =========================================
+    // CATEGORY 3: TEXT TOOLS (cat: 'text')
+    // =========================================
+    { 
+        "name": "Text Cleaner", 
+        "url": "text-cleaner.html", 
+        "cat": "text", 
+        "icon": "fa-broom", 
+        "desc": "Remove spaces, duplicates & HTML.", 
+        "tag": "HOT" 
+    },
+    { 
+        "name": "URL Slug Generator", 
+        "url": "slug-generator.html", 
+        "cat": "text", 
+        "icon": "fa-link", 
+        "desc": "Create SEO-friendly URL links.", 
+        "tag": "SEO" 
+    },
+    { 
+        "name": "Fancy Text Gen", 
+        "url": "fancy-text.html", 
+        "cat": "text", 
+        "icon": "fa-wand-magic-sparkles", 
+        "desc": "Cool fonts for Instagram & TikTok.", 
+        "tag": "VIRAL" 
+    },
+    { 
+        "name": "Text Diff Checker", 
+        "url": "diff-checker.html", 
+        "cat": "text", 
+        "icon": "fa-code-compare", 
+        "desc": "Compare two texts for differences.", 
+        "tag": "DEV" 
+    },
+    { 
+        "name": "Markdown Editor", 
+        "url": "markdown-editor.html", 
+        "cat": "text", 
+        "icon": "fa-file-pen", 
+        "desc": "Write Markdown with live preview.", 
+        "tag": "DEV" 
+    },
+    { 
+        "name": "Text to Binary", 
+        "url": "binary-text.html", 
+        "cat": "text", 
+        "icon": "fa-terminal", 
+        "desc": "Translate text to 010101 code.", 
+        "tag": "GEEK" 
+    },
+    { 
+        "name": "Text Repeater", 
+        "url": "text-repeater.html", 
+        "cat": "text", 
+        "icon": "fa-repeat", 
+        "desc": "Repeat text 1000 times instantly.", 
+        "tag": "VIRAL" 
+    },
     { 
         "name": "Case Converter", 
         "url": "case-converter.html", 
@@ -383,7 +395,81 @@ const toolsDB = [
         "tag": "" 
     },
 
-    // --- STUDENT ---
+    // =========================================
+    // CATEGORY 4: SOCIAL MEDIA (cat: 'social')
+    // =========================================
+    { 
+        "name": "Instagram Tools", 
+        "url": "instagram.html", 
+        "cat": "social", 
+        "icon": "fa-instagram", 
+        "desc": "Engagement calculator.", 
+        "tag": "" 
+    },
+    { 
+        "name": "TikTok Money Calc", 
+        "url": "tiktok.html", 
+        "cat": "social", 
+        "icon": "fa-tiktok", 
+        "desc": "Estimate earnings from views.", 
+        "tag": "VIRAL" 
+    },
+    { 
+        "name": "Tweet Generator", 
+        "url": "tweet-img.html", 
+        "cat": "social", 
+        "icon": "fa-twitter", 
+        "desc": "Create fake tweet images.", 
+        "tag": "FUN" 
+    },
+    { 
+        "name": "YouTube Thumbnails", 
+        "url": "youtube-thumb.html", 
+        "cat": "social", 
+        "icon": "fa-youtube", 
+        "desc": "Download HD thumbnails.", 
+        "tag": "" 
+    },
+    { 
+        "name": "YouTube Tags", 
+        "url": "yt-tags.html", 
+        "cat": "social", 
+        "icon": "fa-tags", 
+        "desc": "Extract video keywords.", 
+        "tag": "SEO" 
+    },
+
+    // =========================================
+    // CATEGORY 5: AI TOOLS (cat: 'ai')
+    // =========================================
+    { 
+        "name": "Text to Speech", 
+        "url": "text-to-speech.html", 
+        "cat": "ai", 
+        "icon": "fa-volume-high", 
+        "desc": "Convert text to audio instantly.", 
+        "tag": "HOT" 
+    },
+    { 
+        "name": "Business Name Gen", 
+        "url": "business-name.html", 
+        "cat": "ai", 
+        "icon": "fa-briefcase", 
+        "desc": "AI-powered brand names.", 
+        "tag": "AI" 
+    },
+    { 
+        "name": "Slogan Generator", 
+        "url": "slogan-gen.html", 
+        "cat": "ai", 
+        "icon": "fa-lightbulb", 
+        "desc": "Catchy taglines for brands.", 
+        "tag": "" 
+    },
+
+    // =========================================
+    // CATEGORY 6: STUDENT TOOLS (cat: 'student')
+    // =========================================
     { 
         "name": "Age Calculator", 
         "url": "age-calculator.html", 
@@ -409,7 +495,9 @@ const toolsDB = [
         "tag": "" 
     },
 
-    // --- IMAGE ---
+    // =========================================
+    // CATEGORY 7: IMAGE TOOLS (cat: 'image')
+    // =========================================
     { 
         "name": "Image Compressor", 
         "url": "img-compress.html", 
@@ -419,4 +507,3 @@ const toolsDB = [
         "tag": "HOT" 
     }
 ];
-// End of database.js
