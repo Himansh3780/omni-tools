@@ -28,7 +28,7 @@
             color: var(--text); 
             height: 100vh; 
             display: flex; 
-            overflow: hidden; /* Prevents double scrollbars */
+            overflow: hidden; 
         }
 
         /* --- SIDEBAR (App Drawer) --- */
@@ -80,12 +80,11 @@
                 left: 0; 
                 top: 0; 
                 bottom: 0; 
-                transform: translateX(-100%); /* Hidden by default */
+                transform: translateX(-100%); 
                 box-shadow: 20px 0 50px rgba(0,0,0,0.5); 
             }
-            aside.open { transform: translateX(0); } /* Slide in */
+            aside.open { transform: translateX(0); }
             
-            /* Background Overlay */
             #overlay { 
                 position: fixed; inset: 0; background: rgba(0,0,0,0.7); 
                 z-index: 90; display: none; backdrop-filter: blur(4px); 
@@ -140,15 +139,14 @@
         
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Smart Desktop Grid */
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
             gap: 20px; 
             padding-bottom: 80px; 
         }
 
-        /* MOBILE GRID STACK */
         @media(max-width: 600px) {
             .grid-container { padding: 15px; }
-            .grid { grid-template-columns: 1fr; gap: 15px; } /* Stack vertically on phone */
+            .grid { grid-template-columns: 1fr; gap: 15px; }
         }
 
         /* --- CARD DESIGN --- */
@@ -163,7 +161,7 @@
             flex-direction: column; 
             transition: transform 0.2s, border-color 0.2s, background 0.2s;
         }
-        .card:active { transform: scale(0.97); background: #162032; } /* Phone Tap Effect */
+        .card:active { transform: scale(0.97); background: #162032; }
         .card:hover { border-color: var(--primary); transform: translateY(-4px); }
 
         .icon-box { 
@@ -181,6 +179,11 @@
         .card:hover .icon-box.brand-biz { color: #10b981; background: rgba(16,185,129,0.1); }
         .card:hover .icon-box.brand-dev { color: #3b82f6; background: rgba(59,130,246,0.1); }
         .card:hover .icon-box.brand-stu { color: #f59e0b; background: rgba(245,158,11,0.1); }
+        
+        /* NEW COLORS */
+        .card:hover .icon-box.brand-text { color: #2dd4bf; background: rgba(45, 212, 191, 0.1); } /* Teal for Text */
+        .card:hover .icon-box.brand-ai { color: #a855f7; background: rgba(168, 85, 247, 0.1); } /* Purple for AI */
+        .card:hover .icon-box.brand-img { color: #ec4899; background: rgba(236, 72, 153, 0.1); } /* Pink for Image */
 
         .card-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 6px; color: white; }
         .card-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.5; font-weight: 500; }
@@ -195,6 +198,8 @@
         .badge.new { background: rgba(34,197,94,0.15); color: #4ade80; }
         .badge.pro { background: rgba(99,102,241,0.15); color: #818cf8; }
         .badge.seo { background: rgba(245,158,11,0.15); color: #fcd34d; }
+        .badge.viral { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+        .badge.ai { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
 
         /* Error Screen */
         #error-screen { display: none; padding: 50px; text-align: center; color: #ef4444; }
@@ -210,11 +215,15 @@
         </div>
         
         <div class="nav-item active" onclick="filter('all', this)"><i class="fa-solid fa-border-all"></i> All Tools</div>
-        <div class="nav-item" onclick="filter('social', this)"><i class="fa-brands fa-tiktok"></i> Social Media</div>
-        <div class="nav-item" onclick="filter('business', this)"><i class="fa-solid fa-briefcase"></i> Business</div>
-        <div class="nav-item" onclick="filter('student', this)"><i class="fa-solid fa-graduation-cap"></i> Student</div>
+        
         <div class="nav-item" onclick="filter('dev', this)"><i class="fa-solid fa-code"></i> Developer</div>
+        <div class="nav-item" onclick="filter('business', this)"><i class="fa-solid fa-briefcase"></i> Business</div>
+        <div class="nav-item" onclick="filter('text', this)"><i class="fa-solid fa-font"></i> Text Tools</div>
+        <div class="nav-item" onclick="filter('social', this)"><i class="fa-brands fa-tiktok"></i> Social Media</div>
+        
         <div class="nav-item" onclick="filter('image', this)"><i class="fa-solid fa-image"></i> Image Tools</div>
+        <div class="nav-item" onclick="filter('ai', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</div>
+        <div class="nav-item" onclick="filter('student', this)"><i class="fa-solid fa-graduation-cap"></i> Student</div>
         
         <div class="nav-item" onclick="toggleMenu()" style="margin-top:auto; color:#ef4444; border-top:1px solid var(--border); border-radius:0;">
             <i class="fa-solid fa-arrow-left"></i> Close Menu
@@ -249,15 +258,12 @@
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
-        // MOBILE MENU TOGGLE
         function toggleMenu() {
             sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
         }
 
-        // RENDER TOOLS
         function render(cat) {
-            // Close menu on mobile after clicking
             if(window.innerWidth < 850) {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('active');
@@ -265,7 +271,6 @@
 
             grid.innerHTML = "";
             
-            // Check if database loaded
             if(typeof toolsDB === 'undefined') {
                 document.getElementById('error-screen').style.display = 'block';
                 return;
@@ -276,17 +281,19 @@
             filtered.forEach(tool => {
                 let badge = tool.tag ? `<span class="badge ${tool.tag.toLowerCase()}">${tool.tag}</span>` : "";
                 
-                // Icon Logic
                 let iconPrefix = "fa-solid";
                 if (['tiktok','instagram','youtube','twitter','facebook','discord','paypal'].some(b => tool.icon.includes(b))) {
                     iconPrefix = "fa-brands";
                 }
                 
-                // Color Logic
+                // --- CATEGORY COLOR MAPPING ---
                 let brandClass = "brand-dev";
                 if (tool.cat === 'social') brandClass = "brand-social";
                 else if (tool.cat === 'business') brandClass = "brand-biz";
                 else if (tool.cat === 'student') brandClass = "brand-stu";
+                else if (tool.cat === 'text') brandClass = "brand-text";
+                else if (tool.cat === 'ai') brandClass = "brand-ai";
+                else if (tool.cat === 'image') brandClass = "brand-img";
 
                 grid.innerHTML += `
                     <a href="${tool.url}" class="card"> 
@@ -314,7 +321,6 @@
             });
         }
 
-        // Initial Load (Wait 50ms to ensure DB loads)
         setTimeout(() => render('all'), 50);
     </script>
 </body>
