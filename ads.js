@@ -1,19 +1,21 @@
 /* --- AD CONFIGURATION MASTER FILE --- */
 
 const adConfig = {
-    // 1. MASTER SWITCH: Set to 'false' to hide ALL ads instantly.
+    // 1. MASTER SWITCH
+    // Set to 'false' to hide ALL ads instantly (clean site mode).
     enabled: true, 
 
     // 2. HERO CAROUSEL (Big Slider at the Top)
+    // Add as many slides as you want inside the [ brackets ].
     hero: [
         {
-            tag: "FEATURED",
-            title: "Deploy Apps <br>Fast.",
-            desc: "Scale from zero to billion users in seconds.",
-            btnText: "Start Free Trial",
-            btnLink: "https://google.com", 
-            bgImage: "https://placehold.co/1200x400/0f172a/FFFFFF?text=Featured+Ad",
-            accent: "#3b82f6" // Blue
+            tag: "FEATURED",                // Small text above title
+            title: "Deploy Apps <br>Fast.", // Main Headline (<br> is a line break)
+            desc: "Scale from zero to billion users in seconds.", 
+            btnText: "Start Free Trial",    // Button Text
+            btnLink: "https://google.com",  // Button Link
+            bgImage: "https://placehold.co/1200x400/0f172a/FFFFFF?text=Featured+Ad", // Background Image URL
+            accent: "#3b82f6"               // Color of the button and tag (Hex Code)
         },
         {
             tag: "AI POWERED",
@@ -22,7 +24,7 @@ const adConfig = {
             btnText: "Get Plugin",
             btnLink: "#",
             bgImage: "https://placehold.co/1200x400/312e81/FFFFFF?text=AI+Ad",
-            accent: "#a855f7" // Purple
+            accent: "#a855f7"
         }
     ],
 
@@ -33,19 +35,19 @@ const adConfig = {
     },
 
     // 4. NATIVE ADS (In-Feed Cards)
-    // These appear inside the tool grid every 4 items.
-    // 'category' options: 'all', 'dev', 'business', 'social', 'text', 'image', 'ai', 'student'
+    // These cards appear every 4 items in the grid.
+    // 'category' determines where it shows: 'all', 'dev', 'social', 'business', etc.
     native: [
         {
-            category: "all", // SHOWS EVERYWHERE
+            category: "all", // SHOWS ON EVERY PAGE
             title: "Launch Your Startup",
             desc: "Get $5,000 in cloud credits and deploy instantly.",
             cta: "Apply Now",
             link: "https://example.com/credits",
-            icon: "fa-rocket"
+            icon: "fa-rocket" // FontAwesome Icon name
         },
         {
-            category: "dev", // ONLY SHOWS IN 'DEVELOPER' TAB
+            category: "dev", // SHOWS ONLY IN 'DEVELOPER' TAB
             title: "Best VS Code Theme",
             desc: "Download the #1 rated dark theme for coding.",
             cta: "Install",
@@ -53,20 +55,21 @@ const adConfig = {
             icon: "fa-code"
         },
         {
-            category: "social", // ONLY SHOWS IN 'SOCIAL' TAB
+            category: "social", // SHOWS ONLY IN 'SOCIAL' TAB
             title: "Grow Your TikTok",
             desc: "Get 10k followers in 30 days with this guide.",
             cta: "Get Guide",
             link: "#",
             icon: "fa-tiktok"
-        },
-        {
-            category: "business", // ONLY SHOWS IN 'BUSINESS' TAB
-            title: "LLC Formation",
-            desc: "Register your company in 5 minutes.",
-            cta: "Start LLC",
-            link: "#",
-            icon: "fa-briefcase"
         }
-    ]
+    ],
+
+    // 5. STICKY FOOTER AD (Bar at the bottom)
+    stickyFooter: {
+        enabled: true, // Set to false to hide just the footer
+        text: "⚡ <b>Limited Deal:</b> Get 50% OFF Omni-Tools Pro Account!", // You can use HTML like <b>
+        btnText: "Claim Offer",
+        link: "https://example.com/offer",
+        bgColor: "#dc2626" // Red background color
+    }
 };
