@@ -226,14 +226,12 @@
     <main>
         <header>
             <div class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
+            
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" class="search-input" id="search" placeholder="Search 5,000+ trusted tools..." onkeyup="searchTools()">
             </div>
-            <div style="display:flex; gap:15px; align-items:center;">
-                <div style="width:35px; height:35px; background:linear-gradient(45deg, #3b82f6, #8b5cf6); border-radius:50%; display:block;"></div>
-            </div>
-        </header>
+            </header>
 
         <div class="grid-container">
 
@@ -330,7 +328,7 @@
                 window.currentSlide = 0;
             }
 
-            // 3. STICKY FOOTER (New Logic)
+            // 3. STICKY FOOTER
             if(adConfig.stickyFooter && adConfig.stickyFooter.enabled) {
                 const footer = document.getElementById('sticky-footer');
                 const data = adConfig.stickyFooter;
