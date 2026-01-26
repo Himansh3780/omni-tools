@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OmniTools - All-in-One Dashboard</title>
+    <title>OmniTools - Premier Dashboard</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,6 +25,9 @@
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background: var(--bg); 
+            /* Added subtle texture for premium feel */
+            background-image: radial-gradient(circle at top right, #1e293b 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #0f172a 0%, transparent 40%);
             color: var(--text); 
             height: 100vh; 
             display: flex; 
@@ -34,7 +37,8 @@
         /* --- SIDEBAR (App Drawer) --- */
         aside { 
             width: var(--sidebar-width); 
-            background: var(--panel); 
+            background: rgba(15, 23, 42, 0.6); /* Glass effect */
+            backdrop-filter: blur(12px);
             border-right: 1px solid var(--border); 
             display: flex; 
             flex-direction: column; 
@@ -55,10 +59,10 @@
         }
         
         .nav-item { 
-            padding: 14px 16px; 
+            padding: 12px 16px; 
             color: var(--muted); 
             cursor: pointer; 
-            border-radius: 12px; 
+            border-radius: 10px; 
             margin-bottom: 6px; 
             font-size: 0.95rem; 
             font-weight: 600; 
@@ -66,30 +70,40 @@
             align-items: center; 
             gap: 15px; 
             transition: 0.2s; 
+            border: 1px solid transparent;
         }
         .nav-item:hover, .nav-item.active { 
             background: rgba(59, 130, 246, 0.1); 
             color: var(--primary); 
+            border-color: rgba(59, 130, 246, 0.2);
         }
         .nav-item i { width: 20px; text-align: center; }
+
+        /* SIDEBAR AD SLOT */
+        .sidebar-ad-box {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
 
         /* --- MOBILE SIDEBAR LOGIC --- */
         @media(max-width: 850px) {
             aside { 
-                position: fixed; 
-                left: 0; 
-                top: 0; 
-                bottom: 0; 
+                position: fixed; left: 0; top: 0; bottom: 0; 
                 transform: translateX(-100%); 
                 box-shadow: 20px 0 50px rgba(0,0,0,0.5); 
             }
             aside.open { transform: translateX(0); }
-            
             #overlay { 
                 position: fixed; inset: 0; background: rgba(0,0,0,0.7); 
                 z-index: 90; display: none; backdrop-filter: blur(4px); 
             }
             #overlay.active { display: block; }
+            .sidebar-ad-box { display: none; } /* Hide sidebar ad on mobile */
         }
 
         /* --- MAIN CONTENT AREA --- */
@@ -97,25 +111,20 @@
 
         /* HEADER */
         header { 
-            padding: 15px 20px; 
+            padding: 15px 25px; 
             border-bottom: 1px solid var(--border); 
             display: flex; 
             align-items: center; 
-            gap: 15px;
-            background: rgba(2, 6, 23, 0.9); 
+            gap: 20px;
+            background: rgba(2, 6, 23, 0.8); 
             backdrop-filter: blur(10px); 
             z-index: 50;
         }
 
         .menu-btn { 
-            display: none; 
-            font-size: 1.2rem; 
-            color: white; 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            padding: 10px 14px; 
-            border-radius: 10px; 
-            cursor: pointer;
+            display: none; font-size: 1.2rem; color: white; 
+            background: var(--panel); border: 1px solid var(--border); 
+            padding: 10px 14px; border-radius: 10px; cursor: pointer;
         }
         @media(max-width: 850px) { .menu-btn { display: block; } }
 
@@ -124,74 +133,114 @@
         .search-box i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--muted); }
         .search-input { 
             width: 100%; 
-            background: var(--panel); 
+            background: rgba(15, 23, 42, 0.5); 
             border: 1px solid var(--border); 
-            padding: 14px 14px 14px 50px; 
-            border-radius: 12px; 
+            padding: 12px 14px 12px 50px; 
+            border-radius: 50px; /* Modern Pill Shape */
             color: #fff; 
-            font-size: 1rem;
-            transition: border-color 0.2s;
+            font-size: 0.95rem;
+            transition: 0.2s;
         }
-        .search-input:focus { border-color: var(--primary); }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+        /* --- HERO CAROUSEL (The Feature Ad Spot) --- */
+        .hero-container {
+            width: 100%; height: 280px;
+            border-radius: 20px; position: relative; overflow: hidden;
+            margin-bottom: 30px; border: 1px solid var(--border);
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+        }
+        .slide {
+            position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease-in-out;
+            background-size: cover; background-position: center; display: flex; align-items: center;
+        }
+        .slide.active { opacity: 1; z-index: 2; }
+        .slide-content {
+            background: linear-gradient(90deg, #020617 30%, transparent 100%);
+            height: 100%; width: 100%; padding: 50px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .hero-btn {
+            background: var(--primary); color: white; border: none; padding: 10px 24px;
+            border-radius: 8px; font-weight: 700; width: fit-content; cursor: pointer; margin-top: 20px;
+            transition: 0.2s;
+        }
+        .hero-btn:hover { transform: scale(1.05); }
+
+        .dots { position: absolute; bottom: 20px; left: 50px; display: flex; gap: 8px; z-index: 10; }
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: var(--primary); width: 24px; border-radius: 4px; }
+
+        /* --- STATS BAR --- */
+        .stats-bar { display: flex; gap: 40px; margin-bottom: 30px; padding: 0 10px; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-num { font-size: 1.1rem; font-weight: 800; color: white; }
+        .stat-label { font-size: 0.8rem; color: var(--muted); }
 
         /* --- TOOLS GRID --- */
-        .grid-container { flex: 1; overflow-y: auto; padding: 25px; scroll-behavior: smooth; }
+        .grid-container { flex: 1; overflow-y: auto; padding: 30px; scroll-behavior: smooth; }
         
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 24px; 
             padding-bottom: 80px; 
         }
 
         @media(max-width: 600px) {
             .grid-container { padding: 15px; }
             .grid { grid-template-columns: 1fr; gap: 15px; }
+            .hero-container { height: 350px; } /* Taller on mobile for text */
+            .slide-content { padding: 25px; background: linear-gradient(0deg, #020617 40%, transparent 100%); justify-content: flex-end; }
         }
 
         /* --- CARD DESIGN --- */
         .card { 
             background: var(--panel); 
             border: 1px solid var(--border); 
-            border-radius: 18px; 
-            padding: 22px; 
+            border-radius: 16px; 
+            padding: 24px; 
             text-decoration: none; 
             position: relative; 
             display: flex; 
             flex-direction: column; 
-            transition: transform 0.2s, border-color 0.2s, background 0.2s;
+            transition: all 0.2s;
         }
-        .card:active { transform: scale(0.97); background: #162032; }
-        .card:hover { border-color: var(--primary); transform: translateY(-4px); }
+        .card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4);
+        }
 
         .icon-box { 
-            width: 55px; height: 55px; 
+            width: 50px; height: 50px; 
             background: rgba(255,255,255,0.03); 
-            border-radius: 14px; 
+            border-radius: 12px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 1.6rem; 
+            font-size: 1.5rem; 
             color: var(--muted); 
             margin-bottom: 18px; 
+            transition: 0.2s;
         }
 
-        /* DYNAMIC COLORS */
+        /* Brand Colors */
         .card:hover .icon-box.brand-social { color: #f43f5e; background: rgba(244,63,94,0.1); }
         .card:hover .icon-box.brand-biz { color: #10b981; background: rgba(16,185,129,0.1); }
         .card:hover .icon-box.brand-dev { color: #3b82f6; background: rgba(59,130,246,0.1); }
         .card:hover .icon-box.brand-stu { color: #f59e0b; background: rgba(245,158,11,0.1); }
-        
-        /* NEW COLORS */
-        .card:hover .icon-box.brand-text { color: #2dd4bf; background: rgba(45, 212, 191, 0.1); } /* Teal for Text */
-        .card:hover .icon-box.brand-ai { color: #a855f7; background: rgba(168, 85, 247, 0.1); } /* Purple for AI */
-        .card:hover .icon-box.brand-img { color: #ec4899; background: rgba(236, 72, 153, 0.1); } /* Pink for Image */
+        .card:hover .icon-box.brand-text { color: #2dd4bf; background: rgba(45, 212, 191, 0.1); }
+        .card:hover .icon-box.brand-ai { color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+        .card:hover .icon-box.brand-img { color: #ec4899; background: rgba(236, 72, 153, 0.1); }
 
-        .card-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 6px; color: white; }
+        .card-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; color: white; display: flex; align-items: center; gap: 8px; }
         .card-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.5; font-weight: 500; }
         
+        /* Verified Badge */
+        .verified-icon { color: var(--primary); font-size: 0.9rem; }
+
         .badge { 
-            position: absolute; top: 22px; right: 22px; 
+            position: absolute; top: 24px; right: 24px; 
             font-size: 0.7rem; font-weight: 800; 
-            padding: 5px 10px; border-radius: 8px; 
+            padding: 4px 10px; border-radius: 6px; 
             letter-spacing: 0.5px;
         }
         .badge.hot { background: rgba(244,63,94,0.15); color: #fb7185; }
@@ -200,6 +249,17 @@
         .badge.seo { background: rgba(245,158,11,0.15); color: #fcd34d; }
         .badge.viral { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
         .badge.ai { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+        /* --- NATIVE AD CARD --- */
+        .card.native-ad {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .card.native-ad .icon-box { background: white; color: black; }
+        .ad-cta { 
+            margin-top: 15px; color: var(--primary); font-size: 0.9rem; font-weight: 700; 
+            display: flex; align-items: center; gap: 5px;
+        }
 
         /* Error Screen */
         #error-screen { display: none; padding: 50px; text-align: center; color: #ef4444; }
@@ -225,6 +285,11 @@
         <div class="nav-item" onclick="filter('ai', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Tools</div>
         <div class="nav-item" onclick="filter('student', this)"><i class="fa-solid fa-graduation-cap"></i> Student</div>
         
+        <div class="sidebar-ad-box">
+            <div style="font-size:0.7rem; color:#64748b; margin-bottom:10px; text-transform:uppercase;">Sponsored</div>
+            <img src="https://placehold.co/200x200/1e293b/FFFFFF?text=Partner+Ad" style="width:100%; border-radius:8px;">
+        </div>
+
         <div class="nav-item" onclick="toggleMenu()" style="margin-top:auto; color:#ef4444; border-top:1px solid var(--border); border-radius:0;">
             <i class="fa-solid fa-arrow-left"></i> Close Menu
         </div>
@@ -235,23 +300,92 @@
             <div class="menu-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></div>
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="search-input" id="search" placeholder="Search for tools..." onkeyup="searchTools()">
+                <input type="text" class="search-input" id="search" placeholder="Search 5,000+ trusted tools..." onkeyup="searchTools()">
+            </div>
+            <div style="display:flex; gap:15px; align-items:center;">
+                <button style="background:var(--border); color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:600; cursor:pointer; display:none;">Submit</button>
+                <div style="width:35px; height:35px; background:linear-gradient(45deg, #3b82f6, #8b5cf6); border-radius:50%; display:block;"></div>
             </div>
         </header>
 
-        <div id="error-screen">
-            <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem; margin-bottom:20px;"></i>
-            <h3>Database Error</h3>
-            <p>Could not load 'database.js'. Make sure it is in the same folder.</p>
-        </div>
-
         <div class="grid-container">
+
+            <div class="hero-container">
+                <div class="slide active" style="background-image: url('https://placehold.co/1200x400/0f172a/FFFFFF?text=Background');">
+                    <div class="slide-content">
+                        <span style="color:var(--primary); font-weight:700; letter-spacing:1px; font-size:0.8rem; margin-bottom:10px;">FEATURED</span>
+                        <h1 style="font-size:2.2rem; font-weight:800; line-height:1.1; margin-bottom:15px; color:white;">Deploy Apps <br>in Seconds.</h1>
+                        <p style="color:#cbd5e1; max-width:500px; margin-bottom:20px;">The developer platform for the AI era. Scale from zero to billion users.</p>
+                        <button class="hero-btn">Start Free Trial</button>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://placehold.co/1200x400/312e81/FFFFFF?text=Background');">
+                    <div class="slide-content">
+                        <span style="color:#a855f7; font-weight:700; letter-spacing:1px; font-size:0.8rem; margin-bottom:10px;">AI POWERED</span>
+                        <h1 style="font-size:2.2rem; font-weight:800; line-height:1.1; margin-bottom:15px; color:white;">Write Code <br>With Omni-AI.</h1>
+                        <p style="color:#cbd5e1; max-width:500px; margin-bottom:20px;">Your intelligent pair programmer. Suggests code and fixes bugs.</p>
+                        <button class="hero-btn" style="background:#a855f7;">Install Plugin</button>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://placehold.co/1200x400/064e3b/FFFFFF?text=Background');">
+                    <div class="slide-content">
+                        <span style="color:#10b981; font-weight:700; letter-spacing:1px; font-size:0.8rem; margin-bottom:10px;">FINANCE</span>
+                        <h1 style="font-size:2.2rem; font-weight:800; line-height:1.1; margin-bottom:15px; color:white;">Smart Banking <br>For Startups.</h1>
+                        <p style="color:#cbd5e1; max-width:500px; margin-bottom:20px;">No fees. 4.5% APY. The bank account built for founders.</p>
+                        <button class="hero-btn" style="background:#10b981;">Open Account</button>
+                    </div>
+                </div>
+
+                <div class="dots">
+                    <div class="dot active" onclick="setSlide(0)"></div>
+                    <div class="dot" onclick="setSlide(1)"></div>
+                    <div class="dot" onclick="setSlide(2)"></div>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-num">5,200+</span>
+                    <span class="stat-label">Verified Tools</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">1.2M</span>
+                    <span class="stat-label">Monthly Users</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">Secure</span>
+                </div>
+            </div>
+
+            <div id="error-screen">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem; margin-bottom:20px;"></i>
+                <h3>Database Error</h3>
+                <p>Could not load 'database.js'. Make sure it is in the same folder.</p>
+            </div>
+
+            <h3 style="margin-bottom:20px; color:white;">Trending Tools</h3>
             <div class="grid" id="tools-grid">
                 </div>
         </div>
     </main>
 
-    <script src="database.js"></script>
+    <script>
+        const demoToolsDB = [
+            {name: "JSON Formatter", desc: "Beautify and validate JSON code.", url: "#", icon: "fa-code", cat: "dev", tag: "HOT"},
+            {name: "PDF Compressor", desc: "Reduce PDF file size quickly.", url: "#", icon: "fa-file-pdf", cat: "business", tag: "NEW"},
+            {name: "Instagram Downloader", desc: "Save posts and reels.", url: "#", icon: "fa-instagram", cat: "social", tag: "VIRAL"},
+            {name: "ChatGPT Prompt Gen", desc: "Create perfect AI prompts.", url: "#", icon: "fa-robot", cat: "ai", tag: "AI"},
+            {name: "Word Counter", desc: "Count words and characters.", url: "#", icon: "fa-align-left", cat: "text", tag: ""},
+            {name: "Background Remover", desc: "Remove image backgrounds.", url: "#", icon: "fa-image", cat: "image", tag: "PRO"},
+            {name: "Code Minifier", desc: "Minify CSS/JS files.", url: "#", icon: "fa-file-code", cat: "dev", tag: ""},
+            {name: "QR Generator", desc: "Create custom QR codes.", url: "#", icon: "fa-qrcode", cat: "business", tag: "SEO"},
+            {name: "Video Trimmer", desc: "Cut videos online instantly.", url: "#", icon: "fa-video", cat: "social", tag: ""},
+            {name: "Citation Machine", desc: "APA & MLA Citation generator.", url: "#", icon: "fa-book", cat: "student", tag: "FREE"},
+        ];
+    </script>
+
+    <script src="database.js" onerror="window.toolsDB = demoToolsDB"></script>
 
     <script>
         const grid = document.getElementById('tools-grid');
@@ -271,12 +405,16 @@
 
             grid.innerHTML = "";
             
-            if(typeof toolsDB === 'undefined') {
+            // Check for DB or Fallback
+            const db = (typeof toolsDB !== 'undefined') ? toolsDB : window.demoToolsDB;
+
+            if(!db) {
                 document.getElementById('error-screen').style.display = 'block';
                 return;
             }
 
-            const filtered = cat === 'all' ? toolsDB : toolsDB.filter(t => t.cat === cat);
+            const filtered = cat === 'all' ? db : db.filter(t => t.cat === cat);
+            let counter = 0;
             
             filtered.forEach(tool => {
                 let badge = tool.tag ? `<span class="badge ${tool.tag.toLowerCase()}">${tool.tag}</span>` : "";
@@ -299,10 +437,27 @@
                     <a href="${tool.url}" class="card"> 
                         ${badge}
                         <div class="icon-box ${brandClass}"><i class="${iconPrefix} ${tool.icon}"></i></div>
-                        <div class="card-title">${tool.name}</div>
+                        <div class="card-title">
+                            ${tool.name} 
+                            <i class="fa-solid fa-circle-check verified-icon"></i>
+                        </div>
                         <div class="card-desc">${tool.desc}</div>
                     </a>
                 `;
+
+                counter++;
+
+                // --- INSERT NATIVE AD EVERY 4 ITEMS ---
+                if (counter % 4 === 0) {
+                    grid.innerHTML += `
+                        <div class="card native-ad">
+                            <div class="icon-box"><i class="fa-solid fa-rocket"></i></div>
+                            <div class="card-title">Launch Your Startup</div>
+                            <div class="card-desc">Get $5,000 in cloud credits and deploy instantly.</div>
+                            <div class="ad-cta">Apply Now <i class="fa-solid fa-arrow-right"></i></div>
+                        </div>
+                    `;
+                }
             });
         }
 
@@ -315,11 +470,32 @@
         function searchTools() {
             const q = document.getElementById('search').value.toLowerCase();
             document.querySelectorAll('.card').forEach(c => {
+                if(c.classList.contains('native-ad')) return; // Don't filter ads
                 const title = c.querySelector('.card-title').innerText.toLowerCase();
                 const desc = c.querySelector('.card-desc').innerText.toLowerCase();
                 c.style.display = (title.includes(q) || desc.includes(q)) ? 'flex' : 'none';
             });
         }
+
+        // --- CAROUSEL ANIMATION ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function setSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            let next = (currentSlide + 1) % slides.length;
+            setSlide(next);
+        }
+
+        setInterval(nextSlide, 5000); // Auto-rotate every 5s
 
         setTimeout(() => render('all'), 50);
     </script>
