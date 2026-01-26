@@ -166,6 +166,35 @@
         .card.native-ad .icon-box { background: white; color: black; }
         .ad-cta { margin-top: 15px; color: var(--primary); font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
 
+        /* --- STICKY FOOTER STYLES --- */
+        #sticky-footer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #2563eb; color: white;
+            padding: 12px 20px; z-index: 200;
+            display: none; /* Hidden by default */
+            align-items: center; justify-content: center; gap: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-text { font-weight: 600; font-size: 0.95rem; }
+        .footer-btn { 
+            background: white; color: black; border: none; 
+            padding: 6px 16px; border-radius: 6px; font-weight: 700; 
+            cursor: pointer; text-decoration: none; font-size: 0.85rem; 
+            transition: transform 0.2s; white-space: nowrap;
+        }
+        .footer-btn:hover { transform: scale(1.05); }
+        .close-footer { 
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
+            cursor: pointer; opacity: 0.7; font-size: 1.1rem; 
+        }
+        .close-footer:hover { opacity: 1; }
+
+        @media(max-width: 600px) {
+            #sticky-footer { flex-direction: column; gap: 10px; padding: 15px; text-align: center; }
+            .close-footer { top: 10px; right: 10px; transform: none; }
+        }
+
         #error-screen { display: none; padding: 50px; text-align: center; color: #ef4444; }
     </style>
 </head>
@@ -226,6 +255,8 @@
             <div class="grid" id="tools-grid"></div>
         </div>
     </main>
+    
+    <div id="sticky-footer"></div>
 
     <script src="ads.js"></script>
 
@@ -298,6 +329,20 @@
                 window.heroDots = document.querySelectorAll('.dot');
                 window.currentSlide = 0;
             }
+
+            // 3. STICKY FOOTER (New Logic)
+            if(adConfig.stickyFooter && adConfig.stickyFooter.enabled) {
+                const footer = document.getElementById('sticky-footer');
+                const data = adConfig.stickyFooter;
+
+                footer.style.display = 'flex';
+                footer.style.background = data.bgColor;
+                footer.innerHTML = `
+                    <div class="footer-text">${data.text}</div>
+                    <a href="${data.link}" class="footer-btn">${data.btnText}</a>
+                    <div class="close-footer" onclick="this.parentElement.style.display='none'"><i class="fa-solid fa-xmark"></i></div>
+                `;
+            }
         }
 
         // --- B. RENDER TOOLS + CATEGORY ADS ---
@@ -318,7 +363,6 @@
             // 2. Filter Ads for this Category
             let availableAds = [];
             if(typeof adConfig !== 'undefined' && adConfig.enabled && adConfig.native) {
-                // Get ads that match CURRENT category OR 'all'
                 availableAds = adConfig.native.filter(ad => ad.category === 'all' || ad.category === cat);
             }
 
@@ -351,7 +395,6 @@
 
                 // 3. Inject Ad Every 4 Slots
                 if (counter % 4 === 0 && availableAds.length > 0) {
-                    // Pick the next ad in the list (looping)
                     const ad = availableAds[adCounter % availableAds.length];
                     
                     grid.innerHTML += `
@@ -362,7 +405,7 @@
                             <div class="ad-cta">${ad.cta} <i class="fa-solid fa-arrow-right"></i></div>
                         </a>
                     `;
-                    adCounter++; // Move to next ad for next slot
+                    adCounter++; 
                 }
             });
         }
