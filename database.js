@@ -4,7 +4,7 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Meta Tag Analyzer", 
-        "url": "meta-analyzer.html", 
+        "url": "meta-analyzer", 
         "cat": "dev", 
         "icon": "fa-magnifying-glass-chart", 
         "desc": "Analyze SEO meta tags.", 
@@ -12,23 +12,23 @@ const toolsDB = [
     },
     {
         "name": "JSON Formatter",
-        "url": "json-formatter.html", 
+        "url": "json-formatter", 
         "cat": "dev",
         "icon": "fa-code",
         "desc": "Beautify and validate JSON code.",
         "tag": "HOT"
     },
     {
-        name: "UUID Generator",
-        desc: "Generate random UUIDs/GUIDs in bulk.",
-        url: "uuid-generator.html",
-        icon: "fa-fingerprint",
-        cat: "dev",
-        tag: "PRO"
+        "name": "UUID Generator",
+        "desc": "Generate random UUIDs/GUIDs in bulk.",
+        "url": "uuid-generator",
+        "icon": "fa-fingerprint",
+        "cat": "dev",
+        "tag": "PRO"
     },
     { 
         "name": "QR Code Generator", 
-        "url": "qr-code.html", 
+        "url": "qr-code", 
         "cat": "dev", 
         "icon": "fa-qrcode", 
         "desc": "Create custom QR codes.", 
@@ -36,7 +36,7 @@ const toolsDB = [
     },
     { 
         "name": "Schema Generator", 
-        "url": "schema-gen.html", 
+        "url": "schema-gen", 
         "cat": "dev", 
         "icon": "fa-code", 
         "desc": "Create structured JSON-LD.", 
@@ -44,7 +44,7 @@ const toolsDB = [
     },
     { 
         "name": "Sitemap Generator", 
-        "url": "sitemap-gen.html", 
+        "url": "sitemap-gen", 
         "cat": "dev", 
         "icon": "fa-sitemap", 
         "desc": "Create XML sitemaps.", 
@@ -52,7 +52,7 @@ const toolsDB = [
     },
     { 
         "name": "Cron Job Generator", 
-        "url": "cron-job.html", 
+        "url": "cron-job", 
         "cat": "dev", 
         "icon": "fa-clock", 
         "desc": "Create Linux cron schedules.", 
@@ -60,7 +60,7 @@ const toolsDB = [
     },
     { 
         "name": "JSON to CSV", 
-        "url": "json-csv.html", 
+        "url": "json-csv", 
         "cat": "dev", 
         "icon": "fa-file-csv", 
         "desc": "Convert JSON to CSV.", 
@@ -68,7 +68,7 @@ const toolsDB = [
     },
     { 
         "name": "CSV to JSON", 
-        "url": "csv-json.html", 
+        "url": "csv-json", 
         "cat": "dev", 
         "icon": "fa-file-code", 
         "desc": "Convert CSV to JSON.", 
@@ -76,7 +76,7 @@ const toolsDB = [
     },
     { 
         "name": "HTML Minifier", 
-        "url": "html-minify.html", 
+        "url": "html-minify", 
         "cat": "dev", 
         "icon": "fa-compress", 
         "desc": "Compress HTML code.", 
@@ -84,7 +84,7 @@ const toolsDB = [
     },
     { 
         "name": "CSS Beautifier", 
-        "url": "css-beautify.html", 
+        "url": "css-beautify", 
         "cat": "dev", 
         "icon": "fa-wand-magic", 
         "desc": "Format messy CSS code.", 
@@ -92,7 +92,7 @@ const toolsDB = [
     },
     { 
         "name": "SQL Formatter", 
-        "url": "sql-format.html", 
+        "url": "sql-format", 
         "cat": "dev", 
         "icon": "fa-database", 
         "desc": "Beautify SQL queries.", 
@@ -100,7 +100,7 @@ const toolsDB = [
     },
     { 
         "name": "Meta Tag Generator", 
-        "url": "meta-tag.html", 
+        "url": "meta-tag", 
         "cat": "dev", 
         "icon": "fa-magnifying-glass", 
         "desc": "Generate SEO tags.", 
@@ -108,7 +108,7 @@ const toolsDB = [
     },
     { 
         "name": "Open Graph Gen", 
-        "url": "open-graph.html", 
+        "url": "open-graph", 
         "cat": "dev", 
         "icon": "fa-share-nodes", 
         "desc": "Create social media cards.", 
@@ -116,7 +116,7 @@ const toolsDB = [
     },
     { 
         "name": "Robots.txt Gen", 
-        "url": "robots-gen.html", 
+        "url": "robots-gen", 
         "cat": "dev", 
         "icon": "fa-robot", 
         "desc": "Generate robots.txt files.", 
@@ -124,7 +124,7 @@ const toolsDB = [
     },
     { 
         "name": ".htaccess Gen", 
-        "url": "htaccess.html", 
+        "url": "htaccess", 
         "cat": "dev", 
         "icon": "fa-server", 
         "desc": "Generate server rules.", 
@@ -132,7 +132,7 @@ const toolsDB = [
     },
     { 
         "name": "User Agent Lookup", 
-        "url": "user-agent.html", 
+        "url": "user-agent", 
         "cat": "dev", 
         "icon": "fa-fingerprint", 
         "desc": "Check browser info.", 
@@ -140,7 +140,7 @@ const toolsDB = [
     },
     { 
         "name": "What Is My IP", 
-        "url": "my-ip.html", 
+        "url": "my-ip", 
         "cat": "dev", 
         "icon": "fa-laptop-code", 
         "desc": "Show public IP.", 
@@ -148,7 +148,7 @@ const toolsDB = [
     },
     { 
         "name": "DNS Lookup", 
-        "url": "dns-lookup.html", 
+        "url": "dns-lookup", 
         "cat": "dev", 
         "icon": "fa-network-wired", 
         "desc": "Check DNS records.", 
@@ -156,7 +156,7 @@ const toolsDB = [
     },
     { 
         "name": "Screen Resolution", 
-        "url": "screen-res.html", 
+        "url": "screen-res", 
         "cat": "dev", 
         "icon": "fa-display", 
         "desc": "Test responsive design.", 
@@ -164,7 +164,7 @@ const toolsDB = [
     },
     { 
         "name": "Keycode Checker", 
-        "url": "keycode.html", 
+        "url": "keycode", 
         "cat": "dev", 
         "icon": "fa-keyboard", 
         "desc": "Get JS keycodes.", 
@@ -172,7 +172,7 @@ const toolsDB = [
     },
     { 
         "name": "Base64 Converter", 
-        "url": "base64-tool.html", 
+        "url": "base64-tool", 
         "cat": "dev", 
         "icon": "fa-file-shield", 
         "desc": "Encode text & images.", 
@@ -180,7 +180,7 @@ const toolsDB = [
     },
     { 
         "name": "URL Encoder", 
-        "url": "url-encode.html", 
+        "url": "url-encode", 
         "cat": "dev", 
         "icon": "fa-link", 
         "desc": "Encode/Decode URLs.", 
@@ -188,20 +188,19 @@ const toolsDB = [
     },
     { 
         "name": "UUID Generator", 
-        "url": "uuid-gen.html", 
+        "url": "uuid-gen", 
         "cat": "dev", 
         "icon": "fa-fingerprint", 
         "desc": "Generate Unique IDs.", 
         "tag": "PRO" 
     },
-  
 
     // =========================================
     // CATEGORY 2: BUSINESS TOOLS (cat: 'business')
     // =========================================
     { 
         "name": "Commission Calculator", 
-        "url": "commission-calc.html", 
+        "url": "commission-calc", 
         "cat": "business", 
         "icon": "fa-hand-holding-dollar", 
         "desc": "Calculate sales commissions.", 
@@ -209,7 +208,7 @@ const toolsDB = [
     },
     { 
         "name": "GST / VAT Calculator", 
-        "url": "gst-calc.html", 
+        "url": "gst-calc", 
         "cat": "business", 
         "icon": "fa-calculator", 
         "desc": "Add or remove tax instantly.", 
@@ -217,7 +216,7 @@ const toolsDB = [
     },
     { 
         "name": "Invoice Generator", 
-        "url": "invoice-generator.html", 
+        "url": "invoice-generator", 
         "cat": "business", 
         "icon": "fa-file-invoice-dollar", 
         "desc": "Create professional PDF invoices.", 
@@ -225,7 +224,7 @@ const toolsDB = [
     },
     { 
         "name": "Loan Calculator", 
-        "url": "loan-calculator.html", 
+        "url": "loan-calculator", 
         "cat": "business", 
         "icon": "fa-sack-dollar", 
         "desc": "Calculate mortgage payments.", 
@@ -233,7 +232,7 @@ const toolsDB = [
     },
     { 
         "name": "PayPal Fee Calculator", 
-        "url": "paypal-fee.html", 
+        "url": "paypal-fee", 
         "cat": "business", 
         "icon": "fa-paypal", 
         "desc": "Calculate fees for transfers.", 
@@ -241,7 +240,7 @@ const toolsDB = [
     },
     { 
         "name": "PO Generator", 
-        "url": "po-generator.html", 
+        "url": "po-generator", 
         "cat": "business", 
         "icon": "fa-file-signature", 
         "desc": "Create B2B Purchase Orders.", 
@@ -249,7 +248,7 @@ const toolsDB = [
     },
     { 
         "name": "Privacy Policy Gen", 
-        "url": "privacy-policy.html", 
+        "url": "privacy-policy", 
         "cat": "business", 
         "icon": "fa-shield-halved", 
         "desc": "Generate legal privacy policies.", 
@@ -257,7 +256,7 @@ const toolsDB = [
     },
     { 
         "name": "Profit Margin Tool", 
-        "url": "profit-calculator.html", 
+        "url": "profit-calculator", 
         "cat": "business", 
         "icon": "fa-chart-line", 
         "desc": "Calculate margin & markup.", 
@@ -265,7 +264,7 @@ const toolsDB = [
     },
     { 
         "name": "Receipt Maker", 
-        "url": "receipt-maker.html", 
+        "url": "receipt-maker", 
         "cat": "business", 
         "icon": "fa-receipt", 
         "desc": "Generate rent & cash receipts.", 
@@ -273,7 +272,7 @@ const toolsDB = [
     },
     { 
         "name": "Rent vs. Buy", 
-        "url": "rent-vs-buy.html", 
+        "url": "rent-vs-buy", 
         "cat": "business", 
         "icon": "fa-house-chimney", 
         "desc": "Compare renting vs buying.", 
@@ -281,7 +280,7 @@ const toolsDB = [
     },
     { 
         "name": "Resignation Letter", 
-        "url": "resignation-letter.html", 
+        "url": "resignation-letter", 
         "cat": "business", 
         "icon": "fa-envelope-open-text", 
         "desc": "Write a resignation letter.", 
@@ -289,7 +288,7 @@ const toolsDB = [
     },
     { 
         "name": "Hourly to Salary", 
-        "url": "salary-converter.html", 
+        "url": "salary-converter", 
         "cat": "business", 
         "icon": "fa-money-bill-wave", 
         "desc": "Convert hourly to yearly salary.", 
@@ -297,7 +296,7 @@ const toolsDB = [
     },
     { 
         "name": "Inflation Calculator", 
-        "url": "inflation-calc.html", 
+        "url": "inflation-calc", 
         "cat": "business", 
         "icon": "fa-arrow-trend-up", 
         "desc": "Check purchasing power.", 
@@ -305,7 +304,7 @@ const toolsDB = [
     },
     { 
         "name": "Paycheck Calculator", 
-        "url": "paycheck-calc.html", 
+        "url": "paycheck-calc", 
         "cat": "business", 
         "icon": "fa-money-check-dollar", 
         "desc": "Estimate take-home pay.", 
@@ -313,7 +312,7 @@ const toolsDB = [
     },
     { 
         "name": "CPM Calculator", 
-        "url": "cpm-calc.html", 
+        "url": "cpm-calc", 
         "cat": "business", 
         "icon": "fa-chart-pie", 
         "desc": "Calculate CPM, CPC, CTR.", 
@@ -325,7 +324,7 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Text Cleaner", 
-        "url": "text-cleaner.html", 
+        "url": "text-cleaner", 
         "cat": "text", 
         "icon": "fa-broom", 
         "desc": "Remove spaces, duplicates & HTML.", 
@@ -333,7 +332,7 @@ const toolsDB = [
     },
     { 
         "name": "URL Slug Generator", 
-        "url": "slug-generator.html", 
+        "url": "slug-generator", 
         "cat": "text", 
         "icon": "fa-link", 
         "desc": "Create SEO-friendly URL links.", 
@@ -341,7 +340,7 @@ const toolsDB = [
     },
     { 
         "name": "Fancy Text Gen", 
-        "url": "fancy-text.html", 
+        "url": "fancy-text", 
         "cat": "text", 
         "icon": "fa-wand-magic-sparkles", 
         "desc": "Cool fonts for Instagram & TikTok.", 
@@ -349,7 +348,7 @@ const toolsDB = [
     },
     { 
         "name": "Text Diff Checker", 
-        "url": "diff-checker.html", 
+        "url": "diff-checker", 
         "cat": "text", 
         "icon": "fa-code-compare", 
         "desc": "Compare two texts for differences.", 
@@ -357,7 +356,7 @@ const toolsDB = [
     },
     { 
         "name": "Markdown Editor", 
-        "url": "markdown-editor.html", 
+        "url": "markdown-editor", 
         "cat": "text", 
         "icon": "fa-file-pen", 
         "desc": "Write Markdown with live preview.", 
@@ -365,7 +364,7 @@ const toolsDB = [
     },
     { 
         "name": "Text to Binary", 
-        "url": "binary-text.html", 
+        "url": "binary-text", 
         "cat": "text", 
         "icon": "fa-terminal", 
         "desc": "Translate text to 010101 code.", 
@@ -373,7 +372,7 @@ const toolsDB = [
     },
     { 
         "name": "Text Repeater", 
-        "url": "text-repeater.html", 
+        "url": "text-repeater", 
         "cat": "text", 
         "icon": "fa-repeat", 
         "desc": "Repeat text 1000 times instantly.", 
@@ -381,7 +380,7 @@ const toolsDB = [
     },
     { 
         "name": "Case Converter", 
-        "url": "case-converter.html", 
+        "url": "case-converter", 
         "cat": "text", 
         "icon": "fa-font", 
         "desc": "Convert text case.", 
@@ -389,7 +388,7 @@ const toolsDB = [
     },
     { 
         "name": "Lorem Ipsum", 
-        "url": "lorem-ipsum.html", 
+        "url": "lorem-ipsum", 
         "cat": "text", 
         "icon": "fa-paragraph", 
         "desc": "Generate placeholder text.", 
@@ -397,7 +396,7 @@ const toolsDB = [
     },
     { 
         "name": "Word Counter", 
-        "url": "word-counter.html", 
+        "url": "word-counter", 
         "cat": "text", 
         "icon": "fa-pen-nib", 
         "desc": "Count words & chars.", 
@@ -409,7 +408,7 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Instagram Tools", 
-        "url": "instagram.html", 
+        "url": "instagram", 
         "cat": "social", 
         "icon": "fa-instagram", 
         "desc": "Engagement calculator.", 
@@ -417,7 +416,7 @@ const toolsDB = [
     },
     { 
         "name": "TikTok Money Calc", 
-        "url": "tiktok.html", 
+        "url": "tiktok", 
         "cat": "social", 
         "icon": "fa-tiktok", 
         "desc": "Estimate earnings from views.", 
@@ -425,7 +424,7 @@ const toolsDB = [
     },
     { 
         "name": "Tweet Generator", 
-        "url": "tweet-img.html", 
+        "url": "tweet-img", 
         "cat": "social", 
         "icon": "fa-twitter", 
         "desc": "Create fake tweet images.", 
@@ -433,7 +432,7 @@ const toolsDB = [
     },
     { 
         "name": "YouTube Thumbnails", 
-        "url": "youtube-thumb.html", 
+        "url": "youtube-thumb", 
         "cat": "social", 
         "icon": "fa-youtube", 
         "desc": "Download HD thumbnails.", 
@@ -441,7 +440,7 @@ const toolsDB = [
     },
     { 
         "name": "YouTube Tags", 
-        "url": "yt-tags.html", 
+        "url": "yt-tags", 
         "cat": "social", 
         "icon": "fa-tags", 
         "desc": "Extract video keywords.", 
@@ -453,7 +452,7 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Text to Speech", 
-        "url": "text-to-speech.html", 
+        "url": "text-to-speech", 
         "cat": "ai", 
         "icon": "fa-volume-high", 
         "desc": "Convert text to audio instantly.", 
@@ -461,7 +460,7 @@ const toolsDB = [
     },
     { 
         "name": "Business Name Gen", 
-        "url": "business-name.html", 
+        "url": "business-name", 
         "cat": "ai", 
         "icon": "fa-briefcase", 
         "desc": "AI-powered brand names.", 
@@ -469,7 +468,7 @@ const toolsDB = [
     },
     { 
         "name": "Slogan Generator", 
-        "url": "slogan-gen.html", 
+        "url": "slogan-gen", 
         "cat": "ai", 
         "icon": "fa-lightbulb", 
         "desc": "Catchy taglines for brands.", 
@@ -481,7 +480,7 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Age Calculator", 
-        "url": "age-calculator.html", 
+        "url": "age-calculator", 
         "cat": "student", 
         "icon": "fa-hourglass-start", 
         "desc": "Calculate exact age.", 
@@ -489,7 +488,7 @@ const toolsDB = [
     },
     { 
         "name": "Citation Machine", 
-        "url": "citation.html", 
+        "url": "citation", 
         "cat": "student", 
         "icon": "fa-quote-right", 
         "desc": "Generate citations.", 
@@ -497,7 +496,7 @@ const toolsDB = [
     },
     { 
         "name": "GPA Calculator", 
-        "url": "gpa-calc.html", 
+        "url": "gpa-calc", 
         "cat": "student", 
         "icon": "fa-graduation-cap", 
         "desc": "Calculate GPA.", 
@@ -509,29 +508,31 @@ const toolsDB = [
     // =========================================
     { 
         "name": "Image Compressor", 
-        "url": "img-compress.html", 
+        "url": "img-compress", 
         "cat": "image", 
         "icon": "fa-file-zipper", 
         "desc": "Reduce image size.", 
         "tag": "HOT" 
     },
-       // =========================================
-    // CATEGORY 7: fun (cat: 'image')
+
+    // =========================================
+    // CATEGORY 8: FUN & GAMES (cat: 'fun')
     // =========================================
     { 
         "name": "Love Calculator", 
-        "url": "love-calculator.html", 
+        "url": "love-calculator", 
         "cat": "fun", 
         "icon": "fa-heart-pulse", 
         "desc": "Check relationship compatibility.", 
         "tag": "VIRAL" 
     },
-        // =========================================
-    // CATEGORY 7: health(cat: 'image')
+
+    // =========================================
+    // CATEGORY 9: HEALTH TOOLS (cat: 'health')
     // =========================================
     { 
         "name": "BMI Calculator", 
-        "url": "bmi-calculator.html", 
+        "url": "bmi-calculator", 
         "cat": "health", 
         "icon": "fa-weight-scale", 
         "desc": "Check your Body Mass Index.", 
