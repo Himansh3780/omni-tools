@@ -194,14 +194,7 @@ const toolsDB = [
         "desc": "Generate Unique IDs.", 
         "tag": "PRO" 
     },
-    { 
-        "name": "Hash Generator", 
-        "url": "hash-generator.html", 
-        "cat": "dev", 
-        "icon": "fa-file-shield", 
-        "desc": "Calculate SHA checksums.", 
-        "tag": "SECURE" 
-    },
+  
 
     // =========================================
     // CATEGORY 2: BUSINESS TOOLS (cat: 'business')
