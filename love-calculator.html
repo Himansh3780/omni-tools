@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Calculator - True Relationship Compatibility Test</title>
+    <meta name="description" content="Calculate your love compatibility percentage. Our advanced love algorithm analyzes names to predict relationship success. Test your soulmate connection now.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ROMANTIC & PRO THEME --- */
+        :root { 
+            --bg: #0f172a; 
+            --panel: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+            --primary: #be123c; /* Deep Rose */
+            --accent: #fb7185;
+            --gradient: linear-gradient(135deg, #be123c, #fb7185);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --glow: 0 0 50px rgba(190, 18, 60, 0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
+        nav { padding: 20px 0; margin-bottom: 20px; }
+        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .back-btn:hover { color: white; }
+
+        .header-section { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        .subtitle { color: var(--muted); font-size: 1.1rem; }
+
+        /* MAIN TOOL CARD */
+        .love-card { 
+            background: var(--panel); border: var(--border); border-radius: 24px; padding: 40px; 
+            box-shadow: var(--glow); position: relative; overflow: hidden; max-width: 600px; margin: 0 auto;
+        }
+
+        /* Heart Floating Animation */
+        .bg-heart { position: absolute; color: rgba(251, 113, 133, 0.05); z-index: 0; animation: float 10s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+
+        .inputs-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 20px; }
+        
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 700; color: #fda4af; font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase; }
+        input[type="text"] {
+            width: 100%; padding: 16px; background: #020617; border: 2px solid #334155; 
+            color: white; border-radius: 12px; font-size: 1.1rem; transition: 0.2s;
+        }
+        input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(251, 113, 133, 0.1); }
+
+        /* VS CIRCLE */
+        .vs-divider { 
+            display: flex; align-items: center; justify-content: center; margin: -10px 0; z-index: 5;
+        }
+        .vs-badge { 
+            background: var(--bg); border: 2px solid var(--accent); color: var(--accent); 
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; font-weight: 800; font-size: 0.8rem;
+        }
+
+        .calc-btn {
+            width: 100%; padding: 18px; background: var(--gradient); border: none; color: white; 
+            border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(190, 18, 60, 0.4); transition: transform 0.2s, box-shadow 0.2s;
+            position: relative; z-index: 2;
+        }
+        .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(190, 18, 60, 0.5); }
+        .calc-btn:active { transform: translateY(0); }
+
+        /* RESULTS */
+        #result-area { display: none; margin-top: 30px; text-align: center; animation: slideUp 0.5s ease; position: relative; z-index: 2; border-top: 1px solid #334155; padding-top: 30px; }
+        
+        .score-display { font-size: 4.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 5px; text-shadow: 0 0 30px rgba(251, 113, 133, 0.3); }
+        .score-label { font-size: 1.2rem; font-weight: 600; color: white; margin-bottom: 15px; }
+        
+        .progress-container { width: 100%; height: 12px; background: #334155; border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
+        .progress-bar { height: 100%; background: var(--gradient); width: 0%; border-radius: 6px; transition: width 2s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        .analysis-box { background: rgba(2, 6, 23, 0.5); border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+        .analysis-title { color: var(--accent); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; }
+        .analysis-text { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* SEO CONTENT SECTION */
+        .seo-content { margin-top: 60px; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 40px; }
+        .seo-content h2 { color: white; margin: 30px 0 15px 0; font-size: 1.8rem; }
+        .seo-content h3 { color: #e2e8f0; margin: 20px 0 10px 0; font-size: 1.4rem; }
+        .seo-content p { margin-bottom: 15px; }
+        .seo-content ul { margin-bottom: 20px; padding-left: 20px; }
+        .seo-content li { margin-bottom: 10px; }
+        .tag-pill { background: #334155; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px; }
+
+        @media(max-width: 600px) { h1 { font-size: 2.2rem; } .love-card { padding: 25px; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </nav>
+
+    <div class="header-section">
+        <h1>Love Calculator</h1>
+        <p class="subtitle">Enter two names to test your relationship compatibility.</p>
+    </div>
+
+    <div class="love-card">
+        <i class="fa-solid fa-heart bg-heart" style="font-size: 150px; top: -20px; right: -20px;"></i>
+        <i class="fa-solid fa-heart bg-heart" style="font-size: 80px; bottom: 20px; left: -20px; animation-delay: 2s;"></i>
+
+        <div class="inputs-wrapper">
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" id="name1" placeholder="e.g. Romeo">
+            </div>
+
+            <div class="vs-divider">
+                <div class="vs-badge">VS</div>
+            </div>
+
+            <div class="input-group">
+                <label>Partner's Name</label>
+                <input type="text" id="name2" placeholder="e.g. Juliet">
+            </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculateLove()">
+            <i class="fa-solid fa-heart-pulse"></i> Calculate Compatibility
+        </button>
+
+        <div id="result-area">
+            <div class="score-display" id="score">0%</div>
+            <div class="score-label" id="verdict">Calculating...</div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+
+            <div class="analysis-box">
+                <div class="analysis-title"><i class="fa-solid fa-sparkles"></i> Relationship Analysis</div>
+                <div class="analysis-text" id="analysis">Enter names to reveal the secrets of your connection.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="seo-content">
+        <h2>How to Use the Love Calculator</h2>
+        <p>
+            The <strong>OmniTools Love Calculator</strong> is a sophisticated tool designed to analyze the compatibility between two people. By converting the letters of your names into a numerical value using ancient numerology principles, we provide a compatibility percentage that indicates the strength of your relationship potential.
+        </p>
+
+        <h3>What does the Love Score mean?</h3>
+        <ul>
+            <li><strong>90% - 100% (Twin Flames):</strong> A rare and powerful connection. You finish each other's sentences and share deep emotional bonds.</li>
+            <li><strong>70% - 89% (Perfect Match):</strong> Highly compatible. While you may have small differences, your core values align perfectly.</li>
+            <li><strong>50% - 69% (Strong Potential):</strong> A balanced relationship. It requires effort from both sides, but the foundation is solid.</li>
+            <li><strong>Below 50% (Challenging):</strong> This indicates contrasting personalities. Opposites attract, but you may need to work harder on communication.</li>
+        </ul>
+
+        <h3>Is this Love Calculator accurate?</h3>
+        <p>
+            While no algorithm can fully capture the complexity of human emotion, our tool is consistent. Unlike random generators, the <em>OmniTools Love Algorithm</em> is deterministic—meaning the same two names will always produce the same result. This allows you to test different nicknames or variations to see how they impact your numerological harmony.
+        </p>
+
+        <h3>Psychology of Names in Relationships</h3>
+        <p>
+            Psychologists suggest that "Implicit Egotism" plays a role in attraction. We are often drawn to people with names that sound familiar or share letters with our own. This tool helps visualize that connection in a fun, shareable format.
+        </p>
+        
+        <div style="margin-top:30px;">
+            <span class="tag-pill">#LoveCalculator</span>
+            <span class="tag-pill">#Compatibility</span>
+            <span class="tag-pill">#RelationshipTest</span>
+            <span class="tag-pill">#TrueLove</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateLove() {
+        const n1 = document.getElementById('name1').value.trim();
+        const n2 = document.getElementById('name2').value.trim();
+
+        if (!n1 || !n2) {
+            alert("Please enter both names to calculate love!");
+            return;
+        }
+
+        // DETERMINISTIC ALGORITHM
+        // 1. Combine names, lower case, sort (so Order doesn't matter: Romeo+Juliet = Juliet+Romeo)
+        const combined = [n1.toLowerCase(), n2.toLowerCase()].sort().join("");
+        
+        // 2. Create a hash from the string
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+            const char = combined.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        
+        // 3. Normalize to 0-100
+        // Use Math.abs to handle negative hash, % 101 to get 0-100 range.
+        let score = Math.abs(hash) % 101;
+
+        // 4. "Mercy" Bias: Push scores slightly higher because users like high scores
+        // If score is < 30, add 40. If > 100, cap at 99.
+        if (score < 30) score += 40;
+        if (score > 100) score = 99;
+
+        // UI UPDATE
+        document.getElementById('result-area').style.display = 'block';
+        
+        // Reset for animation
+        const scoreEl = document.getElementById('score');
+        const progressEl = document.getElementById('progress');
+        scoreEl.innerText = "0%";
+        progressEl.style.width = "0%";
+
+        // Generate Analysis
+        let verdict = "";
+        let analysis = "";
+        
+        if (score >= 90) {
+            verdict = "💖 Twin Flames!";
+            analysis = "An incredible match! Your energies resonate on the same frequency. This relationship is destined for greatness.";
+        } else if (score >= 75) {
+            verdict = "🔥 Passionate Match!";
+            analysis = "High compatibility. You have a natural chemistry that is hard to ignore. Keep the spark alive!";
+        } else if (score >= 50) {
+            verdict = "✨ Good Balance";
+            analysis = "A solid foundation. You may have differences, but they make your relationship stronger and more interesting.";
+        } else {
+            verdict = "🤔 It's Complicated";
+            analysis = "You are two very different people. This relationship will require patience, communication, and compromise.";
+        }
+
+        document.getElementById('verdict').innerText = verdict;
+        document.getElementById('analysis').innerText = analysis;
+
+        // Animation Loop
+        let currentScore = 0;
+        const interval = setInterval(() => {
+            currentScore += 1;
+            scoreEl.innerText = currentScore + "%";
+            
+            if (currentScore >= score) {
+                clearInterval(interval);
+                progressEl.style.width = score + "%";
+            }
+        }, 15); // Speed of counting
+    }
+</script>
+
+</body>
+</html>
