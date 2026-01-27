@@ -529,5 +529,12 @@ const toolsDB = [
         // =========================================
     // CATEGORY 7: health(cat: 'image')
     // =========================================
-    
+    { 
+        "name": "BMI Calculator", 
+        "url": "bmi-calculator.html", 
+        "cat": "health", 
+        "icon": "fa-weight-scale", 
+        "desc": "Check your Body Mass Index.", 
+        "tag": "HOT" 
+    }
 ];
