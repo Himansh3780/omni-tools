@@ -315,7 +315,7 @@
         ];
     </script>
 
-    <script src="database.js" onerror="window.toolsDB = demoToolsDB"></script>
+    <script src="database.js"></script>
 
     <script>
         const grid = document.getElementById('tools-grid');
@@ -393,7 +393,8 @@
             }
 
             grid.innerHTML = "";
-            const db = (typeof toolsDB !== 'undefined') ? toolsDB : window.demoToolsDB;
+            // FIX: Correctly check if toolsDB is loaded from the external file
+            const db = (typeof toolsDB !== 'undefined') ? toolsDB : demoToolsDB;
 
             if(!db) { document.getElementById('error-screen').style.display = 'block'; return; }
 
