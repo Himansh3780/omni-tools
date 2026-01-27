@@ -11,14 +11,14 @@ const toolsDB = [
         "tag": "SEO" 
     },
    {
-        name: "JSON Formatter", 
-        desc: "Beautify and validate JSON code.", 
-        url: "json-formatter.html",
-        icon: "fa-code", 
-        cat: "dev", 
+        name: "JSON Formatter",
+        desc: "Beautify and validate JSON code.",
+        url: "json-formatter.html", 
+        icon: "fa-code",
+        cat: "dev",
         tag: "HOT"
-    },;
-    { 
+    },
+   { 
         "name": "QR Code Generator", 
         "url": "qr-code.html", 
         "cat": "dev", 
