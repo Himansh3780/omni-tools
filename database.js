@@ -10,15 +10,15 @@ const toolsDB = [
         "desc": "Analyze SEO meta tags.", 
         "tag": "SEO" 
     },
-   {
-        name: "JSON Formatter",
-        desc: "Beautify and validate JSON code.",
-        url: "json-formatter.html", 
-        icon: "fa-code",
-        cat: "dev",
-        tag: "HOT"
+    {
+        "name": "JSON Formatter",
+        "url": "json-formatter.html", 
+        "cat": "dev",
+        "icon": "fa-code",
+        "desc": "Beautify and validate JSON code.",
+        "tag": "HOT"
     },
-   { 
+    { 
         "name": "QR Code Generator", 
         "url": "qr-code.html", 
         "cat": "dev", 
