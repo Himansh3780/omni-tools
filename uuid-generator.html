@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free UUID Generator (v4) - Bulk & Custom Formats</title>
+    
+    <meta name="description" content="Generate random UUIDs (v4) instantly. Bulk generation, remove hyphens, uppercase options, and one-click copy. Secure client-side generation.">
+    <meta name="keywords" content="uuid generator, guid generator, free uuid tool, bulk uuid, random uuid v4, developer tools">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "OmniTools UUID Generator",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": "Bulk Generation, Format Options, Secure Crypto API"
+    }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { 
+            --bg: #020617; 
+            --panel: #0f172a; 
+            --border: #1e293b; 
+            --primary: #3b82f6; 
+            --success: #10b981;
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            min-height: 100vh; 
+            display: flex; flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 15px 5%; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(15, 23, 42, 0.95); position: sticky; top: 0; z-index: 50;
+        }
+        .logo { 
+            font-size: 1.3rem; font-weight: 800; color: white; text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .back-btn {
+            background: var(--border); color: var(--muted); padding: 8px 16px;
+            border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            transition: 0.2s;
+        }
+        .back-btn:hover { background: var(--panel); color: white; }
+
+        /* --- TOOL INTERFACE --- */
+        .tool-container { padding: 40px 5%; max-width: 1000px; margin: 0 auto; width: 100%; }
+
+        .control-panel {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+            padding: 25px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+            margin-bottom: 30px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .label { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input[type="number"] {
+            background: #020617; border: 1px solid var(--border); color: white;
+            padding: 10px; border-radius: 8px; width: 100px; font-weight: 700;
+        }
+
+        .toggle-group { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .toggle-box {
+            width: 40px; height: 22px; background: var(--border); border-radius: 20px;
+            position: relative; transition: 0.3s;
+        }
+        .toggle-box::after {
+            content: ''; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px;
+            background: white; border-radius: 50%; transition: 0.3s;
+        }
+        input:checked + .toggle-box { background: var(--primary); }
+        input:checked + .toggle-box::after { transform: translateX(18px); }
+
+        .gen-btn {
+            background: var(--primary); color: white; border: none; padding: 12px 30px;
+            border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: auto;
+            display: flex; align-items: center; gap: 10px; transition: 0.2s;
+        }
+        .gen-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
+
+        /* --- OUTPUT AREA --- */
+        .output-box {
+            background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden; position: relative; min-height: 200px;
+        }
+        .output-header {
+            padding: 15px 25px; background: #0b1120; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .result-count { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+        
+        textarea {
+            width: 100%; height: 400px; background: transparent; border: none; padding: 25px;
+            color: #e2e8f0; font-family: 'JetBrains Mono', monospace; font-size: 1rem;
+            resize: vertical; line-height: 1.8;
+        }
+
+        /* --- SEO CONTENT --- */
+        .content-section {
+            margin-top: 60px; border-top: 1px solid var(--border); padding-top: 40px;
+            color: #cbd5e1; line-height: 1.7;
+        }
+        .content-section h2 { color: white; margin-bottom: 15px; margin-top: 30px; font-size: 1.5rem; }
+        .content-section p { margin-bottom: 15px; }
+        .faq-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+        .faq-q { font-weight: 700; color: white; margin-bottom: 8px; display: block; }
+
+        @media(max-width: 700px) {
+            .control-panel { flex-direction: column; align-items: stretch; gap: 15px; }
+            .gen-btn { margin-left: 0; justify-content: center; }
+        }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--success); color: white; padding: 10px 24px; border-radius: 50px;
+            font-weight: 600; opacity: 0; transition: 0.3s; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-layer-group" style="color:var(--primary)"></i> OmniTools
+        </a>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+    </header>
+
+    <div class="tool-container">
+        
+        <div class="control-panel">
+            <div class="input-group">
+                <span class="label">Quantity</span>
+                <input type="number" id="qty" value="1" min="1" max="500">
+            </div>
+
+            <div class="input-group">
+                <span class="label">Options</span>
+                <label class="toggle-group">
+                    <input type="checkbox" id="hyphens" checked hidden>
+                    <div class="toggle-box"></div>
+                    <span>Hyphens</span>
+                </label>
+                <label class="toggle-group" style="margin-top:5px;">
+                    <input type="checkbox" id="uppercase" hidden>
+                    <div class="toggle-box"></div>
+                    <span>Uppercase</span>
+                </label>
+            </div>
+
+            <button class="gen-btn" onclick="generateUUIDs()">
+                <i class="fa-solid fa-rotate"></i> Generate UUIDs
+            </button>
+        </div>
+
+        <div class="output-box">
+            <div class="output-header">
+                <span class="result-count">Result</span>
+                <button onclick="copyResults()" style="background:var(--primary); border:none; color:white; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                    <i class="fa-regular fa-copy"></i> Copy All
+                </button>
+            </div>
+            <textarea id="output" readonly></textarea>
+        </div>
+
+        <div class="content-section">
+            <h2>What is a UUID Generator?</h2>
+            <p>A UUID (Universally Unique Identifier) is a 128-bit label used for information in computer systems. The probability of generating two identical UUIDs is so low that it can be considered zero. This tool generates <strong>Version 4 (Random)</strong> UUIDs.</p>
+
+            <h2>UUID vs GUID: What's the difference?</h2>
+            <p>There is effectively no difference. <strong>UUID</strong> is the standard term used in Linux/Unix environments, while <strong>GUID</strong> (Globally Unique Identifier) is the term used by Microsoft. They both refer to the same 128-bit unique identification standard.</p>
+
+            <h2>Common Use Cases</h2>
+            <div class="faq-box">
+                <span class="faq-q">Database Keys</span>
+                Using UUIDs as primary keys allows you to merge databases from different servers without collision errors.
+            </div>
+            <div class="faq-box">
+                <span class="faq-q">Session IDs</span>
+                Securely track user sessions in web applications without predictable ID patterns.
+            </div>
+            <div class="faq-box">
+                <span class="faq-q">File Names</span>
+                Prevent file overwrites when users upload files with the same name (e.g., "image.jpg").
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast">Copied to clipboard!</div>
+
+    <script>
+        const output = document.getElementById('output');
+        const qtyInput = document.getElementById('qty');
+        const hyphensCheck = document.getElementById('hyphens');
+        const capsCheck = document.getElementById('uppercase');
+        const toast = document.getElementById('toast');
+
+        // Generate on Load
+        window.onload = generateUUIDs;
+
+        function showToast(msg) {
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 2500);
+        }
+
+        function generateUUID() {
+            // Uses crypto API for secure random generation
+            return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+        }
+
+        function generateUUIDs() {
+            const count = Math.min(Math.max(qtyInput.value, 1), 500); // Limit between 1 and 500
+            const useHyphens = hyphensCheck.checked;
+            const useCaps = capsCheck.checked;
+            
+            let result = [];
+            
+            for(let i=0; i<count; i++) {
+                let id = generateUUID();
+                
+                if(!useHyphens) id = id.replace(/-/g, '');
+                if(useCaps) id = id.toUpperCase();
+                
+                result.push(id);
+            }
+
+            output.value = result.join('\n');
+        }
+
+        function copyResults() {
+            if(!output.value) return;
+            navigator.clipboard.writeText(output.value);
+            showToast("Copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
