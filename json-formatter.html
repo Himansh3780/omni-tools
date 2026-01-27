@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free JSON Formatter, Validator & Minifier - OmniTools</title>
+    
+    <meta name="description" content="Best free online JSON Formatter. Upload files, validate syntax, minify code, and download results. Fix JSON errors instantly with our dark mode editor.">
+    <meta name="keywords" content="json formatter, json validator, json beautifier, json minifier, fix json errors, free developer tools">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "OmniTools JSON Formatter",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": "File Upload, Validation, Minification, Download",
+      "description": "A powerful browser-based tool to format, validate, and fix JSON data securely."
+    }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { 
+            --bg: #020617; 
+            --panel: #0f172a; 
+            --border: #1e293b; 
+            --primary: #3b82f6; 
+            --success: #10b981;
+            --text: #f8fafc; 
+            --muted: #94a3b8; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.95);
+            position: sticky; top: 0; z-index: 50;
+        }
+        
+        .logo { 
+            font-size: 1.3rem; font-weight: 800; color: white; text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .back-btn {
+            background: var(--border); color: var(--muted); padding: 8px 16px;
+            border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            transition: 0.2s;
+        }
+        .back-btn:hover { background: var(--panel); color: white; }
+
+        /* --- TOOL SECTION --- */
+        .tool-container { padding: 20px 5%; display: flex; flex-direction: column; gap: 20px; height: 85vh; }
+
+        .toolbar {
+            display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+            background: var(--panel); padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 8px 16px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
+            font-size: 0.85rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; color: white;
+            background: #1e293b;
+        }
+        .btn:hover { background: #334155; }
+        .btn-primary { background: var(--primary); }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-clear { background: rgba(239, 68, 68, 0.1); color: #ef4444; margin-left: auto; }
+        .btn-clear:hover { background: rgba(239, 68, 68, 0.2); }
+
+        /* Editors */
+        .editor-wrapper { display: flex; flex: 1; gap: 20px; min-height: 0; }
+        .editor-box {
+            flex: 1; display: flex; flex-direction: column; 
+            background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+            overflow: hidden;
+        }
+        .editor-header {
+            padding: 10px 15px; background: #0b1120; border-bottom: 1px solid var(--border);
+            font-size: 0.8rem; font-weight: 700; color: var(--muted); letter-spacing: 1px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        textarea {
+            flex: 1; width: 100%; height: 100%; background: transparent; border: none;
+            padding: 15px; color: #e2e8f0; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem; resize: none; line-height: 1.6;
+        }
+        textarea::placeholder { color: rgba(148, 163, 184, 0.3); }
+
+        /* Status Badges */
+        .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; display: none; }
+        .badge.valid { display: inline-block; background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge.invalid { display: inline-block; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+
+        /* --- CONTENT / SEO SECTION (The Blog Part) --- */
+        .content-section {
+            background: #020617; padding: 60px 5%; border-top: 1px solid var(--border);
+        }
+        .article { max-width: 800px; margin: 0 auto; line-height: 1.7; color: #cbd5e1; }
+        .article h2 { color: white; margin-top: 40px; margin-bottom: 15px; font-size: 1.8rem; }
+        .article p { margin-bottom: 20px; font-size: 1.05rem; }
+        .article ul { margin-bottom: 20px; padding-left: 20px; }
+        .article li { margin-bottom: 10px; }
+        .highlight { color: var(--primary); font-weight: 700; }
+
+        /* File Input Hidden */
+        #file-upload { display: none; }
+
+        /* Mobile */
+        @media(max-width: 800px) {
+            .tool-container { height: auto; min-height: 100vh; }
+            .editor-wrapper { flex-direction: column; height: 600px; }
+            .toolbar { gap: 8px; justify-content: space-between; }
+            .btn { flex: 1; justify-content: center; font-size: 0.75rem; white-space: nowrap; }
+            .btn-clear { margin-left: 0; width: 100%; }
+        }
+        
+        /* Toast Notification */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--success); color: white; padding: 10px 24px; border-radius: 50px;
+            font-weight: 600; opacity: 0; transition: 0.3s; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-layer-group" style="color:var(--primary)"></i> OmniTools
+        </a>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+    </header>
+
+    <div class="tool-container">
+        <div class="toolbar">
+            <label for="file-upload" class="btn"><i class="fa-solid fa-upload"></i> Upload File</label>
+            <input type="file" id="file-upload" accept=".json,.txt" onchange="uploadFile()">
+            
+            <button class="btn" onclick="loadSample()"><i class="fa-solid fa-flask"></i> Sample</button>
+            <div style="width:1px; height:20px; background:var(--border); margin:0 5px;"></div>
+            
+            <button class="btn btn-primary" onclick="formatJSON()"><i class="fa-solid fa-wand-magic-sparkles"></i> Beautify</button>
+            <button class="btn" onclick="minifyJSON()"><i class="fa-solid fa-compress"></i> Minify</button>
+            <button class="btn" onclick="downloadJSON()"><i class="fa-solid fa-download"></i> Download</button>
+            
+            <button class="btn btn-clear" onclick="clearAll()"><i class="fa-solid fa-trash"></i></button>
+        </div>
+
+        <div class="editor-wrapper">
+            <div class="editor-box">
+                <div class="editor-header">
+                    <span>INPUT JSON</span>
+                    <i class="fa-solid fa-code" style="color:var(--muted)"></i>
+                </div>
+                <textarea id="json-input" placeholder="Paste your messy JSON here..."></textarea>
+            </div>
+
+            <div class="editor-box">
+                <div class="editor-header">
+                    <span>RESULT</span>
+                    <div id="status-badge" class="badge"></div>
+                    <button class="btn" onclick="copyOutput()" style="padding:4px 8px; font-size:0.7rem; background:transparent; border:1px solid var(--border);">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                </div>
+                <textarea id="json-output" readonly placeholder="Formatted result will appear here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <section class="content-section">
+        <article class="article">
+            <h2>How to Use the OmniTools JSON Formatter</h2>
+            <p>Cleaning up code shouldn't be hard. Our <strong>free JSON Formatter</strong> helps developers beautify, validate, and minify JSON data in seconds. Whether you are debugging an API response or formatting a config file, this tool handles it all securely in your browser.</p>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li><span class="highlight">Validation:</span> Instantly detect syntax errors like missing commas or brackets.</li>
+                <li><span class="highlight">Beautify:</span> Indent messy code into a readable, structured tree format (Prettify).</li>
+                <li><span class="highlight">Minify:</span> Remove whitespace to compress JSON size for production use.</li>
+                <li><span class="highlight">File Support:</span> Upload `.json` files directly or download your cleaned code.</li>
+            </ul>
+
+            <h2>What is JSON and why format it?</h2>
+            <p><strong>JSON (JavaScript Object Notation)</strong> is the standard format for data exchange on the web. However, computers prefer it "minified" (single line), which is impossible for humans to read.</p>
+            <p>A JSON Formatter takes that messy single line and adds proper indentation and newlines, making it easy for you to spot structure and data.</p>
+
+            <h2>Common JSON Errors to Watch For</h2>
+            <p>If you see an "Invalid JSON" error, check these common mistakes:</p>
+            <ul>
+                <li><strong>Trailing Commas:</strong> JSON does not allow a comma after the last item in a list `{"a": 1,}`.</li>
+                <li><strong>Quotes:</strong> All keys must be wrapped in double quotes `"key": "value"`. Single quotes are not allowed.</li>
+                <li><strong>Data Types:</strong> Ensure boolean values are lowercase (`true`, `false`) and strings are quoted.</li>
+            </ul>
+        </article>
+    </section>
+
+    <div id="toast">Action Successful!</div>
+
+    <script>
+        const input = document.getElementById('json-input');
+        const output = document.getElementById('json-output');
+        const badge = document.getElementById('status-badge');
+        const toast = document.getElementById('toast');
+
+        // 1. Show Toast Notification
+        function showToast(msg, isError = false) {
+            toast.innerText = msg;
+            toast.style.background = isError ? "#ef4444" : "#10b981";
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 3000);
+        }
+
+        // 2. Validate JSON
+        function validate(raw) {
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 3. Format (Beautify)
+        function formatJSON() {
+            const raw = input.value;
+            if(!raw.trim()) return showToast("Please enter JSON first", true);
+            
+            try {
+                const validObj = JSON.parse(raw);
+                output.value = JSON.stringify(validObj, null, 4);
+                updateBadge(true);
+            } catch (e) {
+                updateBadge(false);
+                output.value = e.message; // Show exact error
+                showToast("Invalid JSON syntax", true);
+            }
+        }
+
+        // 4. Minify
+        function minifyJSON() {
+            const raw = input.value;
+            if(!raw.trim()) return showToast("Please enter JSON first", true);
+            
+            try {
+                const validObj = JSON.parse(raw);
+                output.value = JSON.stringify(validObj);
+                updateBadge(true);
+                showToast("JSON Minified");
+            } catch (e) {
+                updateBadge(false);
+                output.value = e.message;
+                showToast("Cannot minify invalid JSON", true);
+            }
+        }
+
+        // 5. Sample Data
+        function loadSample() {
+            const sample = {"name":"OmniTools","active":true,"features":["JSON","PDF","AI"],"owner":{"id":101,"verified":true}};
+            input.value = JSON.stringify(sample);
+            formatJSON(); // Auto format
+            showToast("Sample loaded");
+        }
+
+        // 6. Upload File
+        function uploadFile() {
+            const file = document.getElementById('file-upload').files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                input.value = e.target.result;
+                formatJSON(); // Auto format on upload
+                showToast("File uploaded");
+            };
+            reader.readAsText(file);
+        }
+
+        // 7. Download File
+        function downloadJSON() {
+            if(!output.value) return showToast("Nothing to download", true);
+            
+            const blob = new Blob([output.value], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'omnitools-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Download started");
+        }
+
+        // 8. Copy to Clipboard
+        function copyOutput() {
+            if(!output.value) return;
+            navigator.clipboard.writeText(output.value);
+            showToast("Copied to clipboard");
+        }
+
+        // 9. Clear
+        function clearAll() {
+            input.value = "";
+            output.value = "";
+            badge.style.display = 'none';
+            document.getElementById('file-upload').value = ""; // Reset file input
+        }
+
+        function updateBadge(isValid) {
+            badge.style.display = 'inline-block';
+            badge.innerText = isValid ? "VALID JSON" : "INVALID";
+            badge.className = isValid ? "badge valid" : "badge invalid";
+        }
+    </script>
+</body>
+</html>
