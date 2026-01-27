@@ -18,6 +18,14 @@ const toolsDB = [
         "desc": "Beautify and validate JSON code.",
         "tag": "HOT"
     },
+    {
+        name: "UUID Generator",
+        desc: "Generate random UUIDs/GUIDs in bulk.",
+        url: "uuid-generator.html",
+        icon: "fa-fingerprint",
+        cat: "dev",
+        tag: "PRO"
+    },
     { 
         "name": "QR Code Generator", 
         "url": "qr-code.html", 
