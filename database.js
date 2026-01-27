@@ -27,6 +27,14 @@ const toolsDB = [
         "tag": "PRO"
     },
     { 
+        "name": "Password Generator", 
+        "url": "password-generator", 
+        "cat": "dev", 
+        "icon": "fa-key", 
+        "desc": "Create secure passwords.", 
+        "tag": "SECURE" 
+    },
+    { 
         "name": "QR Code Generator", 
         "url": "qr-code", 
         "cat": "dev", 
