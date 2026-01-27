@@ -514,5 +514,20 @@ const toolsDB = [
         "icon": "fa-file-zipper", 
         "desc": "Reduce image size.", 
         "tag": "HOT" 
-    }
+    },
+       // =========================================
+    // CATEGORY 7: fun (cat: 'image')
+    // =========================================
+    { 
+        "name": "Love Calculator", 
+        "url": "love-calculator.html", 
+        "cat": "fun", 
+        "icon": "fa-heart-pulse", 
+        "desc": "Check relationship compatibility.", 
+        "tag": "VIRAL" 
+    },
+        // =========================================
+    // CATEGORY 7: health(cat: 'image')
+    // =========================================
+    
 ];
