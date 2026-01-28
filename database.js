@@ -101,8 +101,6 @@ const toolsDB = [
     { "name": "BMI Calculator - Ideal Weight", "url": "bmi-calculator", "cat": "health", "icon": "fa-weight-scale", "desc": "Check Body Mass Index & Health.", "tag": "HOT" }
 ];
 
-// ... (Your toolsDB array stays the same at the top) ...
-
 // =====================================================================
 // AUTOMATION SCRIPT: INJECTS "RELATED TOOLS" AFTER THE CALCULATOR
 // =====================================================================
