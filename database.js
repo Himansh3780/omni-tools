@@ -75,7 +75,7 @@ const toolsDB = [
     // CATEGORY 5: AI TOOLS
     // =========================================
     { "name": "Text to Speech (AI)", "url": "text-to-speech", "cat": "ai", "icon": "fa-volume-high", "desc": "Convert text to human audio.", "tag": "HOT" },
-    { "name": "Business Name Generator", "url": "business-name", "cat": "ai", "icon": "fa-briefcase", "desc": "AI-powered brand ideas.", "tag": "AI" },
+    { "name": "Business Name Generator", "url": "business-name", "cat": "ai", "icon": "fa-briefcase", "desc": "Brand names.", "tag": "AI" },
     { "name": "Slogan & Tagline Gen", "url": "slogan-gen", "cat": "ai", "icon": "fa-lightbulb", "desc": "Catchy taglines for brands.", "tag": "" },
 
     // =========================================
@@ -99,22 +99,21 @@ const toolsDB = [
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
     { "name": "BMI Calculator - Ideal Weight", "url": "bmi-calculator", "cat": "health", "icon": "fa-weight-scale", "desc": "Check Body Mass Index & Health.", "tag": "HOT" }
+];
+
 // =====================================================================
-// AUTOMATION SCRIPT: PASTE THIS AT THE VERY BOTTOM OF DATABASE.JS
+// AUTOMATION SCRIPT
 // =====================================================================
 document.addEventListener("DOMContentLoaded", function() {
     
     // 1. Check if we are on a Tool Page (not the homepage)
-    // We check this by looking for the grid container. If it's missing, we are on a tool page.
     if (!document.querySelector(".grid-container") && !document.querySelector("#tools-grid")) {
         
         // --- A. INJECT RELATED TOOLS ---
         const currentPath = window.location.pathname.split("/").pop().replace(".html", "");
-        // Find the current tool in the database
         const currentTool = toolsDB.find(t => t.url === currentPath || currentPath.includes(t.url));
         
         if (currentTool) {
-            // Find 3 other tools in the same category
             const related = toolsDB.filter(t => t.cat === currentTool.cat && t.name !== currentTool.name)
                                    .sort(() => 0.5 - Math.random()) // Shuffle
                                    .slice(0, 3);
@@ -163,4 +162,4 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.appendChild(footer);
         }
     }
-});];
+});
