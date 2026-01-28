@@ -99,4 +99,68 @@ const toolsDB = [
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
     { "name": "BMI Calculator - Ideal Weight", "url": "bmi-calculator", "cat": "health", "icon": "fa-weight-scale", "desc": "Check Body Mass Index & Health.", "tag": "HOT" }
-];
+// =====================================================================
+// AUTOMATION SCRIPT: PASTE THIS AT THE VERY BOTTOM OF DATABASE.JS
+// =====================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. Check if we are on a Tool Page (not the homepage)
+    // We check this by looking for the grid container. If it's missing, we are on a tool page.
+    if (!document.querySelector(".grid-container") && !document.querySelector("#tools-grid")) {
+        
+        // --- A. INJECT RELATED TOOLS ---
+        const currentPath = window.location.pathname.split("/").pop().replace(".html", "");
+        // Find the current tool in the database
+        const currentTool = toolsDB.find(t => t.url === currentPath || currentPath.includes(t.url));
+        
+        if (currentTool) {
+            // Find 3 other tools in the same category
+            const related = toolsDB.filter(t => t.cat === currentTool.cat && t.name !== currentTool.name)
+                                   .sort(() => 0.5 - Math.random()) // Shuffle
+                                   .slice(0, 3);
+
+            if (related.length > 0) {
+                const relatedSection = document.createElement("div");
+                relatedSection.style.cssText = "max-width: 800px; margin: 50px auto; border-top: 1px solid #1e293b; padding-top: 40px;";
+                
+                let cardsHTML = related.map(t => `
+                    <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px;">
+                        <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
+                            <i class="fa-solid ${t.icon}"></i>
+                        </div>
+                        <div>
+                            <div style="color:white; font-weight:700; font-size:0.95rem;">${t.name}</div>
+                            <div style="color:#94a3b8; font-size:0.8rem;">${t.desc}</div>
+                        </div>
+                    </a>
+                `).join("");
+
+                relatedSection.innerHTML = `
+                    <h3 style="color:white; font-size:1.3rem; margin-bottom:20px;">You might also like:</h3>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
+                        ${cardsHTML}
+                    </div>
+                `;
+                document.body.appendChild(relatedSection);
+            }
+        }
+
+        // --- B. INJECT FOOTER ---
+        if (!document.querySelector("footer")) {
+            const footer = document.createElement("footer");
+            footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
+            footer.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
+                </div>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
+                    <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
+                    <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
+                </div>
+            `;
+            document.body.appendChild(footer);
+        }
+    }
+});];
