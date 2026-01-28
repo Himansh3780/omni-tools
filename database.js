@@ -102,77 +102,87 @@ const toolsDB = [
 ];
 
 // =====================================================================
-// AUTOMATION SCRIPT: FOOTER & RELATED TOOLS
+// AUTOMATION SCRIPT: BULLETPROOF VERSION (FORCES FOOTER)
 // =====================================================================
 document.addEventListener("DOMContentLoaded", function() {
     
-    // 1. Check if we are on a Tool Page (not the homepage)
-    if (!document.querySelector(".grid-container") && !document.querySelector("#tools-grid")) {
+    // CHECK: Are we on the Homepage? (If yes, stop)
+    if (document.querySelector(".grid-container") || document.querySelector("#tools-grid")) {
+        return; 
+    }
+
+    // --- 1. ALWAYS INJECT FOOTER (No matter what) ---
+    if (!document.querySelector("footer")) {
+        const footer = document.createElement("footer");
+        footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
+        footer.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
+            </div>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
+                <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
+                <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
+            </div>
+        `;
+        document.body.appendChild(footer);
+    }
+
+    // --- 2. INJECT RELATED TOOLS (Safety Mode) ---
+    const currentPath = window.location.pathname;
+    
+    // Try to find the tool by checking if the URL contains the tool ID
+    let currentTool = toolsDB.find(t => currentPath.includes(t.url));
+    let related = [];
+    let titleText = "";
+
+    if (currentTool) {
+        // Option A: We found the tool -> Show similar category
+        titleText = "You might also like:";
+        related = toolsDB.filter(t => t.cat === currentTool.cat && t.url !== currentTool.url);
+    } 
+    
+    // Option B: Fallback (If tool not found or not enough related tools)
+    if (!currentTool || related.length < 3) {
+        titleText = (currentTool) ? "You might also like:" : "Popular Tools:";
+        const fillers = toolsDB.filter(t => t.tag === 'HOT' || t.tag === 'VIRAL');
+        related = related.concat(fillers); // Fill gaps with HOT tools
+    }
+
+    // Shuffle and Limit to 3
+    related = related.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    // Render the Section
+    if (related.length > 0) {
+        const relatedSection = document.createElement("div");
+        relatedSection.style.cssText = "max-width: 800px; margin: 50px auto; border-top: 1px solid #1e293b; padding-top: 40px;";
         
-        // --- A. INJECT RELATED TOOLS ---
-        const currentPath = window.location.pathname.split("/").pop().replace(".html", "");
-        // Find current tool safely
-        const currentTool = toolsDB.find(t => t.url === currentPath || currentPath.includes(t.url));
+        let cardsHTML = related.map(t => `
+            <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
+                <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
+                    <i class="fa-solid ${t.icon}"></i>
+                </div>
+                <div>
+                    <div style="color:white; font-weight:700; font-size:0.95rem;">${t.name}</div>
+                    <div style="color:#94a3b8; font-size:0.8rem;">${t.desc}</div>
+                </div>
+            </a>
+        `).join("");
+
+        relatedSection.innerHTML = `
+            <h3 style="color:white; font-size:1.3rem; margin-bottom:20px;">${titleText}</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
+                ${cardsHTML}
+            </div>
+        `;
         
-        if (currentTool) {
-            // Step 1: Get tools from the SAME category (EXCLUDING current one)
-            let related = toolsDB.filter(t => t.cat === currentTool.cat && t.url !== currentTool.url);
-
-            // Step 2: If we don't have enough (less than 3), fill with "HOT" or "VIRAL" tools from other categories
-            if (related.length < 3) {
-                const fillers = toolsDB.filter(t => 
-                    t.cat !== currentTool.cat && 
-                    t.url !== currentTool.url && 
-                    (t.tag === 'HOT' || t.tag === 'VIRAL')
-                );
-                related = related.concat(fillers);
-            }
-
-            // Step 3: Shuffle and take top 3
-            related = related.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-            if (related.length > 0) {
-                const relatedSection = document.createElement("div");
-                relatedSection.style.cssText = "max-width: 800px; margin: 50px auto; border-top: 1px solid #1e293b; padding-top: 40px;";
-                
-                let cardsHTML = related.map(t => `
-                    <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
-                        <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
-                            <i class="fa-solid ${t.icon}"></i>
-                        </div>
-                        <div>
-                            <div style="color:white; font-weight:700; font-size:0.95rem;">${t.name}</div>
-                            <div style="color:#94a3b8; font-size:0.8rem;">${t.desc}</div>
-                        </div>
-                    </a>
-                `).join("");
-
-                relatedSection.innerHTML = `
-                    <h3 style="color:white; font-size:1.3rem; margin-bottom:20px;">You might also like:</h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
-                        ${cardsHTML}
-                    </div>
-                `;
-                document.body.appendChild(relatedSection);
-            }
-        }
-
-        // --- B. INJECT FOOTER ---
-        if (!document.querySelector("footer")) {
-            const footer = document.createElement("footer");
-            footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
-            footer.innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
-                </div>
-                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                    <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
-                    <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
-                    <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
-                </div>
-            `;
-            document.body.appendChild(footer);
+        // Insert BEFORE the footer (if footer exists) or append to body
+        const footer = document.querySelector("footer");
+        if(footer) {
+            footer.parentNode.insertBefore(relatedSection, footer);
+        } else {
+            document.body.appendChild(relatedSection);
         }
     }
 });
