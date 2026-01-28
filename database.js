@@ -75,7 +75,7 @@ const toolsDB = [
     // CATEGORY 5: AI TOOLS
     // =========================================
     { "name": "Text to Speech (AI)", "url": "text-to-speech", "cat": "ai", "icon": "fa-volume-high", "desc": "Convert text to human audio.", "tag": "HOT" },
-    { "name": "Business Name Generator", "url": "business-name", "cat": "ai", "icon": "fa-briefcase", "desc": "Brand names.", "tag": "AI" },
+    { "name": "Business Name Generator", "url": "business-name", "cat": "ai", "icon": "fa-briefcase", "desc": "AI-powered brand ideas.", "tag": "AI" },
     { "name": "Slogan & Tagline Gen", "url": "slogan-gen", "cat": "ai", "icon": "fa-lightbulb", "desc": "Catchy taglines for brands.", "tag": "" },
 
     // =========================================
@@ -102,7 +102,7 @@ const toolsDB = [
 ];
 
 // =====================================================================
-// AUTOMATION SCRIPT
+// AUTOMATION SCRIPT: FOOTER & RELATED TOOLS
 // =====================================================================
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -111,19 +111,32 @@ document.addEventListener("DOMContentLoaded", function() {
         
         // --- A. INJECT RELATED TOOLS ---
         const currentPath = window.location.pathname.split("/").pop().replace(".html", "");
+        // Find current tool safely
         const currentTool = toolsDB.find(t => t.url === currentPath || currentPath.includes(t.url));
         
         if (currentTool) {
-            const related = toolsDB.filter(t => t.cat === currentTool.cat && t.name !== currentTool.name)
-                                   .sort(() => 0.5 - Math.random()) // Shuffle
-                                   .slice(0, 3);
+            // Step 1: Get tools from the SAME category (EXCLUDING current one)
+            let related = toolsDB.filter(t => t.cat === currentTool.cat && t.url !== currentTool.url);
+
+            // Step 2: If we don't have enough (less than 3), fill with "HOT" or "VIRAL" tools from other categories
+            if (related.length < 3) {
+                const fillers = toolsDB.filter(t => 
+                    t.cat !== currentTool.cat && 
+                    t.url !== currentTool.url && 
+                    (t.tag === 'HOT' || t.tag === 'VIRAL')
+                );
+                related = related.concat(fillers);
+            }
+
+            // Step 3: Shuffle and take top 3
+            related = related.sort(() => 0.5 - Math.random()).slice(0, 3);
 
             if (related.length > 0) {
                 const relatedSection = document.createElement("div");
                 relatedSection.style.cssText = "max-width: 800px; margin: 50px auto; border-top: 1px solid #1e293b; padding-top: 40px;";
                 
                 let cardsHTML = related.map(t => `
-                    <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px;">
+                    <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
                         <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
                             <i class="fa-solid ${t.icon}"></i>
                         </div>
