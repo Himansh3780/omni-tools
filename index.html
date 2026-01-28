@@ -329,18 +329,8 @@
     <script src="ads.js"></script>
 
     <script>
-        const demoToolsDB = [
-            {name: "JSON Formatter", desc: "Beautify and validate JSON code.", url: "#", icon: "fa-code", cat: "dev", tag: "HOT"},
-            {name: "PDF Compressor", desc: "Reduce PDF file size quickly.", url: "#", icon: "fa-file-pdf", cat: "business", tag: "NEW"},
-            {name: "Instagram Downloader", desc: "Save posts and reels.", url: "#", icon: "fa-instagram", cat: "social", tag: "VIRAL"},
-            {name: "ChatGPT Prompt Gen", desc: "Create perfect AI prompts.", url: "#", icon: "fa-robot", cat: "ai", tag: "AI"},
-            {name: "Word Counter", desc: "Count words and characters.", url: "#", icon: "fa-align-left", cat: "text", tag: ""},
-            {name: "Background Remover", desc: "Remove image backgrounds.", url: "#", icon: "fa-image", cat: "image", tag: "PRO"},
-            {name: "Code Minifier", desc: "Minify CSS/JS files.", url: "#", icon: "fa-file-code", cat: "dev", tag: ""},
-            {name: "QR Generator", desc: "Create custom QR codes.", url: "#", icon: "fa-qrcode", cat: "business", tag: "SEO"},
-            {name: "Video Trimmer", desc: "Cut videos online instantly.", url: "#", icon: "fa-video", cat: "social", tag: ""},
-            {name: "Citation Machine", desc: "APA & MLA Citation generator.", url: "#", icon: "fa-book", cat: "student", tag: "FREE"},
-        ];
+        // Force loading from database.js by removing the fallback
+        const demoToolsDB = []; 
     </script>
 
     <script src="database.js"></script>
@@ -439,7 +429,7 @@
             grid.innerHTML = "";
             const db = (typeof toolsDB !== 'undefined') ? toolsDB : demoToolsDB;
 
-            if(!db) { document.getElementById('error-screen').style.display = 'block'; return; }
+            if(!db || db.length === 0) { document.getElementById('error-screen').style.display = 'block'; return; }
 
             // 1. Filter Database
             const filtered = cat === 'all' ? db : db.filter(t => t.cat === cat);
