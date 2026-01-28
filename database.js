@@ -101,65 +101,48 @@ const toolsDB = [
     { "name": "BMI Calculator - Ideal Weight", "url": "bmi-calculator", "cat": "health", "icon": "fa-weight-scale", "desc": "Check Body Mass Index & Health.", "tag": "HOT" }
 ];
 
+// ... (Your toolsDB array stays the same at the top) ...
+
 // =====================================================================
-// AUTOMATION SCRIPT: BULLETPROOF VERSION (FORCES FOOTER)
+// AUTOMATION SCRIPT: INJECTS "RELATED TOOLS" AFTER THE CALCULATOR
 // =====================================================================
 document.addEventListener("DOMContentLoaded", function() {
     
-    // CHECK: Are we on the Homepage? (If yes, stop)
+    // 1. Check if we are on a Tool Page (not the homepage)
     if (document.querySelector(".grid-container") || document.querySelector("#tools-grid")) {
-        return; 
+        return; // Stop if we are on the dashboard
     }
 
-    // --- 1. ALWAYS INJECT FOOTER (No matter what) ---
-    if (!document.querySelector("footer")) {
-        const footer = document.createElement("footer");
-        footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
-        footer.innerHTML = `
-            <div style="margin-bottom: 15px;">
-                <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
-            </div>
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
-                <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
-                <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
-                <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
-            </div>
-        `;
-        document.body.appendChild(footer);
-    }
-
-    // --- 2. INJECT RELATED TOOLS (Safety Mode) ---
+    // --- 1. PREPARE THE RELATED TOOLS SECTION ---
     const currentPath = window.location.pathname;
-    
-    // Try to find the tool by checking if the URL contains the tool ID
     let currentTool = toolsDB.find(t => currentPath.includes(t.url));
     let related = [];
-    let titleText = "";
+    let titleText = "You might also like:";
 
     if (currentTool) {
-        // Option A: We found the tool -> Show similar category
-        titleText = "You might also like:";
+        // Get tools from same category, exclude current
         related = toolsDB.filter(t => t.cat === currentTool.cat && t.url !== currentTool.url);
     } 
     
-    // Option B: Fallback (If tool not found or not enough related tools)
+    // Fill with "HOT" tools if we don't have enough
     if (!currentTool || related.length < 3) {
-        titleText = (currentTool) ? "You might also like:" : "Popular Tools:";
+        if (!currentTool) titleText = "Popular Tools:";
         const fillers = toolsDB.filter(t => t.tag === 'HOT' || t.tag === 'VIRAL');
-        related = related.concat(fillers); // Fill gaps with HOT tools
+        related = related.concat(fillers); 
     }
 
-    // Shuffle and Limit to 3
+    // Shuffle and pick 3
     related = related.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-    // Render the Section
+    // --- 2. INJECT RELATED TOOLS (THE POSITION FIX) ---
     if (related.length > 0) {
         const relatedSection = document.createElement("div");
-        relatedSection.style.cssText = "max-width: 800px; margin: 50px auto; border-top: 1px solid #1e293b; padding-top: 40px;";
+        relatedSection.className = "related-tools-section";
+        // Styling to make it fit nicely
+        relatedSection.style.cssText = "max-width: 800px; margin: 0 auto 40px auto; padding-top: 20px;";
         
         let cardsHTML = related.map(t => `
-            <a href="${t.url}.html" style="text-decoration:none; background:#0f172a; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
+            <a href="${t.url}.html" style="text-decoration:none; background:#1e293b; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
                 <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
                     <i class="fa-solid ${t.icon}"></i>
                 </div>
@@ -177,12 +160,34 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
         `;
         
-        // Insert BEFORE the footer (if footer exists) or append to body
-        const footer = document.querySelector("footer");
-        if(footer) {
-            footer.parentNode.insertBefore(relatedSection, footer);
+        // ** THIS IS THE MAGIC CHANGE **
+        // We look for the main calculator card (.calc-card)
+        const calcCard = document.querySelector(".calc-card");
+        
+        if (calcCard) {
+            // If found, insert Related Tools AFTER the calculator, but BEFORE the text
+            calcCard.parentNode.insertBefore(relatedSection, calcCard.nextSibling);
         } else {
+            // Fallback: If no calculator card found, put it at the bottom
             document.body.appendChild(relatedSection);
         }
+    }
+
+    // --- 3. ALWAYS INJECT FOOTER ---
+    if (!document.querySelector("footer")) {
+        const footer = document.createElement("footer");
+        footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
+        footer.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
+            </div>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
+                <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
+                <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
+                <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
+            </div>
+        `;
+        document.body.appendChild(footer);
     }
 });
