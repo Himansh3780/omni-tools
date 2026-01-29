@@ -1,4 +1,24 @@
 // =========================================
+// GOOGLE ANALYTICS (GA4) INJECTION
+// =========================================
+(function() {
+    // YOUR TRACKING ID
+    const GA_ID = 'G-1MQNF15L2X'; 
+
+    // 1. Load the Google Script asynchronously
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(script);
+
+    // 2. Initialize Analytics
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+})();
+
+// =========================================
 // PWA & SEO HEAD INJECTION (New Feature)
 // =========================================
 (function() {
