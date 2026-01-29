@@ -1,3 +1,20 @@
+// =========================================
+// PWA & SEO HEAD INJECTION (New Feature)
+// =========================================
+(function() {
+    // 1. Add Manifest for PWA (App Install)
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = 'manifest.json';
+    document.head.appendChild(link);
+
+    // 2. Add Mobile Theme Color
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = '#020617';
+    document.head.appendChild(meta);
+})();
+
 const toolsDB = [
     // =========================================
     // CATEGORY 1: DEVELOPER TOOLS
