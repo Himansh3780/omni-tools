@@ -131,6 +131,7 @@ const toolsDB = [
     // CATEGORY 8: FUN & GAMES
     // =========================================
     { "name": "True Love Calculator", "url": "love-calculator", "cat": "fun", "icon": "fa-heart-pulse", "desc": "Check relationship compatibility.", "tag": "VIRAL" },
+    { "name": "Fake WhatsApp Chat", "url": "whatsapp-chat", "cat": "fun", "icon": "fa-whatsapp", "desc": "Create realistic fake chat screenshots.", "tag": "VIRAL" },
 
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
