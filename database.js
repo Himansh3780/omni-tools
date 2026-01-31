@@ -135,6 +135,9 @@ const toolsDB = [
     { "name": "Fake WhatsApp Chat", "url": "whatsapp-chat", "cat": "fun", "icon": "fa-whatsapp", "desc": "Create realistic fake chat screenshots.", "tag": "VIRAL" },
     { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "fun", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
     { "name": "Fake Instagram Post", "url": "instagram-post", "cat": "social", "icon": "fa-camera-retro", "desc": "Create fake viral posts.", "tag": "HOT" },
+    { "name": "Fake X (Twitter) Post", "url": "tweet-gen", "cat": "social", "icon": "fa-x-twitter", "desc": "Create viral fake tweets.", "tag": "HOT" },
+
+    
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
