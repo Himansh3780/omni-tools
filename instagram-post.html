@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fake Instagram Post Generator - Real Interface</title>
+    <meta name="description" content="Create realistic fake Instagram posts. Customize the image, likes, caption, dark mode, and verify badge. Share to unlock watermark removal.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --font-main: 'Inter', sans-serif;
+        }
+
+        /* --- THEMES --- */
+        .theme-light {
+            --insta-bg: #FFFFFF;
+            --insta-text: #000000;
+            --insta-sub: #8e8e93;
+            --insta-border: #dbdbdb;
+            --insta-icon: #000000;
+            --nav-bg: #FFFFFF;
+        }
+
+        .theme-dark {
+            --insta-bg: #000000;
+            --insta-text: #FFFFFF;
+            --insta-sub: #a8a8a8;
+            --insta-border: #262626;
+            --insta-icon: #FFFFFF;
+            --nav-bg: #000000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--font-main); background: var(--bg-color); color: white; padding: 20px 10px; min-height: 100vh; }
+
+        /* --- LAYOUT --- */
+        .app-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: row; 
+            align-items: flex-start;
+            gap: 40px; 
+            justify-content: center; 
+        }
+
+        /* --- CONTROLS --- */
+        .controls { 
+            flex: 1; 
+            min-width: 320px; 
+            background: var(--panel-bg); 
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .toggle-group { display: flex; background: var(--bg-color); border-radius: 12px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .toggle-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
+        .toggle-btn.active { background: var(--accent-blue); color: white; }
+
+        .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 8px 0; font-weight: 700; }
+        .row-inputs { display: flex; gap: 10px; }
+        
+        input, textarea { 
+            width: 100%; 
+            background: var(--bg-color); 
+            border: 1px solid var(--border-color); 
+            color: white; 
+            padding: 12px 14px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            font-size: 0.9rem; 
+        }
+        input:focus, textarea:focus { border-color: var(--accent-blue); }
+        
+        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+        .checkbox-wrapper input { width: auto; margin: 0; }
+
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 0.95rem; }
+        .btn-green { background: var(--accent-green); color: white; }
+        .btn-blue { background: var(--accent-blue); color: white; }
+        .btn-share { background: white; color: black; margin-top: 25px; }
+
+        /* VIRAL UNLOCK BUTTON STYLES */
+        .btn-unlock {
+            background: linear-gradient(135deg, #8b5cf6, #d946ef); 
+            color: white; 
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: pulse 2s infinite;
+        }
+        .btn-unlock.unlocked {
+            background: #22c55e;
+            animation: none;
+            box-shadow: none;
+            cursor: default;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- PREVIEW AREA --- */
+        .preview-container { position: sticky; top: 20px; z-index: 100; }
+        .phone-wrapper { 
+            width: 380px; height: 800px; 
+            position: relative; 
+            transition: transform 0.3s ease;
+            transform-origin: top center;
+        }
+        .phone-frame { 
+            width: 100%; height: 100%; background: black; border-radius: 50px; 
+            box-shadow: 0 0 0 10px #1a1a1a, 0 30px 80px rgba(0,0,0,0.6); 
+            overflow: hidden; position: relative;
+        }
+
+        /* --- INSTAGRAM UI --- */
+        .screen { 
+            width: 100%; height: 100%; 
+            background: var(--insta-bg); 
+            color: var(--insta-text);
+            display: flex; flex-direction: column; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            position: relative; 
+        }
+
+        .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 10px 28px; font-size: 15px; font-weight: 600; z-index: 10; }
+        
+        .app-header { height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; border-bottom: 1px solid rgba(128,128,128,0.1); }
+        .post-header { height: 60px; display: flex; align-items: center; padding: 0 12px; justify-content: space-between; }
+        
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .pfp-small { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(128,128,128,0.2); }
+        .username-block { display: flex; flex-direction: column; justify-content: center; }
+        .username-text { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .location-text { font-size: 12px; color: var(--insta-text); }
+        .verify-badge { color: #0095f6; font-size: 12px; display: none; }
+        .verify-badge.show { display: inline-block; }
+
+        .post-img-container { width: 100%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .post-img { width: 100%; height: auto; display: block; object-fit: cover; max-height: 450px; }
+
+        .action-bar { padding: 12px 14px 0 14px; display: flex; justify-content: space-between; font-size: 24px; color: var(--insta-icon); }
+        .left-actions { display: flex; gap: 18px; }
+
+        .post-details { padding: 10px 14px; font-size: 14px; }
+        .likes-line { font-weight: 600; margin-bottom: 6px; }
+        .caption-block { line-height: 1.4; }
+        .caption-user { font-weight: 600; margin-right: 5px; }
+        .comments-link { color: var(--insta-sub); margin-top: 6px; display: block; text-decoration: none; }
+        .time-ago { color: var(--insta-sub); font-size: 11px; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .bottom-nav { 
+            height: 60px; border-top: 1px solid rgba(128,128,128,0.2); 
+            background: var(--nav-bg); 
+            display: flex; justify-content: space-around; align-items: center; 
+            position: absolute; bottom: 0; width: 100%; font-size: 24px; color: var(--insta-icon);
+            padding-bottom: 10px;
+        }
+        .nav-pfp { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--insta-text); }
+
+        /* WATERMARK */
+        .watermark { position: absolute; bottom: 70px; right: 15px; font-size: 10px; color: rgba(128,128,128,0.3); font-weight: bold; pointer-events: none; z-index: 20; }
+        .watermark.hidden { display: none !important; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 950px) {
+            .app-container { flex-direction: column; align-items: center; gap: 20px; }
+            .preview-container { width: 100%; display: flex; justify-content: center; height: 680px; overflow: hidden; margin-bottom: -130px; }
+            .phone-wrapper { transform: scale(0.8); }
+            .controls { width: 100%; margin-top: 20px; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 15px 10px; }
+            .preview-container { height: 600px; margin-bottom: -220px; }
+            .phone-wrapper { transform: scale(0.7); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="controls">
+        <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+
+        <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setOS('ios')" id="btn-ios"><i class="fa-brands fa-apple"></i> iOS</button>
+            <button class="toggle-btn" onclick="setOS('android')" id="btn-android"><i class="fa-brands fa-android"></i> Android</button>
+        </div>
+        <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setTheme('light')" id="btn-light"><i class="fa-solid fa-sun"></i> Light</button>
+            <button class="toggle-btn" onclick="setTheme('dark')" id="btn-dark"><i class="fa-solid fa-moon"></i> Dark</button>
+        </div>
+
+        <div class="section-label">User Info</div>
+        <input type="text" id="inp-username" value="creative_traveler" oninput="renderUI()" placeholder="Username">
+        <label class="checkbox-wrapper">
+            <input type="checkbox" id="inp-verified" onchange="renderUI()"> 
+            <span style="font-size:14px; color:#ccc;">Verified Blue Tick</span>
+        </label>
+        <input type="text" id="inp-location" value="Bali, Indonesia" oninput="renderUI()" placeholder="Location (Optional)">
+        
+        <div class="row-inputs">
+            <button class="btn btn-blue" style="margin-top:0;" onclick="document.getElementById('pfp-upload').click()">Upload Profile Pic</button>
+            <input type="file" id="pfp-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'pfp')">
+        </div>
+
+        <div class="section-label">Post Content</div>
+        <button class="btn btn-blue" onclick="document.getElementById('post-upload').click()"><i class="fa-solid fa-image"></i> Upload Post Image</button>
+        <input type="file" id="post-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'post')">
+
+        <div class="section-label">Details</div>
+        <input type="text" id="inp-likes" value="15,403" oninput="renderUI()" placeholder="Like Count">
+        <textarea id="inp-caption" style="height:80px;" oninput="renderUI()" placeholder="Caption...">Just exploring the hidden gems of the island! 🌴✨ #travel #bali</textarea>
+        <input type="text" id="inp-time" value="2 HOURS AGO" oninput="renderUI()" placeholder="Time">
+
+        <button class="btn btn-unlock" id="btn-watermark" onclick="unlockWatermark()">
+            <i class="fa-solid fa-lock"></i> Remove Watermark (Share App)
+        </button>
+
+        <button class="btn btn-share" onclick="downloadImage()">
+            <i class="fa-solid fa-download"></i> Download Screenshot
+        </button>
+    </div>
+
+    <div class="preview-container">
+        <div class="phone-wrapper">
+            <div class="phone-frame">
+                <div class="screen theme-light" id="capture">
+                    
+                    <div class="status-bar" id="status-bar-area"></div>
+
+                    <div class="app-header">
+                        <div style="font-weight:700; font-size:20px; font-family:'Roboto',sans-serif;">Instagram</div>
+                        <div style="display:flex; gap:20px; font-size:22px;">
+                            <i class="fa-regular fa-heart"></i>
+                            <i class="fa-regular fa-paper-plane" style="transform:rotate(15deg) translateY(-2px);"></i>
+                        </div>
+                    </div>
+
+                    <div class="post-header">
+                        <div class="user-info">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="pfp-small" id="img-pfp">
+                            <div class="username-block">
+                                <div class="username-text">
+                                    <span id="txt-username">creative_traveler</span>
+                                    <i class="fa-solid fa-circle-check verify-badge" id="badge-verify"></i>
+                                </div>
+                                <div class="location-text" id="txt-location">Bali, Indonesia</div>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-ellipsis" style="color:var(--insta-text);"></i>
+                    </div>
+
+                    <div class="post-img-container">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="post-img" id="img-post">
+                    </div>
+
+                    <div class="action-bar">
+                        <div class="left-actions">
+                            <i class="fa-regular fa-heart"></i>
+                            <i class="fa-regular fa-comment" style="transform:scaleX(-1);"></i>
+                            <i class="fa-regular fa-paper-plane" style="transform:rotate(15deg) translateY(-2px);"></i>
+                        </div>
+                        <i class="fa-regular fa-bookmark"></i>
+                    </div>
+
+                    <div class="post-details">
+                        <div class="likes-line">Liked by <span id="txt-likes">15,403</span> others</div>
+                        
+                        <div class="caption-block">
+                            <span class="caption-user" id="txt-caption-user">creative_traveler</span>
+                            <span id="txt-caption">Just exploring the hidden gems of the island! 🌴✨ #travel #bali</span>
+                        </div>
+
+                        <a href="#" class="comments-link">View all 128 comments</a>
+                        <div class="time-ago" id="txt-time">2 HOURS AGO</div>
+                    </div>
+
+                    <div class="watermark">omnitools.in</div>
+
+                    <div class="bottom-nav">
+                        <i class="fa-solid fa-house"></i>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <i class="fa-regular fa-square-plus"></i>
+                        <i class="fa-solid fa-clapperboard"></i>
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="nav-pfp" id="img-nav-pfp">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentOS = 'ios';
+    let currentTheme = 'light';
+
+    function setOS(os) {
+        currentOS = os;
+        document.getElementById('btn-ios').classList.toggle('active', os === 'ios');
+        document.getElementById('btn-android').classList.toggle('active', os === 'android');
+        renderUI();
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+        document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+        document.getElementById('capture').className = `screen theme-${theme}`;
+    }
+
+    function renderUI() {
+        const username = document.getElementById('inp-username').value;
+        const verified = document.getElementById('inp-verified').checked;
+        const location = document.getElementById('inp-location').value;
+        const likes = document.getElementById('inp-likes').value;
+        const caption = document.getElementById('inp-caption').value;
+        const time = document.getElementById('inp-time').value;
+
+        document.getElementById('txt-username').innerText = username;
+        document.getElementById('txt-caption-user').innerText = username;
+        document.getElementById('txt-location').innerText = location;
+        document.getElementById('txt-likes').innerText = likes;
+        document.getElementById('txt-caption').innerText = caption;
+        document.getElementById('txt-time').innerText = time;
+
+        const badge = document.getElementById('badge-verify');
+        if(verified) badge.classList.add('show'); else badge.classList.remove('show');
+
+        const sb = document.getElementById('status-bar-area');
+        if(currentOS === 'ios') {
+            sb.innerHTML = `<span>9:41</span><div style="display:flex; gap:6px;"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>`;
+        } else {
+            sb.innerHTML = `<span>9:41</span><div style="display:flex; gap:6px; opacity:0.9;"><i class="fa-brands fa-bluetooth-b"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>`;
+        }
+    }
+
+    function handleImage(input, target) {
+        if(input.files && input.files[0]) {
+            const r = new FileReader();
+            r.onload = e => {
+                if(target === 'pfp') {
+                    document.getElementById('img-pfp').src = e.target.result;
+                    document.getElementById('img-nav-pfp').src = e.target.result;
+                } else {
+                    document.getElementById('img-post').src = e.target.result;
+                }
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function downloadImage() {
+        const capture = document.getElementById('capture');
+        const canvas = await html2canvas(capture, { scale: 2, useCORS: true });
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "insta-post.png", { type: "image/png" });
+            if (navigator.share && navigator.canShare({ files: [file] }) && /Mobi|Android/i.test(navigator.userAgent)) {
+                try { await navigator.share({ files: [file] }); } catch(e){}
+            } else {
+                const a = document.createElement('a');
+                a.download = 'insta-post.png';
+                a.href = canvas.toDataURL();
+                a.click();
+            }
+        });
+    }
+
+    // --- SHARE TO UNLOCK WATERMARK LOGIC ---
+    async function unlockWatermark() {
+        const url = window.location.href;
+        const title = "Fake Insta Post Generator";
+        const text = "Create realistic Fake Instagram Posts with this free tool! 😱";
+        const watermarkEl = document.querySelector('.watermark');
+        const btnEl = document.getElementById('btn-watermark');
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title, text, url });
+                watermarkEl.classList.add('hidden');
+                btnEl.classList.add('unlocked');
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Watermark Removed!';
+                alert("Success! Watermark removed.");
+            } catch (err) { console.log('Cancelled'); }
+        } else {
+            navigator.clipboard.writeText(url).then(() => {
+                watermarkEl.classList.add('hidden');
+                btnEl.classList.add('unlocked');
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Watermark Removed!';
+                alert("Link copied! Watermark removed.");
+            });
+        }
+    }
+
+    // Init
+    renderUI();
+</script>
+
+<script src="database.js"></script>
+<script>
+    if(typeof toolsDB !== 'undefined') {
+        const moreDiv = document.createElement('div');
+        moreDiv.style.cssText = "margin-top:40px; padding:20px; background:#1e293b; border-radius:15px; border:1px solid #334155;";
+        moreDiv.innerHTML = '<h3 style="margin-bottom:15px; font-size:16px;">🔥 Try Other Tools</h3><div id="rec-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px;"></div>';
+        document.querySelector('.controls').appendChild(moreDiv);
+        
+        const recs = toolsDB.sort(() => 0.5 - Math.random()).slice(0, 4);
+        document.getElementById('rec-grid').innerHTML = recs.map(t => `
+            <a href="${t.url}" style="text-decoration:none; background:#0f172a; padding:10px; border-radius:8px; border:1px solid #334155; display:block;">
+                <i class="${t.icon}" style="color:#3b82f6; margin-bottom:5px;"></i>
+                <div style="color:white; font-size:12px; font-weight:600;">${t.title}</div>
+            </a>
+        `).join('');
+    }
+</script>
+
+</body>
+</html>
