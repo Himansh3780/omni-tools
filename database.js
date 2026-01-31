@@ -136,7 +136,8 @@ const toolsDB = [
     { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "fun", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
     { "name": "Fake Instagram Post", "url": "instagram-post", "cat": "fun", "icon": "fa-camera-retro", "desc": "Create fake viral posts.", "tag": "HOT" },
     { "name": "Fake X (Twitter) Post", "url": "tweet-gen", "cat": "fun", "icon": "fa-x-twitter", "desc": "Create viral fake tweets.", "tag": "HOT" },
-    { "name": "Fake YouTube Generator", "url": "fake-youtube-generator", "cat": "social", "icon": "fa-youtube", "desc": "Create realistic fake YouTube video screenshots.", "tag": "VIRAL" },
+    { "name": "Fake YouTube Generator", "url": "fake-youtube-generator", "cat": "fun", "icon": "fa-youtube", "desc": "Create realistic fake YouTube video screenshots.", "tag": "VIRAL" },
+    { "name": "Fake iOS Notification", "url": "fake-ios-notification", "cat": "fun", "icon": "fa-bell", "desc": "Create viral lock screen prank messages.", "tag": "VIRAL" },
     
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
