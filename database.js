@@ -133,7 +133,8 @@ const toolsDB = [
     // =========================================
     { "name": "True Love Calculator", "url": "love-calculator", "cat": "fun", "icon": "fa-heart-pulse", "desc": "Check relationship compatibility.", "tag": "VIRAL" },
     { "name": "Fake WhatsApp Chat", "url": "whatsapp-chat", "cat": "fun", "icon": "fa-whatsapp", "desc": "Create realistic fake chat screenshots.", "tag": "VIRAL" },
-
+    { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "fun", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
+    { "name": "Fake Instagram Post", "url": "instagram-post", "cat": "social", "icon": "fa-camera-retro", "desc": "Create fake viral posts.", "tag": "HOT" },
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
