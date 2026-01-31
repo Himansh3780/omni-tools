@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fake WhatsApp Chat Generator - Android & iOS</title>
+    <meta name="description" content="Create realistic fake WhatsApp chats for Android and iPhone. Toggle themes, edit battery, send images, and download high-quality screenshots.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-purple: #8b5cf6; /* New Color for Share Button */
+            
+            /* App Theme Vars */
+            --chat-bg: #EFE7DE;
+            --header-bg: rgba(244, 244, 244, 0.95);
+            --header-text: #000000;
+            --header-sub: #8e8e93;
+            --icon-color: #007AFF;
+            --bubble-me: #DCF8C6;
+            --bubble-them: #FFFFFF;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            --border-radius: 18px;
+        }
+
+        .mode-android {
+            --chat-bg: #EFE7DE;
+            --header-bg: #008069;
+            --header-text: #FFFFFF;
+            --header-sub: rgba(255, 255, 255, 0.8);
+            --icon-color: #FFFFFF;
+            --bubble-me: #E7FFDB;
+            --bubble-them: #FFFFFF;
+            --font-family: 'Roboto', sans-serif;
+            --border-radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-color); color: white; padding: 20px 10px; min-height: 100vh; }
+
+        /* --- LAYOUT GRID --- */
+        .app-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: row; 
+            align-items: flex-start;
+            gap: 40px; 
+            justify-content: center; 
+        }
+
+        /* --- CONTROLS PANEL --- */
+        .controls { 
+            flex: 1; 
+            min-width: 300px; 
+            background: var(--panel-bg); 
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .os-toggle { display: flex; background: var(--bg-color); border-radius: 12px; padding: 5px; margin-bottom: 25px; border: 1px solid var(--border-color); }
+        .os-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #94a3b8; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+        .os-btn.active { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+
+        .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px 0; font-weight: 700; }
+        
+        .row-inputs { display: flex; gap: 10px; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            background: var(--bg-color); 
+            border: 1px solid var(--border-color); 
+            color: white; 
+            padding: 12px 15px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            font-size: 0.95rem; 
+            transition: border 0.2s;
+        }
+        input:focus, textarea:focus { border-color: var(--accent-blue); }
+
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 1rem; }
+        .btn:active { transform: scale(0.98); }
+        
+        .btn-green { background: var(--accent-green); color: white; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2); }
+        .btn-green:hover { background: #16a34a; }
+        
+        .btn-blue { background: var(--accent-blue); color: white; }
+        .btn-share { background: white; color: black; margin-top: 25px; font-size: 1.1rem; }
+        
+        /* NEW SHARE SITE BUTTON */
+        .btn-purple { background: var(--accent-purple); color: white; margin-top: 10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); }
+        .btn-purple:hover { background: #7c3aed; }
+
+        /* --- PHONE PREVIEW WRAPPER --- */
+        .preview-container {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .phone-wrapper { 
+            width: 380px; 
+            height: 800px; 
+            position: relative; 
+            transition: transform 0.3s ease;
+            transform-origin: top center;
+        }
+        
+        .phone-frame { 
+            width: 100%; height: 100%; background: black; border-radius: 50px; 
+            box-shadow: 0 0 0 8px #2d2d2d, 0 30px 60px rgba(0,0,0,0.6); 
+            overflow: hidden; position: relative;
+        }
+
+        /* --- INSIDE PHONE CSS --- */
+        .screen { width: 100%; height: 100%; background: var(--chat-bg); display: flex; flex-direction: column; font-family: var(--font-family); position: relative; }
+        .screen::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); opacity: 0.08; pointer-events: none; z-index: 0; }
+        
+        .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px 8px 25px; font-size: 14px; font-weight: 600; color: black; z-index: 10; background: var(--header-bg); }
+        .wa-header { height: 60px; background: var(--header-bg); display: flex; align-items: center; padding: 0 10px; z-index: 10; box-shadow: 0 1px 2px rgba(0,0,0,0.1); backdrop-filter: blur(10px); }
+        .chat-area { flex: 1; padding: 15px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; z-index: 5; scrollbar-width: none; }
+        .chat-area::-webkit-scrollbar { display: none; }
+
+        .encryption-msg { background: rgba(255, 252, 207, 0.9); color: #555; padding: 6px 10px; border-radius: 8px; font-size: 10px; text-align: center; margin: 10px auto; max-width: 85%; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .msg { max-width: 75%; padding: 6px 10px; border-radius: var(--border-radius); font-size: 16px; line-height: 20px; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.15); color: black; word-wrap: break-word; }
+        .msg-them { background: var(--bubble-them); align-self: flex-start; border-top-left-radius: 2px; margin-left: 5px; }
+        .msg-me { background: var(--bubble-me); align-self: flex-end; border-top-right-radius: 2px; margin-right: 5px; }
+        .meta { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 11px; color: rgba(0,0,0,0.45); margin-top: 2px; float: right; margin-left: 10px; }
+        .ticks { color: #34B7F1; font-size: 14px; }
+        .wa-footer { min-height: 80px; background: var(--footer-bg); padding: 5px 10px 25px 10px; display: flex; align-items: center; gap: 10px; z-index: 10; }
+        
+        .watermark { position: absolute; bottom: 90px; right: 20px; font-size: 10px; color: rgba(0,0,0,0.2); font-weight: bold; pointer-events: none; z-index: 20; }
+        .msg-img { width: 100%; border-radius: 8px; margin-bottom: 4px; display: block; }
+        .dynamic-header { display: flex; align-items: center; width: 100%; }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 950px) {
+            .app-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .preview-container {
+                position: relative;
+                top: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-bottom: -150px; 
+                height: 650px; 
+                overflow: hidden;
+            }
+
+            .phone-wrapper {
+                transform: scale(0.8);
+            }
+
+            .controls {
+                width: 100%;
+                min-width: unset;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .preview-container { margin-bottom: -220px; height: 580px; }
+            .phone-wrapper { transform: scale(0.7); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="controls">
+        <a href="#" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+
+        <div class="os-toggle">
+            <button class="os-btn active" onclick="setOS('ios')" id="btn-ios"><i class="fa-brands fa-apple"></i> iOS</button>
+            <button class="os-btn" onclick="setOS('android')" id="btn-android"><i class="fa-brands fa-android"></i> Android</button>
+        </div>
+
+        <div class="section-label"><i class="fa-solid fa-mobile-screen"></i> System Status</div>
+        <div class="row-inputs">
+            <input type="text" id="sys-time" value="9:41" oninput="renderUI()" placeholder="Time">
+            <input type="text" id="sys-batt" value="100%" oninput="renderUI()" placeholder="Battery %">
+        </div>
+
+        <div class="section-label"><i class="fa-solid fa-user"></i> Contact Info</div>
+        <div class="row-inputs">
+            <input type="text" id="inp-name" value="Mom ❤️" oninput="renderUI()" placeholder="Name">
+            <input type="text" id="inp-status" value="online" oninput="renderUI()" placeholder="Status">
+        </div>
+        <input type="text" id="inp-pfp" value="https://randomuser.me/api/portraits/women/44.jpg" oninput="renderUI()" placeholder="Profile Image URL">
+
+        <div class="section-label"><i class="fa-solid fa-comment-dots"></i> Message Editor</div>
+        <textarea id="msg-text" style="height:80px; resize:none;" placeholder="Type message here..."></textarea>
+        
+        <div class="row-inputs">
+            <select id="msg-type">
+                <option value="me">Me (Green)</option>
+                <option value="them">Them (White)</option>
+            </select>
+            <input type="text" id="msg-ts" value="9:42 PM">
+        </div>
+
+        <div class="row-inputs">
+            <button class="btn btn-green" onclick="addMessage('text')"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            <button class="btn btn-blue" onclick="document.getElementById('img-upload').click()"><i class="fa-solid fa-image"></i> Photo</button>
+        </div>
+        
+        <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="handleImage(this)">
+
+        <button class="btn btn-share" onclick="downloadImage()">
+            <i class="fa-solid fa-download"></i> Download Screenshot
+        </button>
+
+        <button class="btn btn-purple" onclick="shareTool()">
+            <i class="fa-solid fa-share-nodes"></i> Share 
+        </button>
+
+        <button class="btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444; margin-top:15px;" onclick="resetChat()">Reset Chat</button>
+    </div>
+
+    <div class="preview-container">
+        <div class="phone-wrapper">
+            <div class="phone-frame">
+                <div class="screen" id="capture">
+                    
+                    <div class="status-bar" id="status-bar-area"></div>
+                    <div class="wa-header" id="header-area"></div>
+
+                    <div class="chat-area" id="chat-box">
+                        <div class="encryption-msg"><i class="fa-solid fa-lock"></i> Messages are end-to-end encrypted.</div>
+                        
+                        <div class="msg msg-them">
+                            Honey, did you clean your room?
+                            <div class="meta">9:40 PM</div>
+                        </div>
+                        <div class="msg msg-me">
+                            Yes mom! I'm studying coding now.
+                            <div class="meta">9:41 PM <span class="ticks"><i class="fa-solid fa-check-double"></i></span></div>
+                        </div>
+                    </div>
+
+                    <div class="watermark">omnitools.in</div>
+                    <div class="wa-footer" id="footer-area"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentOS = 'ios';
+
+    const layouts = {
+        ios: {
+            statusBar: (time, batt) => `
+                <span>${time}</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <i class="fa-solid fa-signal"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-battery-full"></i>
+                </div>
+            `,
+            header: (pfp, name, status) => `
+                <div class="dynamic-header" style="justify-content:space-between; color:var(--icon-color);">
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <i class="fa-solid fa-chevron-left" style="font-size:22px;"></i>
+                        <span style="font-size:16px;">9+</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <img src="${pfp}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">
+                        <div style="font-size:12px; font-weight:600; color:var(--header-text); margin-top:2px;">${name}</div>
+                        <div style="font-size:10px; color:var(--header-sub);">${status}</div>
+                    </div>
+                    <div style="display:flex; gap:18px; font-size:18px;">
+                        <i class="fa-solid fa-video"></i> <i class="fa-solid fa-phone"></i>
+                    </div>
+                </div>
+            `,
+            footer: () => `
+                <i class="fa-solid fa-plus" style="color:#007AFF; font-size:22px;"></i>
+                <div style="flex:1; height:34px; background:white; border:1px solid #ccc; border-radius:18px; padding:0 10px; display:flex; align-items:center; justify-content:flex-end;">
+                    <i class="fa-regular fa-note-sticky" style="color:#999;"></i>
+                </div>
+                <i class="fa-solid fa-camera" style="color:#007AFF; font-size:20px;"></i>
+                <i class="fa-solid fa-microphone" style="color:#007AFF; font-size:20px;"></i>
+            `
+        },
+        android: {
+            statusBar: (time, batt) => `
+                <span>${time}</span>
+                <div style="display:flex; gap:6px; align-items:center; opacity:0.8;">
+                    <i class="fa-brands fa-bluetooth-b" style="font-size:10px;"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-signal"></i> <i class="fa-solid fa-battery-full"></i>
+                </div>
+            `,
+            header: (pfp, name, status) => `
+                <div class="dynamic-header" style="color:var(--icon-color); gap:10px;">
+                    <i class="fa-solid fa-arrow-left" style="font-size:20px;"></i>
+                    <img src="${pfp}" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+                    <div style="flex:1;">
+                        <div style="font-size:16px; font-weight:500; color:var(--header-text);">${name}</div>
+                        <div style="font-size:11px; color:var(--header-sub);">${status}</div>
+                    </div>
+                    <div style="display:flex; gap:20px; font-size:18px;">
+                        <i class="fa-solid fa-video"></i> <i class="fa-solid fa-phone"></i> <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </div>
+                </div>
+            `,
+            footer: () => `
+                <div style="flex:1; background:white; height:48px; border-radius:24px; padding:0 10px 0 15px; display:flex; align-items:center; gap:10px; box-shadow:0 1px 2px rgba(0,0,0,0.1);">
+                    <i class="fa-regular fa-face-smile" style="color:#888; font-size:22px;"></i>
+                    <div style="flex:1; color:#aaa; font-size:16px;">Message</div>
+                    <i class="fa-solid fa-paperclip" style="color:#888; font-size:20px; transform:rotate(-45deg);"></i>
+                    <i class="fa-solid fa-camera" style="color:#888; font-size:20px;"></i>
+                </div>
+                <div style="width:48px; height:48px; background:#008069; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+            `
+        }
+    };
+
+    function setOS(os) {
+        currentOS = os;
+        const screen = document.getElementById('capture');
+        const btnIOS = document.getElementById('btn-ios');
+        const btnAndroid = document.getElementById('btn-android');
+
+        if(os === 'android') {
+            screen.classList.add('mode-android');
+            btnAndroid.classList.add('active');
+            btnIOS.classList.remove('active');
+        } else {
+            screen.classList.remove('mode-android');
+            btnIOS.classList.add('active');
+            btnAndroid.classList.remove('active');
+        }
+        renderUI();
+    }
+
+    function renderUI() {
+        const name = document.getElementById('inp-name').value;
+        const status = document.getElementById('inp-status').value;
+        const pfp = document.getElementById('inp-pfp').value;
+        const time = document.getElementById('sys-time').value;
+        const batt = document.getElementById('sys-batt').value;
+
+        const layout = layouts[currentOS];
+
+        document.getElementById('status-bar-area').innerHTML = layout.statusBar(time, batt);
+        document.getElementById('header-area').innerHTML = layout.header(pfp, name, status);
+        document.getElementById('footer-area').innerHTML = layout.footer();
+    }
+
+    function addMessage(type, content = null) {
+        const text = document.getElementById('msg-text').value;
+        const ts = document.getElementById('msg-ts').value;
+        const who = document.getElementById('msg-type').value;
+        const box = document.getElementById('chat-box');
+
+        if(type === 'text' && !text) return;
+
+        const div = document.createElement('div');
+        div.className = `msg msg-${who}`;
+        
+        const ticks = who === 'me' ? `<span class="ticks"><i class="fa-solid fa-check-double"></i></span>` : '';
+        let body = type === 'text' ? text : `<img src="${content}" class="msg-img">`;
+
+        div.innerHTML = `${body}<div class="meta">${ts} ${ticks}</div>`;
+        
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        if(type==='text') document.getElementById('msg-text').value = '';
+    }
+
+    function handleImage(input) {
+        if(input.files && input.files[0]) {
+            const r = new FileReader();
+            r.onload = e => addMessage('image', e.target.result);
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function resetChat() {
+        if(confirm("Are you sure you want to clear the chat?")) {
+            document.getElementById('chat-box').innerHTML = '<div class="encryption-msg"><i class="fa-solid fa-lock"></i> Messages are end-to-end encrypted.</div>';
+        }
+    }
+
+    async function downloadImage() {
+        const capture = document.getElementById('capture');
+        const canvas = await html2canvas(capture, { scale: 2, useCORS: true, backgroundColor: null });
+        
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "fake-chat.png", { type: "image/png" });
+            
+            // Check if native sharing is available for files
+            if (navigator.share && navigator.canShare({ files: [file] }) && /Mobi|Android/i.test(navigator.userAgent)) {
+                try {
+                    await navigator.share({
+                        title: 'Fake Chat',
+                        text: 'Created using OmniTools',
+                        files: [file]
+                    });
+                } catch(e) { console.log(e); }
+            } else {
+                const a = document.createElement('a');
+                a.download = 'fake-chat.png';
+                a.href = canvas.toDataURL();
+                a.click();
+            }
+        });
+    }
+
+    // --- NEW FUNCTION: SHARE SITE () ---
+    async function shareTool() {
+        const url = window.location.href; // Gets the current URL of your tool
+        const title = document.title;
+        const text = "Check out this amazing Fake WhatsApp Chat Generator! Create realistic chats in seconds.";
+
+        if (navigator.share) {
+            // Mobile: Opens native share sheet (WhatsApp, FB, etc)
+            try {
+                await navigator.share({
+                    title: title,
+                    text: text,
+                    url: url
+                });
+            } catch (err) {
+                console.log('Share failed', err);
+            }
+        } else {
+            // Desktop Fallback: Copy to clipboard
+            navigator.clipboard.writeText(url).then(() => {
+                alert("Link copied to clipboard! You can now paste it anywhere.");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    }
+
+    // Init
+    renderUI();
+</script>
+  <script src="database.js"></script>
+
+</body>
+</html>
