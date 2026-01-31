@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fake Instagram DM Generator - Realistic Dark Mode</title>
-    <meta name="description" content="Create realistic fake Instagram Direct Messages (DM). Toggle Dark/Light mode, iOS/Android themes, and download high-quality screenshots.">
+    <title>Fake Instagram Chat Generator - Remove Watermark Free</title>
+    <meta name="description" content="Create realistic fake Instagram Direct Messages (DM). Toggle Dark/Light mode, share to unlock features, and download screenshots.">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- APP UI VARIABLES (The Tool Itself) --- */
+        /* --- GLOBAL VARIABLES --- */
         :root {
             --bg-color: #0f172a;
             --panel-bg: #1e293b;
             --border-color: #334155;
             --accent-blue: #3b82f6;
             --accent-green: #22c55e;
-            --accent-purple: #8b5cf6;
             --font-main: 'Inter', sans-serif;
         }
 
@@ -30,7 +29,6 @@
             --insta-bubble-them: #EFEFEF;
             --insta-bubble-me-text: #FFFFFF;
             --insta-input-bg: #EFEFEF;
-            --insta-border: #dbdbdb;
             --status-bar-color: #000000;
         }
 
@@ -41,11 +39,10 @@
             --insta-bubble-them: #262626;
             --insta-bubble-me-text: #FFFFFF;
             --insta-input-bg: #262626;
-            --insta-border: #262626;
             --status-bar-color: #FFFFFF;
         }
 
-        /* The "Me" Gradient (Instagram Brand Color) */
+        /* The "Me" Gradient */
         .gradient-bubble {
             background: linear-gradient(to right bottom, #9C3CE7, #0095F6);
         }
@@ -64,7 +61,7 @@
             justify-content: center; 
         }
 
-        /* --- CONTROLS --- */
+        /* --- CONTROLS PANEL --- */
         .controls { 
             flex: 1; 
             min-width: 320px; 
@@ -81,7 +78,6 @@
         .toggle-btn.active { background: var(--accent-blue); color: white; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
 
         .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 8px 0; font-weight: 700; }
-        
         .row-inputs { display: flex; gap: 10px; }
         
         input, select, textarea { 
@@ -96,32 +92,50 @@
             font-family: var(--font-main);
             transition: border 0.2s;
         }
-        input:focus, textarea:focus { border-color: var(--accent-blue); }
+        input:focus { border-color: var(--accent-blue); }
 
+        /* Buttons */
         .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 0.95rem; }
-        .btn:active { transform: scale(0.98); }
         .btn-green { background: var(--accent-green); color: white; }
         .btn-blue { background: var(--accent-blue); color: white; }
         .btn-share { background: white; color: black; margin-top: 25px; }
-        .btn-purple { background: var(--accent-purple); color: white; margin-top: 10px; }
+        
+        /* VIRAL UNLOCK BUTTON STYLES */
+        .btn-unlock {
+            background: linear-gradient(135deg, #8b5cf6, #d946ef); 
+            color: white; 
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: pulse 2s infinite;
+        }
+        .btn-unlock.unlocked {
+            background: #22c55e;
+            animation: none;
+            box-shadow: none;
+            cursor: default;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
 
         /* --- PREVIEW AREA --- */
-        .preview-container { position: sticky; top: 20px; z-index: 100; perspective: 1000px; }
-
+        .preview-container { position: sticky; top: 20px; z-index: 100; }
         .phone-wrapper { 
-            width: 380px; height: 812px; /* iPhone X/13 ratio */
+            width: 380px; height: 812px; 
             position: relative; 
             transition: transform 0.3s ease;
             transform-origin: top center;
         }
-        
         .phone-frame { 
             width: 100%; height: 100%; background: black; border-radius: 55px; 
             box-shadow: 0 0 0 10px #1a1a1a, 0 30px 80px rgba(0,0,0,0.6); 
             overflow: hidden; position: relative;
         }
 
-        /* --- INSTAGRAM INTERNAL UI --- */
+        /* --- INSTAGRAM UI --- */
         .screen { 
             width: 100%; height: 100%; 
             background: var(--insta-bg); 
@@ -134,14 +148,7 @@
         .android-font { font-family: 'Roboto', sans-serif; }
 
         .status-bar { height: 47px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 10px 28px; font-size: 15px; font-weight: 600; z-index: 10; color: var(--status-bar-color); }
-
-        .insta-header { 
-            height: 50px; 
-            display: flex; align-items: center; 
-            padding: 0 15px; 
-            z-index: 10; 
-            /* Border usually invisible in modern dark mode, noticeable in light */
-        }
+        .insta-header { height: 50px; display: flex; align-items: center; padding: 0 15px; z-index: 10; }
 
         .chat-area { flex: 1; padding: 10px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; z-index: 5; scrollbar-width: none; }
         .chat-area::-webkit-scrollbar { display: none; }
@@ -161,70 +168,35 @@
             line-height: 1.35; 
             max-width: 75%; 
             word-wrap: break-word; 
-            position: relative;
         }
-
-        .bubble-them { 
-            background: var(--insta-bubble-them); 
-            color: var(--insta-text); 
-            border-bottom-left-radius: 4px;
-        }
-
-        .bubble-me { 
-            /* Gradient defined in gradient-bubble class */
-            color: var(--insta-bubble-me-text); 
-            border-bottom-right-radius: 4px;
-        }
+        .bubble-them { background: var(--insta-bubble-them); color: var(--insta-text); border-bottom-left-radius: 4px; }
+        .bubble-me { color: var(--insta-bubble-me-text); border-bottom-right-radius: 4px; }
 
         .timestamp { text-align: center; color: var(--insta-sub); font-size: 11px; margin: 15px 0 8px 0; font-weight: 500; }
         .seen-indicator { text-align: right; color: var(--insta-sub); font-size: 11px; margin-top: 2px; margin-right: 5px; width: 100%; font-weight: 500; }
 
-        /* Footer */
         .insta-footer { 
             min-height: 70px; 
             background: var(--insta-bg); 
             padding: 0 15px 20px 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            z-index: 10; 
+            display: flex; align-items: center; gap: 12px; z-index: 10; 
         }
-
-        .camera-btn { 
-            width: 38px; height: 38px; 
-            background: #0095F6; 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            flex-shrink: 0; 
-        }
-        
-        .input-pill { 
-            flex: 1; height: 44px; 
-            background: var(--insta-input-bg); 
-            border-radius: 22px; 
-            padding: 0 18px; 
-            display: flex; align-items: center; 
-            color: var(--insta-text); 
-            font-size: 15px;
-            /* Border logic for light mode mainly */
-        }
-
+        .camera-btn { width: 38px; height: 38px; background: #0095F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .input-pill { flex: 1; height: 44px; background: var(--insta-input-bg); border-radius: 22px; padding: 0 18px; display: flex; align-items: center; color: var(--insta-text); font-size: 15px; }
         .footer-icons { display: flex; gap: 16px; font-size: 24px; color: var(--insta-text); align-items: center; }
 
+        /* WATERMARK */
         .watermark { position: absolute; bottom: 85px; right: 20px; font-size: 10px; color: rgba(128,128,128,0.3); font-weight: bold; pointer-events: none; z-index: 20; }
+        .watermark.hidden { display: none !important; }
         .msg-img { width: 100%; border-radius: 18px; display: block; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 950px) {
             .app-container { flex-direction: column; align-items: center; gap: 20px; }
-            .preview-container { 
-                width: 100%; display: flex; justify-content: center; 
-                height: 680px; overflow: hidden; margin-bottom: -130px;
-            }
+            .preview-container { width: 100%; display: flex; justify-content: center; height: 680px; overflow: hidden; margin-bottom: -130px; }
             .phone-wrapper { transform: scale(0.8); }
             .controls { width: 100%; margin-top: 20px; }
         }
-
         @media (max-width: 480px) {
             body { padding: 15px 10px; }
             .preview-container { height: 600px; margin-bottom: -220px; }
@@ -237,7 +209,7 @@
 <div class="app-container">
     
     <div class="controls">
-        <a href="#" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+        <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
 
         <div class="toggle-group">
             <button class="toggle-btn active" onclick="setOS('ios')" id="btn-ios"><i class="fa-brands fa-apple"></i> iOS</button>
@@ -249,41 +221,31 @@
             <button class="toggle-btn" onclick="setTheme('dark')" id="btn-dark"><i class="fa-solid fa-moon"></i> Dark</button>
         </div>
 
-        <div class="section-label"><i class="fa-solid fa-mobile-screen"></i> Status Bar</div>
-        <div class="row-inputs">
-            <input type="text" id="sys-time" value="9:41" oninput="renderUI()" placeholder="Time">
-            <input type="text" id="sys-batt" value="100%" oninput="renderUI()" placeholder="Batt %">
-        </div>
-
-        <div class="section-label"><i class="fa-solid fa-user"></i> Profile Details</div>
+        <div class="section-label">Profile</div>
         <div class="row-inputs">
             <input type="text" id="inp-name" value="design_sarah" oninput="renderUI()" placeholder="Username">
             <input type="text" id="inp-status" value="Active now" oninput="renderUI()" placeholder="Status">
         </div>
-        <input type="text" id="inp-pfp" value="https://randomuser.me/api/portraits/women/90.jpg" oninput="renderUI()" placeholder="Profile Picture URL">
+        <input type="text" id="inp-pfp" value="https://randomuser.me/api/portraits/women/90.jpg" oninput="renderUI()" placeholder="PFP URL">
 
-        <div class="section-label"><i class="fa-solid fa-comment-dots"></i> Chat Editor</div>
+        <div class="section-label">Add Message</div>
         <textarea id="msg-text" style="height:80px; resize:none;" placeholder="Type a message..."></textarea>
-        
         <div class="row-inputs">
             <select id="msg-type">
                 <option value="me">Me (Gradient Blue)</option>
                 <option value="them">Them (Gray/Dark)</option>
             </select>
+            <button class="btn btn-green" onclick="addMessage('text')" style="margin-top:0;">Send</button>
         </div>
-
-        <div class="row-inputs">
-            <button class="btn btn-green" onclick="addMessage('text')"><i class="fa-solid fa-paper-plane"></i> Send</button>
-            <button class="btn btn-blue" onclick="document.getElementById('img-upload').click()"><i class="fa-solid fa-image"></i> Photo</button>
-        </div>
+        <button class="btn btn-blue" onclick="document.getElementById('img-upload').click()">Upload Photo Message</button>
         <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="handleImage(this)">
+
+        <button class="btn btn-unlock" id="btn-watermark" onclick="unlockWatermark()">
+            <i class="fa-solid fa-lock"></i> Remove Watermark (Share App)
+        </button>
 
         <button class="btn btn-share" onclick="downloadImage()">
             <i class="fa-solid fa-download"></i> Download Screenshot
-        </button>
-
-        <button class="btn btn-purple" onclick="shareTool()">
-            <i class="fa-solid fa-share-nodes"></i> Share
         </button>
 
         <button class="btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444; margin-top:15px;" onclick="resetChat()">Reset</button>
@@ -305,13 +267,13 @@
                                 <img src="https://randomuser.me/api/portraits/women/90.jpg" class="avatar-img chat-pfp-ref">
                             </div>
                             <div class="msg-bubble bubble-them">
-                                Hey! Did you see the new design updates?
+                                Hey! Did you see the new tool?
                             </div>
                         </div>
 
                         <div class="msg-row me">
                             <div class="msg-bubble bubble-me gradient-bubble">
-                                Yes! They look amazing in Dark Mode. 🔥
+                                Yes! It's super realistic. 🔥
                             </div>
                         </div>
 
@@ -319,6 +281,7 @@
                     </div>
 
                     <div class="watermark">omnitools.in</div>
+
                     <div id="footer-area" class="insta-footer"></div>
 
                 </div>
@@ -331,17 +294,10 @@
     let currentOS = 'ios';
     let currentTheme = 'light';
 
-    // HTML Templates for Dynamic UI
+    // UI TEMPLATES
     const templates = {
         ios: {
-            bar: (time) => `
-                <div style="flex:1;">${time}</div>
-                <div style="display:flex; gap:6px; align-items:center;">
-                    <i class="fa-solid fa-signal"></i>
-                    <i class="fa-solid fa-wifi"></i>
-                    <i class="fa-solid fa-battery-full"></i>
-                </div>
-            `,
+            bar: (time) => `<div>${time}</div><div style="display:flex; gap:6px; align-items:center;"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>`,
             header: (pfp, name, status) => `
                 <div style="display:flex; align-items:center; width:100%;">
                     <i class="fa-solid fa-chevron-left" style="font-size:26px; margin-right:15px;"></i>
@@ -353,22 +309,13 @@
                         </div>
                     </div>
                     <div style="display:flex; gap:22px; font-size:24px;">
-                        <i class="fa-solid fa-phone"></i>
-                        <i class="fa-solid fa-video"></i>
+                        <i class="fa-solid fa-phone"></i><i class="fa-solid fa-video"></i>
                     </div>
                 </div>
             `
         },
         android: {
-            bar: (time) => `
-                <div style="flex:1;">${time}</div>
-                <div style="display:flex; gap:6px; align-items:center; opacity:0.9;">
-                    <i class="fa-brands fa-bluetooth-b" style="font-size:11px;"></i>
-                    <i class="fa-solid fa-wifi" style="font-size:13px;"></i>
-                    <i class="fa-solid fa-signal" style="font-size:13px;"></i>
-                    <i class="fa-solid fa-battery-full" style="font-size:14px;"></i>
-                </div>
-            `,
+            bar: (time) => `<div>${time}</div><div style="display:flex; gap:6px; align-items:center; opacity:0.9;"><i class="fa-brands fa-bluetooth-b" style="font-size:11px;"></i><i class="fa-solid fa-wifi" style="font-size:13px;"></i><i class="fa-solid fa-battery-full" style="font-size:14px;"></i></div>`,
             header: (pfp, name, status) => `
                 <div style="display:flex; align-items:center; width:100%;">
                     <i class="fa-solid fa-arrow-left" style="font-size:24px; margin-right:15px;"></i>
@@ -380,8 +327,7 @@
                         </div>
                     </div>
                     <div style="display:flex; gap:20px; font-size:22px;">
-                        <i class="fa-solid fa-phone"></i>
-                        <i class="fa-solid fa-video"></i>
+                        <i class="fa-solid fa-phone"></i><i class="fa-solid fa-video"></i>
                     </div>
                 </div>
             `
@@ -389,30 +335,22 @@
     };
 
     function renderFooter() {
-        // Footer icons depend on theme sometimes, but usually SVG stroke. FontAwesome solid for now.
         return `
-            <div class="camera-btn">
-                <i class="fa-solid fa-camera" style="color:white; font-size:18px;"></i>
-            </div>
+            <div class="camera-btn"><i class="fa-solid fa-camera" style="color:white; font-size:18px;"></i></div>
             <div class="input-pill">Message...</div>
             <div class="footer-icons">
-                <i class="fa-regular fa-microphone"></i>
-                <i class="fa-regular fa-image"></i>
-                <i class="fa-regular fa-heart"></i>
+                <i class="fa-regular fa-microphone"></i><i class="fa-regular fa-image"></i><i class="fa-regular fa-heart"></i>
             </div>
         `;
     }
 
-    // --- LOGIC ---
+    // TOGGLES
     function setOS(os) {
         currentOS = os;
         document.getElementById('btn-ios').classList.toggle('active', os === 'ios');
         document.getElementById('btn-android').classList.toggle('active', os === 'android');
-        
         const screen = document.getElementById('capture');
-        if(os === 'android') screen.classList.add('android-font');
-        else screen.classList.remove('android-font');
-        
+        if(os === 'android') screen.classList.add('android-font'); else screen.classList.remove('android-font');
         renderUI();
     }
 
@@ -420,29 +358,27 @@
         currentTheme = theme;
         document.getElementById('btn-light').classList.toggle('active', theme === 'light');
         document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
-        
         const screen = document.getElementById('capture');
-        screen.className = `screen theme-${theme}`; // Reset classes
+        screen.className = `screen theme-${theme}`;
         if(currentOS === 'android') screen.classList.add('android-font');
-        
         renderUI();
     }
 
+    // CORE UI RENDER
     function renderUI() {
-        const time = document.getElementById('sys-time').value;
         const name = document.getElementById('inp-name').value;
         const status = document.getElementById('inp-status').value;
         const pfp = document.getElementById('inp-pfp').value;
+        const layout = templates[currentOS];
 
-        // Render Bar & Header
-        document.getElementById('status-bar-area').innerHTML = templates[currentOS].bar(time);
-        document.getElementById('header-area').innerHTML = templates[currentOS].header(pfp, name, status);
+        document.getElementById('status-bar-area').innerHTML = layout.bar('9:41');
+        document.getElementById('header-area').innerHTML = layout.header(pfp, name, status);
         document.getElementById('footer-area').innerHTML = renderFooter();
 
-        // Update avatar in existing messages (Them only)
         document.querySelectorAll('.chat-pfp-ref').forEach(img => img.src = pfp);
     }
 
+    // MESSAGES
     function addMessage(type, content = null) {
         const text = document.getElementById('msg-text').value;
         const who = document.getElementById('msg-type').value;
@@ -453,34 +389,21 @@
 
         const row = document.createElement('div');
         row.className = `msg-row ${who}`;
-
         let innerHTML = '';
         
-        // If Them, Add Avatar
-        if(who === 'them') {
-            innerHTML += `
-                <div class="avatar-spot">
-                    <img src="${pfp}" class="avatar-img chat-pfp-ref">
-                </div>
-            `;
-        }
+        if(who === 'them') innerHTML += `<div class="avatar-spot"><img src="${pfp}" class="avatar-img chat-pfp-ref"></div>`;
 
-        // Message Body
         let body = type === 'text' ? text : `<img src="${content}" class="msg-img">`;
-        
-        // Classes for bubble
         let bubbleClass = who === 'them' ? 'bubble-them' : 'bubble-me gradient-bubble';
-
+        
         innerHTML += `<div class="msg-bubble ${bubbleClass}">${body}</div>`;
         row.innerHTML = innerHTML;
 
-        // Manage "Seen"
         const oldSeen = document.querySelector('.seen-indicator');
         if(oldSeen) oldSeen.remove();
 
         box.appendChild(row);
 
-        // Add new Seen
         const seen = document.createElement('div');
         seen.className = 'seen-indicator';
         seen.innerText = 'Seen';
@@ -499,11 +422,36 @@
     }
 
     function resetChat() {
-        if(confirm("Clear chat?")) {
-            document.getElementById('chat-box').innerHTML = '<div class="timestamp">Today 9:00 AM</div>';
+        if(confirm("Clear chat?")) document.getElementById('chat-box').innerHTML = '<div class="timestamp">Today 9:00 AM</div>';
+    }
+
+    // --- SHARE TO UNLOCK WATERMARK LOGIC ---
+    async function unlockWatermark() {
+        const url = window.location.href;
+        const title = "Fake Chat Generator";
+        const text = "Check out this amazing tool to create Fake Insta Chats! 😱 Create yours here:";
+        const watermarkEl = document.querySelector('.watermark');
+        const btnEl = document.getElementById('btn-watermark');
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title, text, url });
+                watermarkEl.classList.add('hidden');
+                btnEl.classList.add('unlocked');
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Watermark Removed!';
+                alert("Success! Watermark removed.");
+            } catch (err) { console.log('Cancelled'); }
+        } else {
+            navigator.clipboard.writeText(url).then(() => {
+                watermarkEl.classList.add('hidden');
+                btnEl.classList.add('unlocked');
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> Watermark Removed!';
+                alert("Link copied! Watermark removed.");
+            });
         }
     }
 
+    // DOWNLOAD
     async function downloadImage() {
         const capture = document.getElementById('capture');
         const canvas = await html2canvas(capture, { scale: 2, useCORS: true, backgroundColor: null });
@@ -520,17 +468,27 @@
         });
     }
 
-    async function shareTool() {
-        const url = window.location.href;
-        if (navigator.share) {
-            try { await navigator.share({ title: document.title, url: url }); } catch (err) {}
-        } else {
-            navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
-        }
-    }
-
     // Init
     renderUI();
+</script>
+
+<script src="database.js"></script>
+<script>
+    // Simple logic to show 4 other tools at bottom
+    if(typeof toolsDB !== 'undefined') {
+        const moreDiv = document.createElement('div');
+        moreDiv.style.cssText = "margin-top:40px; padding:20px; background:#1e293b; border-radius:15px; border:1px solid #334155;";
+        moreDiv.innerHTML = '<h3 style="margin-bottom:15px; font-size:16px;">🔥 Try Other Tools</h3><div id="rec-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:10px;"></div>';
+        document.querySelector('.controls').appendChild(moreDiv);
+        
+        const recs = toolsDB.sort(() => 0.5 - Math.random()).slice(0, 4);
+        document.getElementById('rec-grid').innerHTML = recs.map(t => `
+            <a href="${t.url}" style="text-decoration:none; background:#0f172a; padding:10px; border-radius:8px; border:1px solid #334155; display:block;">
+                <i class="${t.icon}" style="color:#3b82f6; margin-bottom:5px;"></i>
+                <div style="color:white; font-size:12px; font-weight:600;">${t.title}</div>
+            </a>
+        `).join('');
+    }
 </script>
 
 </body>
