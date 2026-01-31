@@ -134,8 +134,8 @@ const toolsDB = [
     { "name": "True Love Calculator", "url": "love-calculator", "cat": "fun", "icon": "fa-heart-pulse", "desc": "Check relationship compatibility.", "tag": "VIRAL" },
     { "name": "Fake WhatsApp Chat", "url": "whatsapp-chat", "cat": "fun", "icon": "fa-whatsapp", "desc": "Create realistic fake chat screenshots.", "tag": "VIRAL" },
     { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "fun", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
-    { "name": "Fake Instagram Post", "url": "instagram-post", "cat": "social", "icon": "fa-camera-retro", "desc": "Create fake viral posts.", "tag": "HOT" },
-    { "name": "Fake X (Twitter) Post", "url": "tweet-gen", "cat": "social", "icon": "fa-x-twitter", "desc": "Create viral fake tweets.", "tag": "HOT" },
+    { "name": "Fake Instagram Post", "url": "instagram-post", "cat": "fun", "icon": "fa-camera-retro", "desc": "Create fake viral posts.", "tag": "HOT" },
+    { "name": "Fake X (Twitter) Post", "url": "tweet-gen", "cat": "fun", "icon": "fa-x-twitter", "desc": "Create viral fake tweets.", "tag": "HOT" },
 
     
     // =========================================
