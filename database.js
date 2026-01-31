@@ -107,6 +107,7 @@ const toolsDB = [
     { "name": "Fake Tweet Generator", "url": "tweet-img", "cat": "social", "icon": "fa-twitter", "desc": "Create meme tweet images.", "tag": "FUN" },
     { "name": "YouTube Thumbnail Grabber", "url": "youtube-thumb", "cat": "social", "icon": "fa-youtube", "desc": "Download HD thumbnails.", "tag": "HD" },
     { "name": "YouTube Tag Extractor", "url": "yt-tags", "cat": "social", "icon": "fa-tags", "desc": "Extract keywords from videos.", "tag": "SEO" },
+    { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "social", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
 
     // =========================================
     // CATEGORY 5: AI TOOLS
