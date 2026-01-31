@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fake Discord Chat Generator - Prank Tool</title>
+    <meta name="description" content="Create realistic fake Discord chat screenshots. Customize username, role colors, bot tags, and message content. Share to unlock watermark removal.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+            --accent-blurple: #5865F2;
+            --accent-green: #23a559;
+            --font-main: 'Roboto', sans-serif;
+        }
+
+        /* --- DISCORD THEMES --- */
+        .theme-dark {
+            --dc-bg: #313338;
+            --dc-header: #2b2d31;
+            --dc-text: #dbdee1;
+            --dc-text-head: #f2f3f5;
+            --dc-input: #383a40;
+            --dc-msg-hover: #2e3035;
+            --dc-timestamp: #949ba4;
+        }
+
+        .theme-light {
+            --dc-bg: #ffffff;
+            --dc-header: #f2f3f5;
+            --dc-text: #2e3338;
+            --dc-text-head: #060607;
+            --dc-input: #ebedef;
+            --dc-msg-hover: #f2f3f5;
+            --dc-timestamp: #5c5e66;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--font-main); background: var(--bg-color); color: white; padding: 20px 10px; min-height: 100vh; }
+
+        /* --- LAYOUT --- */
+        .app-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: row; align-items: flex-start; gap: 40px; justify-content: center; }
+
+        /* --- CONTROLS --- */
+        .controls { 
+            flex: 1; min-width: 320px; background: var(--panel-bg); padding: 25px; 
+            border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+
+        .toggle-group { display: flex; background: var(--bg-color); border-radius: 12px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .toggle-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
+        .toggle-btn.active { background: var(--accent-blurple); color: white; }
+
+        .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 8px 0; font-weight: 700; }
+        .row-inputs { display: flex; gap: 10px; }
+        
+        input, textarea, select { 
+            width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); color: white; 
+            padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; font-family: var(--font-main);
+        }
+        input[type="color"] { padding: 2px; height: 45px; cursor: pointer; }
+        
+        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; background: var(--bg-color); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); }
+        .checkbox-wrapper input { width: auto; margin: 0; }
+
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 0.95rem; }
+        .btn-blue { background: var(--accent-blurple); color: white; }
+        .btn-green { background: var(--accent-green); color: white; }
+        .btn-share { background: white; color: black; margin-top: 25px; }
+
+        /* UNLOCK BUTTON */
+        .btn-unlock { background: linear-gradient(135deg, #8b5cf6, #d946ef); color: white; margin-top: 20px; box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3); border: 1px solid rgba(255,255,255,0.2); animation: pulse 2s infinite; }
+        .btn-unlock.unlocked { background: #22c55e; animation: none; box-shadow: none; cursor: default; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* --- PREVIEW AREA --- */
+        .preview-container { position: sticky; top: 20px; z-index: 100; }
+        .phone-wrapper { width: 380px; height: 800px; position: relative; transition: transform 0.3s ease; transform-origin: top center; }
+        .phone-frame { 
+            width: 100%; height: 100%; background: black; border-radius: 50px; 
+            box-shadow: 0 0 0 10px #1a1a1a, 0 30px 80px rgba(0,0,0,0.6); 
+            overflow: hidden; position: relative;
+        }
+
+        /* --- DISCORD UI --- */
+        .screen { 
+            width: 100%; height: 100%; 
+            background: var(--dc-bg); color: var(--dc-text);
+            display: flex; flex-direction: column; 
+            font-family: var(--font-main); position: relative; 
+        }
+
+        .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 10px 28px; font-size: 15px; font-weight: 600; z-index: 10; }
+        
+        /* Header */
+        .dc-header { 
+            height: 50px; background: var(--dc-header); 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            font-weight: 700; color: var(--dc-text-head);
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-icons { display: flex; gap: 20px; font-size: 20px; color: var(--dc-text); }
+        .channel-name { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+
+        /* Chat Area */
+        .chat-area { flex: 1; padding: 10px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0px; }
+
+        .msg-container { 
+            display: flex; gap: 16px; padding: 2px 16px 2px 16px; 
+            margin-top: 15px; /* Group spacing */
+        }
+        .msg-container:hover { background: var(--dc-msg-hover); }
+
+        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; margin-top: 4px; }
+        
+        .msg-content { flex: 1; display: flex; flex-direction: column; }
+        
+        .username-row { display: flex; align-items: center; gap: 6px; line-height: 1.3; }
+        .username { font-weight: 600; font-size: 16px; color: var(--dc-text-head); }
+        .timestamp { font-size: 12px; color: var(--dc-timestamp); margin-left: 4px; font-weight: 500; }
+        
+        .bot-tag { 
+            background: #5865F2; color: white; font-size: 10px; padding: 1px 5px; 
+            border-radius: 4px; display: flex; align-items: center; gap: 3px; font-weight: 700; height: 15px; line-height: 1;
+        }
+        .bot-tag i { font-size: 8px; }
+
+        .message-text { font-size: 15px; line-height: 1.375rem; white-space: pre-wrap; color: var(--dc-text); }
+        .message-img { max-width: 100%; border-radius: 8px; margin-top: 6px; cursor: pointer; display: none; }
+
+        /* Input Area */
+        .input-area { 
+            padding: 10px 16px 25px 16px; background: var(--dc-header); 
+            border-top: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; 
+        }
+        .plus-btn { width: 24px; height: 24px; background: var(--dc-text); color: var(--dc-header); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; }
+        
+        .input-box { 
+            flex: 1; background: var(--dc-input); height: 44px; border-radius: 22px; 
+            display: flex; align-items: center; padding: 0 15px; color: var(--dc-text); font-size: 15px;
+            justify-content: space-between;
+        }
+        .input-icons { display: flex; gap: 12px; color: var(--dc-text); font-size: 20px; }
+
+        .watermark { position: absolute; bottom: 85px; right: 15px; font-size: 10px; color: rgba(255,255,255,0.1); font-weight: bold; pointer-events: none; z-index: 20; }
+        .watermark.hidden { display: none !important; }
+
+        /* RESPONSIVE */
+        @media (max-width: 950px) {
+            .app-container { flex-direction: column; align-items: center; gap: 20px; }
+            .preview-container { width: 100%; display: flex; justify-content: center; height: 680px; overflow: hidden; margin-bottom: -130px; }
+            .phone-wrapper { transform: scale(0.8); }
+            .controls { width: 100%; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="controls">
+        <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+
+        <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setTheme('dark')" id="btn-dark">Dark</button>
+            <button class="toggle-btn" onclick="setTheme('light')" id="btn-light">Light</button>
+        </div>
+
+        <div class="section-label">User Settings</div>
+        <div class="row-inputs">
+            <input type="text" id="inp-name" value="Midjourney Bot" oninput="renderUI()" placeholder="Username">
+            <input type="color" id="inp-color" value="#ffffff" oninput="renderUI()" style="width:50px;">
+        </div>
+
+        <label class="checkbox-wrapper">
+            <input type="checkbox" id="inp-bot" checked onchange="renderUI()"> 
+            <span style="font-size:14px; color:#ccc;">Bot Tag</span>
+        </label>
+        
+        <button class="btn btn-blue" style="margin-top:0;" onclick="document.getElementById('pfp-upload').click()">Upload Avatar</button>
+        <input type="file" id="pfp-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'pfp')">
+
+        <div class="section-label">Message Content</div>
+        <textarea id="inp-msg" rows="3" oninput="renderUI()" placeholder="Message...">**Image Generating**
+Prompts: Cyberpunk city, neon lights, rain, 4k --v 5.2</textarea>
+        
+        <button class="btn btn-blue" onclick="document.getElementById('img-upload').click()">Upload Image Attachment</button>
+        <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'img')">
+
+        <div class="section-label">Metadata</div>
+        <div class="row-inputs">
+            <input type="text" id="inp-time" value="Today at 4:20 PM" oninput="renderUI()" placeholder="Timestamp">
+            <input type="text" id="inp-channel" value="general" oninput="renderUI()" placeholder="Channel Name">
+        </div>
+
+        <button class="btn btn-unlock" id="btn-watermark" onclick="unlockWatermark()">
+            <i class="fa-solid fa-lock"></i> Remove Watermark (Share App)
+        </button>
+
+        <button class="btn btn-share" onclick="downloadImage()">
+            <i class="fa-solid fa-download"></i> Download Screenshot
+        </button>
+    </div>
+
+    <div class="preview-container">
+        <div class="phone-wrapper">
+            <div class="phone-frame">
+                <div class="screen theme-dark" id="capture">
+                    
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div style="display:flex; gap:6px;"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>
+                    </div>
+
+                    <div class="dc-header">
+                        <div class="header-left">
+                            <i class="fa-solid fa-bars" style="font-size:20px; color:var(--dc-text);"></i>
+                            <div class="channel-name">
+                                <span style="font-size:20px; color:#949ba4;">#</span> <span id="txt-channel">general</span>
+                            </div>
+                        </div>
+                        <div class="header-icons">
+                             <i class="fa-solid fa-hashtag"></i>
+                             <i class="fa-solid fa-user-group"></i>
+                        </div>
+                    </div>
+
+                    <div class="chat-area">
+                        
+                        <div class="msg-container">
+                            <img src="https://ui-avatars.com/api/?name=M&background=5865F2&color=fff" class="avatar" id="img-pfp">
+                            
+                            <div class="msg-content">
+                                <div class="username-row">
+                                    <span class="username" id="txt-name" style="color:#ffffff;">Midjourney Bot</span>
+                                    <div class="bot-tag" id="tag-bot"><i class="fa-solid fa-check"></i> BOT</div>
+                                    <span class="timestamp" id="txt-time">Today at 4:20 PM</span>
+                                </div>
+                                
+                                <div class="message-text" id="txt-msg">**Image Generating**
+Prompts: Cyberpunk city, neon lights, rain, 4k --v 5.2</div>
+                                <img src="" class="message-img" id="img-post">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="watermark">omnitools.in</div>
+
+                    <div class="input-area">
+                        <div class="plus-btn"><i class="fa-solid fa-plus"></i></div>
+                        <div class="input-box">
+                            <span style="color:var(--dc-timestamp);">Message #<span id="txt-channel-ph">general</span></span>
+                            <div class="input-icons">
+                                <i class="fa-solid fa-gift"></i>
+                                <i class="fa-solid fa-face-smile"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setTheme(theme) {
+        document.getElementById('capture').className = `screen theme-${theme}`;
+        document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+        document.getElementById('btn-dark').classList.toggle('active', theme === 'dark');
+    }
+
+    function renderUI() {
+        document.getElementById('txt-name').innerText = document.getElementById('inp-name').value;
+        document.getElementById('txt-name').style.color = document.getElementById('inp-color').value;
+        
+        document.getElementById('txt-time').innerText = document.getElementById('inp-time').value;
+        document.getElementById('txt-msg').innerText = document.getElementById('inp-msg').value;
+        
+        const chan = document.getElementById('inp-channel').value;
+        document.getElementById('txt-channel').innerText = chan;
+        document.getElementById('txt-channel-ph').innerText = chan;
+
+        // Bot Tag
+        const isBot = document.getElementById('inp-bot').checked;
+        document.getElementById('tag-bot').style.display = isBot ? 'flex' : 'none';
+    }
+
+    function handleImage(input, target) {
+        if(input.files && input.files[0]) {
+            const r = new FileReader();
+            r.onload = e => {
+                if(target === 'pfp') document.getElementById('img-pfp').src = e.target.result;
+                else {
+                    const img = document.getElementById('img-post');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                }
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function downloadImage() {
+        const capture = document.getElementById('capture');
+        const canvas = await html2canvas(capture, { scale: 2, useCORS: true });
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "fake-discord.png", { type: "image/png" });
+            if (navigator.share && navigator.canShare({ files: [file] }) && /Mobi|Android/i.test(navigator.userAgent)) {
+                try { await navigator.share({ files: [file] }); } catch(e){}
+            } else {
+                const a = document.createElement('a');
+                a.download = 'fake-discord.png';
+                a.href = canvas.toDataURL();
+                a.click();
+            }
+        });
+    }
+
+    async function unlockWatermark() {
+        const url = window.location.href;
+        if (navigator.share) {
+            try { await navigator.share({ title: 'Fake Discord', url: url }); document.querySelector('.watermark').classList.add('hidden'); document.getElementById('btn-watermark').classList.add('unlocked'); alert("Unlocked!"); } catch (err) {}
+        } else {
+            navigator.clipboard.writeText(url); document.querySelector('.watermark').classList.add('hidden'); alert("Link copied! Watermark removed.");
+        }
+    }
+
+    // Init
+    renderUI();
+</script>
+
+<script src="database.js"></script>
+<script>
+    if(typeof toolsDB !== 'undefined') {
+        const d = document.createElement('div');
+        d.innerHTML = '<br><b>More Tools:</b><br><div id="rec" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>';
+        document.querySelector('.controls').appendChild(d);
+        document.getElementById('rec').innerHTML = toolsDB.slice(0,3).map(t=>`<a href="${t.url}" style="color:#5865F2;">${t.title}</a>`).join(' • ');
+    }
+</script>
+  <script src="database.js"></script>
+
+</body>
+</html>
