@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fake Breaking News Generator - Viral Meme Tool</title>
+    <meta name="description" content="Create realistic Breaking News TV screenshots. Customize headlines, ticker text, and upload photos to prank friends.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --news-red: #cc0000;
+            --news-blue: #003366;
+            --news-yellow: #fecb00;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+
+        /* --- LAYOUT --- */
+        .app-container { width: 100%; max-width: 1200px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+
+        /* --- CONTROLS --- */
+        .controls { flex: 1; min-width: 320px; background: var(--panel); padding: 25px; border-radius: 20px; border: 1px solid #334155; height: fit-content; }
+        
+        h1 { margin-bottom: 20px; font-weight: 800; text-transform: uppercase; background: linear-gradient(to right, #cc0000, #ff6666); -webkit-background-clip: text; color: transparent; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+
+        .label { font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-bottom: 15px; }
+        
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; margin-top: 5px; transition: 0.2s; }
+        .btn-upload { background: #334155; color: white; border: 1px dashed #64748b; }
+        .btn-upload:hover { border-color: #3b82f6; color: #3b82f6; }
+        .btn-dl { background: var(--news-red); color: white; }
+        .btn-share { background: linear-gradient(45deg, #3b82f6, #06b6d4); color: white; margin-top: 15px; }
+
+        /* --- TV PREVIEW AREA --- */
+        .tv-wrapper { width: 100%; max-width: 600px; aspect-ratio: 16/9; position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 5px solid #111; }
+        
+        .tv-screen { width: 100%; height: 100%; position: relative; background: #000; overflow: hidden; }
+        
+        /* The Footage */
+        #news-image { width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s; }
+        
+        /* Overlays */
+        .scanlines { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px; pointer-events: none; z-index: 5; opacity: 0.6;
+        }
+        .vignette {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none; z-index: 6;
+        }
+
+        /* TV GRAPHICS (Lower Thirds) */
+        .graphics-layer { position: absolute; bottom: 30px; left: 0; width: 100%; z-index: 20; display: flex; flex-direction: column; }
+
+        .live-tag { 
+            position: absolute; top: -140px; left: 30px; 
+            background: var(--news-red); color: white; padding: 5px 12px; 
+            font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 18px; 
+            border-radius: 4px; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            animation: blink 2s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+
+        /* The Headline Box */
+        .headline-box { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 15px 30px 15px 120px; /* Left padding for Logo */
+            position: relative; min-height: 80px; display: flex; align-items: center;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+            margin-right: 40px;
+        }
+        
+        .channel-logo {
+            position: absolute; left: 20px; bottom: 10px;
+            width: 80px; height: 80px; background: var(--news-red);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Oswald', sans-serif; font-weight: 900; font-size: 32px; color: white;
+            border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 25;
+        }
+
+        .category-tag {
+            position: absolute; top: -25px; left: 120px;
+            background: var(--news-yellow); color: black;
+            padding: 5px 15px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase;
+            font-size: 14px; clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .main-headline { 
+            font-family: 'Oswald', sans-serif; font-weight: 700; color: #111; 
+            font-size: 28px; line-height: 1.1; text-transform: uppercase;
+        }
+
+        /* Scrolling Ticker */
+        .ticker-box { 
+            background: var(--news-blue); color: white; 
+            height: 35px; display: flex; align-items: center; overflow: hidden; 
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+            text-transform: uppercase; white-space: nowrap; position: relative;
+            margin-right: 50px;
+        }
+        .ticker-label { background: var(--news-yellow); color: black; padding: 0 15px; height: 100%; display: flex; align-items: center; font-weight: 800; z-index: 5; }
+        
+        .scrolling-text { 
+            padding-left: 100%; animation: scroll 15s linear infinite; 
+        }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* Clock */
+        .time-bug { 
+            position: absolute; bottom: 30px; right: 40px; 
+            background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; 
+            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; border-radius: 4px;
+        }
+
+        .watermark { position: absolute; top: 20px; right: 20px; opacity: 0.5; font-size: 12px; text-shadow: 1px 1px 2px black; font-weight: bold; }
+        .watermark.hidden { display: none; }
+
+        /* SEO Area */
+        .seo-box { width: 100%; max-width: 900px; margin-top: 40px; border-top: 1px solid #334155; padding-top: 30px; }
+        .seo-box h2 { color: var(--news-yellow); font-family: 'Oswald', sans-serif; font-size: 24px; margin-bottom: 10px; }
+        .seo-box p { color: #94a3b8; line-height: 1.6; font-size: 14px; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="controls">
+        <a href="index.html" style="color:#94a3b8; text-decoration:none; font-size:12px; margin-bottom:15px; display:block;">&larr; Back to Dashboard</a>
+        <h1>Breaking News Maker</h1>
+
+        <span class="label">1. Upload Footage</span>
+        <button class="btn btn-upload" onclick="document.getElementById('fileIn').click()">
+            <i class="fa-solid fa-camera"></i> Upload Photo
+        </button>
+        <input type="file" id="fileIn" hidden accept="image/*" onchange="handleImg(this)">
+
+        <span class="label" style="margin-top:15px;">2. Headlines</span>
+        <input type="text" id="inp-cat" value="BREAKING NEWS" oninput="render()" placeholder="Category (Yellow Tag)">
+        <input type="text" id="inp-head" value="LOCAL MAN FORGETS HOW TO DRINK WATER" oninput="render()" placeholder="Main Headline">
+        
+        <span class="label">3. Ticker Tape</span>
+        <input type="text" id="inp-tick" value="Scientists say water is wet • Police looking for suspect • Weather: 75°F" oninput="render()">
+
+        <span class="label">4. Style</span>
+        <select id="inp-filter" onchange="render()">
+            <option value="none">No Filter</option>
+            <option value="news">TV News (Contrast)</option>
+            <option value="bw">Security Cam (B&W)</option>
+        </select>
+
+        <button class="btn btn-share" onclick="unlock()">
+            <i class="fa-solid fa-lock-open"></i> Share to Remove Watermark
+        </button>
+        <button class="btn btn-dl" onclick="download()">Download Image</button>
+    </div>
+
+    <div class="tv-wrapper">
+        <div class="tv-screen" id="capture">
+            
+            <img src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" id="news-image">
+            
+            <div class="scanlines"></div>
+            <div class="vignette"></div>
+            <div class="watermark">omnitools.in</div>
+
+            <div class="graphics-layer">
+                
+                <div class="live-tag">LIVE</div>
+
+                <div style="position:relative;">
+                    <div class="channel-logo">NEWS</div>
+                    <div class="category-tag" id="ui-cat">BREAKING NEWS</div>
+                    <div class="headline-box">
+                        <div class="main-headline" id="ui-head">LOCAL MAN FORGETS HOW TO DRINK WATER</div>
+                    </div>
+                </div>
+
+                <div class="ticker-box">
+                    <div class="ticker-label">LATEST</div>
+                    <div class="scrolling-text" id="ui-tick">Scientists say water is wet • Police looking for suspect • Weather: 75°F</div>
+                </div>
+
+            </div>
+
+            <div class="time-bug" id="ui-time">12:00 PM</div>
+
+        </div>
+    </div>
+
+    <div class="seo-box">
+        <h2>Fake Breaking News Generator</h2>
+        <p>Create viral memes with our <strong>Fake News Generator</strong>. This tool allows you to turn any photo into a realistic TV broadcast screenshot. Perfect for pranking friends, creating "Caught in 4K" memes, or making funny announcements.</p>
+        <br>
+        <p><strong>Features:</strong> Customizable headlines, realistic TV scanlines, rolling ticker tape animation, and broadcast-quality fonts. No design skills required—just type and download.</p>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    // --- RENDER LOGIC ---
+    function render() {
+        document.getElementById('ui-cat').innerText = document.getElementById('inp-cat').value;
+        document.getElementById('ui-head').innerText = document.getElementById('inp-head').value;
+        document.getElementById('ui-tick').innerText = document.getElementById('inp-tick').value;
+        
+        // Time Update
+        const now = new Date();
+        document.getElementById('ui-time').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        // Filters
+        const filter = document.getElementById('inp-filter').value;
+        const img = document.getElementById('news-image');
+        if(filter === 'none') img.style.filter = 'none';
+        if(filter === 'news') img.style.filter = 'contrast(1.2) saturate(1.2)';
+        if(filter === 'bw') img.style.filter = 'grayscale(1) contrast(1.5) brightness(0.8)';
+    }
+
+    function handleImg(input) {
+        if(input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('news-image').src = e.target.result;
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // --- ACTIONS ---
+    async function unlock() {
+        const url = window.location.href;
+        if(navigator.share) {
+            try { await navigator.share({title:'Fake News', url}); document.querySelector('.watermark').classList.add('hidden'); } catch(e){}
+        } else {
+            navigator.clipboard.writeText(url); alert('Link Copied! Watermark removed.'); document.querySelector('.watermark').classList.add('hidden');
+        }
+    }
+
+    async function download() {
+        const capture = document.getElementById('capture');
+        // Temporarily pause animation for clean capture
+        const ticker = document.getElementById('ui-tick');
+        ticker.style.animation = 'none';
+        
+        const canvas = await html2canvas(capture, { scale: 2, useCORS: true, allowTaint: true });
+        
+        // Restore animation
+        ticker.style.animation = 'scroll 15s linear infinite';
+
+        const a = document.createElement('a');
+        a.download = 'breaking-news.png';
+        a.href = canvas.toDataURL();
+        a.click();
+    }
+
+    // Init Time
+    render();
+</script>
+  <script src="database.js"></script>
+
+</body>
+</html>
