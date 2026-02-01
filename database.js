@@ -107,8 +107,7 @@ const toolsDB = [
     { "name": "Fake Tweet Generator", "url": "tweet-img", "cat": "social", "icon": "fa-twitter", "desc": "Create meme tweet images.", "tag": "FUN" },
     { "name": "YouTube Thumbnail Grabber", "url": "youtube-thumb", "cat": "social", "icon": "fa-youtube", "desc": "Download HD thumbnails.", "tag": "HD" },
     { "name": "YouTube Tag Extractor", "url": "yt-tags", "cat": "social", "icon": "fa-tags", "desc": "Extract keywords from videos.", "tag": "SEO" },
-    { "name": "Fake Instagram DM", "url": "instagram-chat", "cat": "social", "icon": "fa-instagram", "desc": "Create realistic fake DM screenshots.", "tag": "VIRAL" },
-
+    
     // =========================================
     // CATEGORY 5: AI TOOLS
     // =========================================
@@ -139,7 +138,7 @@ const toolsDB = [
     { "name": "Fake YouTube Generator", "url": "fake-youtube-generator", "cat": "fun", "icon": "fa-youtube", "desc": "Create realistic fake YouTube video screenshots.", "tag": "VIRAL" },
     { "name": "Fake iOS Notification", "url": "fake-ios-notification", "cat": "fun", "icon": "fa-bell", "desc": "Create viral lock screen prank messages.", "tag": "VIRAL" },
     { "name": "Fake Discord Chat", "url": "fake-discord-chat", "cat": "fun", "icon": "fa-discord", "desc": "Create realistic fake chat screenshots.", "tag": "GAMER" },
-    
+    { "name": "Fake Insta Live", "url": "fake-insta-live", "cat": "fun", "icon": "fa-instagram", "desc": "Simulate a realistic live stream interface.", "tag": "VIRAL" },
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
