@@ -423,12 +423,10 @@
                 heroWrapper.style.display = 'none';
                 return; 
             }
-            // Sidebar Ad
             if(adConfig.sidebar) {
                 const sbContainer = document.getElementById('sidebar-ad-container');
                 sbContainer.innerHTML = `<div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; font-weight:700; padding-left:5px;">Sponsored</div><a href="${adConfig.sidebar.link}"><img src="${adConfig.sidebar.image}" style="width:100%; border-radius:6px; display:block; border:1px solid var(--border-subtle);"></a>`;
             }
-            // Hero Ad
             if(adConfig.hero && adConfig.hero.length > 0) {
                 let slidesHTML = "";
                 let dotsHTML = '<div class="dots" style="position:absolute; bottom:20px; left:40px; display:flex; gap:6px;">';
@@ -444,7 +442,6 @@
                 window.currentSlide = 0;
                 heroWrapper.style.display = 'block';
             }
-            // Footer Ad
             if(adConfig.stickyFooter && adConfig.stickyFooter.enabled) {
                 const footer = document.getElementById('sticky-footer');
                 const data = adConfig.stickyFooter;
@@ -459,7 +456,6 @@
                 sidebar.classList.remove('open');
                 overlay.classList.remove('active');
             }
-            // Hero Logic
             if (cat === 'all') {
                 if (introText) introText.style.display = 'block';
                 if (heroWrapper && heroWrapper.innerHTML.trim() !== "") heroWrapper.style.display = 'block';
@@ -468,11 +464,9 @@
                 if (heroWrapper) heroWrapper.style.display = 'none';
             }
 
-            // SAFETY CHECK: If DB is empty, do NOT clear grid. Keep hardcoded links.
             const db = (typeof toolsDB !== 'undefined') ? toolsDB : [];
-            if(!db || db.length === 0) { return; }
+            if(!db || db.length === 0) { return; } // KEEP BACKUP HTML if DB empty
 
-            // Clear hardcoded HTML only if we have data to replace it
             grid.innerHTML = "";
 
             const filtered = cat === 'all' ? db : db.filter(t => t.cat === cat);
@@ -490,7 +484,7 @@
                 let iconPrefix = "fa-solid";
                 if (['tiktok','instagram','youtube','twitter','facebook','discord','paypal'].some(b => tool.icon.includes(b))) iconPrefix = "fa-brands";
                 
-                let brandClass = "brand-dev"; // Default
+                let brandClass = "brand-dev"; 
                 if (tool.cat === 'social') brandClass = "brand-social";
                 else if (tool.cat === 'ai') brandClass = "brand-ai";
 
@@ -519,9 +513,19 @@
             });
         }
 
+        // --- FILTER WITH MEMORY ---
         function filter(cat, btn) {
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if(btn) {
+                btn.classList.add('active');
+            } else {
+                // Auto-find active button on reload
+                const target = document.querySelector(`.nav-item[onclick*="'${cat}'"]`);
+                if(target) target.classList.add('active');
+            }
+            
+            // SAVE CATEGORY
+            localStorage.setItem('omni_last_category', cat);
             render(cat);
         }
         
@@ -553,9 +557,13 @@
             setSlide(next);
         }
 
-        // Initialize
+        // --- INIT ---
         loadAds(); 
-        setTimeout(() => render('all'), 50); 
+        
+        // CHECK MEMORY
+        const savedCat = localStorage.getItem('omni_last_category') || 'all';
+        setTimeout(() => filter(savedCat, null), 50); 
+        
         setInterval(nextSlide, 5000); 
     </script>
 </body>
