@@ -139,6 +139,11 @@ const toolsDB = [
     { "name": "Fake iOS Notification", "url": "fake-ios-notification", "cat": "fun", "icon": "fa-bell", "desc": "Create viral lock screen prank messages.", "tag": "VIRAL" },
     { "name": "Fake Discord Chat", "url": "fake-discord-chat", "cat": "fun", "icon": "fa-discord", "desc": "Create realistic fake chat screenshots.", "tag": "GAMER" },
     { "name": "Fake Insta Live", "url": "fake-insta-live", "cat": "fun", "icon": "fa-instagram", "desc": "Simulate a realistic live stream interface.", "tag": "VIRAL" },
+    { "name": "Aura Scanner Pro", "url": "aura-scanner-pro", "cat": "fun", "icon": "fa-fingerprint", "desc": "Scan your fingerprint to reveal your aura color.", "tag": "FUN" },
+
+
+
+    
     // =========================================
     // CATEGORY 9: HEALTH TOOLS
     // =========================================
