@@ -142,7 +142,7 @@ const toolsDB = [
     { "name": "Aura Scanner Pro", "url": "aura-scanner-pro", "cat": "fun", "icon": "fa-fingerprint", "desc": "Scan your fingerprint to reveal your aura color.", "tag": "FUN" },
     { "name": "Fake FaceTime", "url": "fake-facetime", "cat": "fun", "icon": "fa-video", "desc": "Create realistic iPhone video call screenshots.", "tag": "VIRAL" },
     { "name": "Fake News Generator", "url": "fake-news-generator", "cat": "fun", "icon": "fa-newspaper", "desc": "Create realistic breaking news headlines.", "tag": "VIRAL" },
-    { "name": "Hacker Prank", "url": "hacker-prank", "cat": "fun", "icon": "fa-user-secret", "desc": "Simulate a movie-style hacking screen to prank friends.", "tag": "FUN" },
+    { "name": "Dark Web Simulator", "url": "dark-web-prank", "cat": "fun", "icon": "fa-skull", "desc": "Simulate accessing a creepy dark web marketplace.", "tag": "PRANK" },
     { "name": "Secret Message", "url": "secret-message", "cat": "fun", "icon": "fa-lock", "desc": "Create self-destructing notes that vanish after reading.", "tag": "PRIVACY" },
     
     // =========================================
