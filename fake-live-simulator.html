@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fake Live Stream Simulator - Viral Prank Tool</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root { --accent: #FF3040; --panel-bg: rgba(20, 20, 20, 0.95); }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: #000; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; color: white; }
+
+        /* --- 1. SETUP SCREEN --- */
+        .setup-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a; z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+        }
+        .setup-overlay.hidden { display: none; }
+
+        h1 { font-size: 2rem; background: linear-gradient(to right, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; max-width: 400px; }
+
+        .form-group { width: 100%; max-width: 350px; text-align: left; margin-bottom: 15px; }
+        .label { font-size: 12px; color: #cbd5e1; margin-bottom: 5px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input, select {
+            width: 100%; padding: 12px; background: #1e293b; 
+            border: 1px solid #334155; border-radius: 10px; color: white; outline: none;
+        }
+
+        /* PFP UPLOAD STYLE */
+        .pfp-upload {
+            display: flex; align-items: center; gap: 15px; background: #1e293b; padding: 10px; 
+            border-radius: 12px; border: 1px solid #334155; cursor: pointer; transition: 0.2s;
+        }
+        .pfp-upload:active { background: #334155; }
+        .pfp-preview { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #3b82f6; }
+        .pfp-text { font-size: 13px; color: #94a3b8; font-weight: 500; }
+        
+        .btn-start {
+            width: 100%; max-width: 350px; padding: 16px;
+            background: linear-gradient(90deg, #FF512F, #DD2476, #FF512F);
+            background-size: 200% 200%;
+            color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 16px;
+            cursor: pointer; margin-top: 15px; 
+            box-shadow: 0 4px 20px rgba(221, 36, 118, 0.5);
+            animation: gradientMove 3s ease infinite;
+        }
+        @keyframes gradientMove { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+
+        /* --- 2. DIRECTOR PANEL --- */
+        .director-panel {
+            position: absolute; bottom: 0; left: 0; width: 100%; 
+            background: var(--panel-bg); border-top: 1px solid #333;
+            border-radius: 20px 20px 0 0; padding: 20px; z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 12px;
+        }
+        .director-panel.collapsed { transform: translateY(88%); }
+        .drag-bar { width: 50px; height: 5px; background: #555; border-radius: 3px; align-self: center; margin-bottom: 5px; cursor: pointer; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; color: #aaa; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        .toggle-txt { color: #3b82f6; cursor: pointer; }
+        .control-row { display: flex; gap: 10px; }
+        .btn-action {
+            flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 13px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px; color: white; background: #333; transition: 0.2s;
+        }
+        .btn-action:active { transform: scale(0.95); }
+        .btn-blue { background: #3b82f6; }
+        .btn-rose { background: #e11d48; }
+        .btn-green { background: #22c55e; }
+
+        /* --- 3. LIVE SCREEN --- */
+        #live-screen { width: 100%; height: 100%; position: relative; background: #000; overflow: hidden; }
+        #video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #black-bg { width: 100%; height: 100%; background: #1a1a1a; display: none; position: absolute; top: 0; }
+
+        /* UI Elements */
+        .live-overlay { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; z-index: 10; }
+        
+        .host-pill { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); padding: 4px 12px 4px 4px; border-radius: 30px; backdrop-filter: blur(5px); }
+        .host-img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #C13584; object-fit: cover; }
+        .host-name { font-size: 13px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        /* IMPROVED LIVE BADGE */
+        .live-badge { 
+            background: linear-gradient(45deg, #C90083, #D22463, #FF5959); 
+            padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(255, 0, 80, 0.6);
+            animation: livePulse 2s infinite;
+        }
+        @keyframes livePulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.03); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .view-pill { background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-left: auto; margin-right: 10px; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(5px); }
+
+        /* Comments */
+        .comments-area { 
+            position: absolute; bottom: 80px; left: 15px; width: 70%; height: 250px; 
+            overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; 
+            mask-image: linear-gradient(to top, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 80%, transparent 100%);
+            z-index: 20;
+        }
+        .comment { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 13px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out; }
+        .comment img { width: 24px; height: 24px; border-radius: 50%; }
+        .comment b { margin-right: 5px; color: #fff; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Animations */
+        .hearts-area { position: absolute; bottom: 80px; right: 20px; width: 50px; height: 350px; pointer-events: none; z-index: 25; }
+        .heart { position: absolute; bottom: 0; right: 0; font-size: 28px; animation: float 2.5s ease-out forwards; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        @keyframes float { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-300px); } }
+
+        .gift-area { position: absolute; bottom: 250px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 50; display: flex; flex-direction: column; align-items: center; }
+        .gift-pop { background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 8px; animation: pop 3s forwards; margin-bottom: 5px; }
+        @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 10% { transform: scale(1.1); opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
+
+        /* Fake Input */
+        .fake-input { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; 
+            display: flex; align-items: center; padding: 0 15px; gap: 15px; z-index: 5;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+        .pill { flex: 1; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; display: flex; align-items: center; padding: 0 15px; font-size: 13px; color: #ddd; background: rgba(0,0,0,0.2); }
+        .icons i { font-size: 24px; margin-left: 15px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; font-size: 14px; font-weight: bold; pointer-events: none; }
+        .watermark.hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="setup-overlay" id="setupScreen">
+    <h1>Live Simulator</h1>
+    <p>Create a fake "Live Stream" to prank your friends. Use the Control Center to send fake gifts and comments.</p>
+    
+    <div class="form-group">
+        <span class="label">Your Username</span>
+        <input type="text" id="setup-name" value="my_profile_name">
+    </div>
+
+    <div class="form-group">
+        <span class="label">Profile Picture</span>
+        <div class="pfp-upload" onclick="document.getElementById('file-pfp').click()">
+            <img src="https://ui-avatars.com/api/?name=User" class="pfp-preview" id="pfp-preview">
+            <div class="pfp-text">Tap to upload photo...</div>
+        </div>
+        <input type="file" id="file-pfp" hidden onchange="handlePfp(this)">
+    </div>
+    
+    <div class="form-group">
+        <span class="label">Starting Viewers</span>
+        <input type="number" id="setup-viewers" value="12500">
+    </div>
+
+    <div class="form-group">
+        <span class="label">Camera Source</span>
+        <select id="setup-cam">
+            <option value="cam">Front Camera (Selfie)</option>
+            <option value="black">Black Screen (Simulated)</option>
+        </select>
+    </div>
+
+    <button class="btn-start" onclick="startSim()">START LIVE 🔴</button>
+    <a href="index.html" style="color:#555; margin-top:20px; font-size:12px; text-decoration:none;">Back to Tools</a>
+</div>
+
+<div class="director-panel" id="directorPanel">
+    <div class="drag-bar" onclick="togglePanel()"></div>
+    <div class="panel-header"><span>Control Center</span><span class="toggle-txt" onclick="togglePanel()">Hide Panel</span></div>
+
+    <div class="control-row">
+        <input type="text" id="inj-name" placeholder="User (e.g. Elon)" style="flex:1;">
+        <input type="text" id="inj-msg" placeholder="Comment..." style="flex:2;">
+        <button class="btn-action btn-blue" style="flex:0.5;" onclick="injectComment()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+
+    <div class="control-row">
+        <button class="btn-action btn-rose" onclick="sendGift('rose')">🌹 Rose</button>
+        <button class="btn-action btn-rose" onclick="sendGift('heart')">💖 Heart</button>
+        <button class="btn-action" onclick="toggleCam()">📷 Cam</button>
+    </div>
+
+    <button class="btn-action btn-green" onclick="unlockWatermark()" id="btn-unlock">
+        <i class="fa-solid fa-lock"></i> Share to Remove Watermark
+    </button>
+</div>
+
+<div id="live-screen">
+    <video id="video-feed" autoplay muted playsinline></video>
+    <div id="black-bg"></div>
+
+    <div class="live-overlay">
+        <div class="host-pill">
+            <img src="https://ui-avatars.com/api/?name=User&background=random" class="host-img" id="ui-pfp">
+            <div style="line-height:1.1;">
+                <div class="host-name" id="ui-name">username</div>
+            </div>
+        </div>
+        <div class="live-badge">LIVE</div>
+        <div class="view-pill"><i class="fa-solid fa-eye"></i> <span id="ui-viewers">12.5K</span></div>
+        <i class="fa-solid fa-xmark" style="font-size:24px; filter:drop-shadow(0 1px 2px black);"></i>
+    </div>
+
+    <div class="gift-area" id="gift-box"></div>
+    <div class="comments-area" id="comment-box"></div>
+    <div class="hearts-area" id="heart-box"></div>
+
+    <div class="fake-input">
+        <div class="pill">Add a comment...</div>
+        <div class="icons">
+            <i class="fa-solid fa-user-plus"></i>
+            <i class="fa-regular fa-paper-plane"></i>
+            <i class="fa-solid fa-heart" onclick="spawnHeart()"></i>
+            <i class="fa-solid fa-ellipsis"></i>
+        </div>
+    </div>
+
+    <div class="watermark">omnitools.in</div>
+</div>
+
+<script>
+    const randomUsers = ["alex_123", "sarah_v", "cool_guy", "jennifer_x", "mark_twain", "lisa_m", "john_doe"];
+    const randomMsgs = ["Hi!!", "Omg love this 😍", "NOTICE ME", "Where is this?", "😂😂", "Wow", "Hello from France 🇫🇷"];
+    let viewers = 0;
+    let isCamOn = true;
+    let uploadedPfp = null;
+
+    // --- SETUP ---
+    function handlePfp(input) {
+        if (input.files && input.files[0]) {
+            const r = new FileReader();
+            r.onload = function(e) {
+                document.getElementById('pfp-preview').src = e.target.result;
+                uploadedPfp = e.target.result;
+            }
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function startSim() {
+        const name = document.getElementById('setup-name').value;
+        const count = document.getElementById('setup-viewers').value;
+        const cam = document.getElementById('setup-cam').value;
+
+        // UI Set
+        document.getElementById('ui-name').innerText = name;
+        if(uploadedPfp) document.getElementById('ui-pfp').src = uploadedPfp;
+        else document.getElementById('ui-pfp').src = `https://ui-avatars.com/api/?name=${name}&background=random`;
+        
+        viewers = parseInt(count);
+        updateViewers();
+
+        // Cam
+        if (cam === 'cam') {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                .then(stream => document.getElementById('video-feed').srcObject = stream)
+                .catch(() => { alert("Camera blocked. Using black screen."); toggleCam(); });
+        } else {
+            toggleCam();
+        }
+
+        document.getElementById('setupScreen').classList.add('hidden');
+        startLoops();
+    }
+
+    // --- LOOPS ---
+    function startLoops() {
+        setInterval(() => { if(Math.random()>0.4) addRandomComment(); }, 1500);
+        setInterval(() => { if(Math.random()>0.2) spawnHeart(); }, 400);
+        setInterval(() => { viewers += Math.floor(Math.random()*50)-20; updateViewers(); }, 2000);
+    }
+
+    // --- ACTIONS ---
+    function togglePanel() { document.getElementById('directorPanel').classList.toggle('collapsed'); }
+    function toggleCam() { isCamOn = !isCamOn; document.getElementById('black-bg').style.display = isCamOn ? 'none' : 'block'; }
+    function updateViewers() { document.getElementById('ui-viewers').innerText = (viewers/1000).toFixed(1) + 'K'; }
+
+    function addRandomComment() {
+        const u = randomUsers[Math.floor(Math.random() * randomUsers.length)];
+        const m = randomMsgs[Math.floor(Math.random() * randomMsgs.length)];
+        createComment(u, m);
+    }
+
+    function injectComment() {
+        const name = document.getElementById('inj-name').value || "Anonymous";
+        const msg = document.getElementById('inj-msg').value || "Hello!";
+        createComment(name, msg);
+        document.getElementById('inj-msg').value = "";
+    }
+
+    function createComment(user, msg) {
+        const box = document.getElementById('comment-box');
+        const div = document.createElement('div');
+        div.className = 'comment';
+        div.innerHTML = `<img src="https://ui-avatars.com/api/?name=${user}&background=random"><div><b>${user}</b><span style="color:rgba(255,255,255,0.9)">${msg}</span></div>`;
+        box.appendChild(div);
+        if(box.children.length > 7) box.removeChild(box.firstChild);
+    }
+
+    function spawnHeart() {
+        const box = document.getElementById('heart-box');
+        const h = document.createElement('i');
+        h.className = 'fa-solid fa-heart heart';
+        h.style.color = ['#ff3040', '#ff5a5f', '#ff0033'][Math.floor(Math.random()*3)];
+        h.style.right = Math.floor(Math.random()*30) + 'px';
+        box.appendChild(h);
+        setTimeout(()=>h.remove(), 2500);
+    }
+
+    function sendGift(type) {
+        const area = document.getElementById('gift-box');
+        const el = document.createElement('div');
+        el.className = 'gift-pop';
+        const icon = type === 'rose' ? '🌹' : '💖';
+        const txt = type === 'rose' ? 'Sent a Rose' : 'Sent a Heart';
+        const user = randomUsers[Math.floor(Math.random() * randomUsers.length)];
+        el.innerHTML = `<span style="font-size:20px">${icon}</span> <div style="display:flex; flex-direction:column; line-height:1"><span style="font-size:10px; opacity:0.8">${user}</span><span style="font-size:13px; font-weight:700; color:#FFD700">${txt}</span></div>`;
+        area.appendChild(el);
+        setTimeout(()=>el.remove(), 3000);
+    }
+
+    async function unlockWatermark() {
+        const url = window.location.href;
+        if(navigator.share) {
+            try { await navigator.share({title:'Live Sim', url}); document.querySelector('.watermark').classList.add('hidden'); document.getElementById('btn-unlock').innerHTML='<i class="fa-solid fa-check"></i> Unlocked!'; } catch(e){}
+        } else {
+            navigator.clipboard.writeText(url); alert("Link Copied! Watermark removed."); document.querySelector('.watermark').classList.add('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
