@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Integrity Check</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Glitch Animation */
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .shake { animation: glitch 0.2s infinite; color: red !important; }
+
+        /* The Trap Button */
+        #start-btn {
+            padding: 20px 40px;
+            font-size: 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #007bff;
+            transition: 0.3s;
+        }
+        #start-btn:hover { background: #0056b3; box-shadow: 0 0 40px #0056b3; }
+
+        /* Terminal Output */
+        #terminal {
+            width: 90%;
+            height: 40%;
+            text-align: left;
+            font-size: 14px;
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        /* The Camera Feed */
+        #cam-container {
+            width: 300px;
+            height: 225px;
+            border: 2px solid red;
+            display: none;
+            position: relative;
+            background: #111;
+        }
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .rec-tag {
+            position: absolute;
+            top: 10px; left: 10px;
+            color: red;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Red Screen of Death Overlay */
+        #alert-box {
+            display: none;
+            border: 5px solid red;
+            padding: 20px;
+            background: rgba(50, 0, 0, 0.9);
+            color: white;
+            text-align: center;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro">
+        <h1 style="color: white;">Device Security Scan</h1>
+        <p style="color: #aaa;">Check your phone for leaks.</p>
+        <button id="start-btn" onclick="initiateHack()">START SCAN</button>
+    </div>
+
+    <div id="terminal"></div>
+
+    <div id="cam-container">
+        <div class="rec-tag">● REC</div>
+        <video id="videoElement" autoplay></video>
+    </div>
+
+    <div id="alert-box">
+        <h1 style="color: red; font-size: 40px;">⚠️ SYSTEM BREACHED</h1>
+        <p id="location-text">LOCATING USER...</p>
+        <h2 id="timer">DELETING DATA IN 10...</h2>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const intro = document.getElementById('intro');
+        const camBox = document.getElementById('cam-container');
+        const alertBox = document.getElementById('alert-box');
+        
+        // Scary Audio Context using Text-to-Speech
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.pitch = 0.1; // Deep voice
+            utterance.rate = 0.9;  // Slow
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function log(text, color = "#0f0") {
+            const p = document.createElement('div');
+            p.innerHTML = `> ${text}`;
+            p.style.color = color;
+            terminal.appendChild(p);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        async function initiateHack() {
+            // 1. Go Full Screen
+            document.documentElement.requestFullscreen().catch(e => {});
+            intro.style.display = 'none';
+            terminal.style.display = 'block';
+
+            // 2. Start Fake Logs
+            log("Initializing rootkit...");
+            await delay(1000);
+            log("Bypassing firewall...", "yellow");
+            await delay(1500);
+
+            // 3. GET REAL IP & LOCATION (The Scary Part)
+            try {
+                log("Scanning network...", "yellow");
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                
+                log(`TARGET FOUND: ${data.ip}`, "red");
+                speak("Target found.");
+                await delay(1000);
+                log(`LOCATION: ${data.city}, ${data.country_name}`, "red");
+                speak(`Location identified. ${data.city}.`);
+                document.getElementById('location-text').innerText = `USER LOCATION: ${data.city.toUpperCase()}`;
+            } catch (e) {
+                log("TARGET FOUND: 192.168.1.55 (Unknown)", "red");
+            }
+
+            await delay(2000);
+
+            // 4. ACTIVATE CAMERA (The Visual Fear)
+            log("Accessing Camera_01...", "cyan");
+            speak("Accessing camera.");
+            camBox.style.display = "block";
+            startCamera();
+
+            await delay(3000);
+
+            // 5. THE CLIMAX (Red Screen + Countdown)
+            document.body.classList.add('shake'); // Shake screen
+            terminal.style.display = "none";
+            alertBox.style.display = "block";
+            speak("System compromised. Deleting all files.");
+            
+            let count = 10;
+            const timer = setInterval(() => {
+                count--;
+                document.getElementById('timer').innerText = `DELETING DATA IN ${count}...`;
+                if(count <= 0) {
+                    clearInterval(timer);
+                    endPrank();
+                }
+            }, 1000);
+        }
+
+        function startCamera() {
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    document.getElementById('videoElement').srcObject = stream;
+                })
+                .catch(function (err) {
+                    log("Camera Access Denied (Simulating Override...)", "red");
+                });
+            }
+        }
+
+        function endPrank() {
+            document.body.classList.remove('shake');
+            camBox.style.display = "none";
+            alertBox.innerHTML = `
+                <h1 style="color:white">😂 PRANKED!</h1>
+                <p>We did not delete anything.</p>
+                <p>But you should update your passwords.</p>
+                <button onclick="location.reload()" style="padding:10px;">Play Again</button>
+            `;
+            // Stop camera
+            const stream = document.getElementById('videoElement').srcObject;
+            if(stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+  <script src="database.js"></script>
+</body>
+</html>
