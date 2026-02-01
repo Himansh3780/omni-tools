@@ -28,10 +28,10 @@
     link.href = 'manifest.json';
     document.head.appendChild(link);
 
-    // 2. Add Mobile Theme Color
+    // 2. Add Mobile Theme Color (Updated to Dark Zinc)
     const meta = document.createElement('meta');
     meta.name = 'theme-color';
-    meta.content = '#020617';
+    meta.content = '#09090b';
     document.head.appendChild(meta);
 })();
 
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Shuffle and pick 3
     related = related.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-    // --- 2. INJECT RELATED TOOLS (THE POSITION FIX) ---
+    // --- 2. INJECT RELATED TOOLS (STYLED FOR GOLD THEME) ---
     if (related.length > 0) {
         const relatedSection = document.createElement("div");
         relatedSection.className = "related-tools-section";
@@ -190,50 +190,46 @@ document.addEventListener("DOMContentLoaded", function() {
         relatedSection.style.cssText = "max-width: 800px; margin: 0 auto 40px auto; padding-top: 20px;";
         
         let cardsHTML = related.map(t => `
-            <a href="${t.url}.html" style="text-decoration:none; background:#1e293b; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #334155; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#334155'">
-                <div style="width:40px; height:40px; background:rgba(59,130,246,0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#3b82f6;">
+            <a href="${t.url}.html" style="text-decoration:none; background:#0c0c0e; padding:15px; border-radius:12px; display:flex; align-items:center; gap:15px; border:1px solid #1f1f22; margin-bottom:10px; transition:0.2s;" onmouseover="this.style.borderColor='#f59e0b'" onmouseout="this.style.borderColor='#1f1f22'">
+                <div style="width:40px; height:40px; background:rgba(245, 158, 11, 0.1); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#f59e0b;">
                     <i class="fa-solid ${t.icon}"></i>
                 </div>
                 <div>
-                    <div style="color:white; font-weight:700; font-size:0.95rem;">${t.name}</div>
-                    <div style="color:#94a3b8; font-size:0.8rem;">${t.desc}</div>
+                    <div style="color:#ededef; font-weight:600; font-size:0.95rem;">${t.name}</div>
+                    <div style="color:#a1a1aa; font-size:0.8rem;">${t.desc}</div>
                 </div>
             </a>
         `).join("");
 
         relatedSection.innerHTML = `
-            <h3 style="color:white; font-size:1.3rem; margin-bottom:20px;">${titleText}</h3>
+            <h3 style="color:#ededef; font-size:1.1rem; margin-bottom:20px;">${titleText}</h3>
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
                 ${cardsHTML}
             </div>
         `;
         
-        // ** THIS IS THE MAGIC CHANGE **
-        // We look for the main calculator card (.calc-card)
-        const calcCard = document.querySelector(".calc-card");
+        const calcCard = document.querySelector(".calc-card") || document.querySelector(".card");
         
         if (calcCard) {
-            // If found, insert Related Tools AFTER the calculator, but BEFORE the text
             calcCard.parentNode.insertBefore(relatedSection, calcCard.nextSibling);
         } else {
-            // Fallback: If no calculator card found, put it at the bottom
             document.body.appendChild(relatedSection);
         }
     }
 
-    // --- 3. ALWAYS INJECT FOOTER ---
+    // --- 3. ALWAYS INJECT FOOTER (STYLED FOR GOLD THEME) ---
     if (!document.querySelector("footer")) {
         const footer = document.createElement("footer");
-        footer.style.cssText = "text-align: center; padding: 50px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #1e293b; margin-top: 50px; background:#020617;";
+        footer.style.cssText = "text-align: center; padding: 50px 20px; color: #a1a1aa; font-size: 0.85rem; border-top: 1px solid #1f1f22; margin-top: 50px; background:#09090b;";
         footer.innerHTML = `
             <div style="margin-bottom: 15px;">
-                <span style="font-weight: 700; color: #cbd5e1;">OmniTools</span> &copy; 2026
+                <span style="font-weight: 700; color: #ededef;">OmniTools</span> &copy; 2026
             </div>
             <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
-                <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a>
-                <a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a>
-                <a href="index.html" style="color: #94a3b8; text-decoration: none;">All Tools</a>
+                <a href="privacy.html" style="color: #a1a1aa; text-decoration: none;">Privacy Policy</a>
+                <a href="terms.html" style="color: #a1a1aa; text-decoration: none;">Terms of Service</a>
+                <a href="contact.html" style="color: #a1a1aa; text-decoration: none;">Contact</a>
+                <a href="index.html" style="color: #a1a1aa; text-decoration: none;">All Tools</a>
             </div>
         `;
         document.body.appendChild(footer);
