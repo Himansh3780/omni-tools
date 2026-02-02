@@ -36,6 +36,7 @@
             --text-main: #ededef;
             --text-muted: #a1a1aa;
             
+            /* Gold Spotlight instead of Blue */
             --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
             --grid-color: #1f1f22;
 
@@ -72,7 +73,6 @@
             height: 100vh;
             display: flex;
             overflow: hidden;
-            /* Precise Grid Background */
             background-image: 
                 linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
@@ -80,7 +80,6 @@
             transition: var(--transition);
         }
 
-        /* The "Spotlight" at the top center */
         body::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
             background: var(--spotlight);
@@ -103,7 +102,6 @@
             display: flex; align-items: center; gap: 10px; color: var(--text-main); 
             padding-left: 12px; letter-spacing: -0.01em;
         }
-        /* Gold Logo Background */
         .logo i { color: black; background: var(--primary); padding: 6px; border-radius: 6px; font-size: 0.9rem; }
         
         .nav-item { 
@@ -142,18 +140,15 @@
         .search-box { flex: 1; position: relative; max-width: 600px; }
         .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
         .search-input { 
-            width: 100%; 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-subtle); 
-            padding: 10px 16px 10px 38px; 
-            border-radius: 8px; 
+            width: 100%; background: var(--input-bg); border: 1px solid var(--border-subtle); 
+            padding: 10px 16px 10px 38px; border-radius: 8px; 
             color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 0.9rem; 
             transition: var(--transition);
         }
         .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
         .search-input::placeholder { color: var(--text-muted); }
 
-        /* THEME TOGGLE BUTTON */
+        /* Theme Toggle */
         .theme-toggle {
             cursor: pointer; padding: 8px; border-radius: 8px;
             border: 1px solid var(--border-subtle); background: var(--input-bg);
@@ -167,31 +162,21 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding-bottom: 80px; }
 
         .card { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border-subtle); 
-            border-radius: var(--radius-md); 
-            padding: 20px; text-decoration: none; 
-            position: relative; display: flex; flex-direction: column; 
-            transition: var(--transition);
+            background: var(--bg-card); border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); padding: 20px; text-decoration: none; 
+            position: relative; display: flex; flex-direction: column; transition: var(--transition);
         }
-        
         .card:hover { 
-            transform: translateY(-2px); 
-            border-color: var(--primary); /* Gold Border on Hover */
-            background: var(--bg-card-hover);
-            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
+            transform: translateY(-2px); border-color: var(--primary); 
+            background: var(--bg-card-hover); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
         }
 
         .icon-box { 
-            width: 40px; height: 40px; 
-            background: var(--bg-body); 
-            border-radius: 8px; 
+            width: 40px; height: 40px; background: var(--bg-body); border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 1.1rem; color: var(--text-main); 
-            margin-bottom: 16px; transition: var(--transition);
-            border: 1px solid var(--border-subtle);
+            font-size: 1.1rem; color: var(--text-main); margin-bottom: 16px; 
+            transition: var(--transition); border: 1px solid var(--border-subtle);
         }
-
         .card:hover .icon-box { color: var(--primary); border-color: var(--primary); }
 
         .card-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
@@ -210,7 +195,7 @@
         .fav-btn.active { color: var(--primary); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
 
         .badge { 
-            position: absolute; top: 20px; right: 50px; /* Moved left to avoid star */
+            position: absolute; top: 20px; right: 50px; 
             font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; 
             text-transform: uppercase; letter-spacing: 0.02em; border: 1px solid transparent;
         }
@@ -221,10 +206,7 @@
             width: 100%; height: 260px; border-radius: 16px; position: relative; overflow: hidden;
             margin-bottom: 40px; border: 1px solid var(--border-subtle); 
         }
-        .slide-content {
-            background: linear-gradient(90deg, var(--bg-body) 40%, transparent 100%);
-            padding: 40px;
-        }
+        .slide-content { background: linear-gradient(90deg, var(--bg-body) 40%, transparent 100%); padding: 40px; }
         .hero-btn {
             background: var(--primary); color: black; border: none; padding: 10px 20px;
             border-radius: 6px; font-weight: 700; font-size: 0.85rem;
@@ -333,6 +315,8 @@
                 </p>
             </div>
 
+            <div id="recents-container"></div>
+
             <h3 style="margin-bottom:20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Applications</h3>
             
             <div class="grid" id="tools-grid">
@@ -429,7 +413,55 @@
             }
         }
 
-        // --- 2. THEME SWITCHER ---
+        // --- 2. RECENTS LOGIC ---
+        function addToRecents(url) {
+            let recents = JSON.parse(localStorage.getItem('omni_recents')) || [];
+            recents = recents.filter(u => u !== url); // Remove duplicate
+            recents.unshift(url); // Add to front
+            if(recents.length > 4) recents.pop(); // Limit to 4
+            localStorage.setItem('omni_recents', JSON.stringify(recents));
+        }
+
+        function renderRecents() {
+            const container = document.getElementById('recents-container');
+            const recents = JSON.parse(localStorage.getItem('omni_recents')) || [];
+            
+            // Need the DB to look up names/icons
+            const db = (typeof toolsDB !== 'undefined') ? toolsDB : [];
+            if(recents.length === 0 || db.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            const recentTools = recents.map(url => db.find(t => t.url === url)).filter(Boolean);
+            
+            if(recentTools.length === 0) return;
+
+            let html = `<h3 style="margin-bottom:15px; font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--primary);">Recently Used</h3>
+                        <div class="grid" style="margin-bottom:40px;">`;
+            
+            recentTools.forEach(tool => {
+                let iconPrefix = "fa-solid";
+                if (['tiktok','instagram','youtube','twitter','facebook','discord','paypal'].some(b => tool.icon.includes(b))) iconPrefix = "fa-brands";
+                let brandClass = "brand-dev"; 
+                if (tool.cat === 'social') brandClass = "brand-social";
+                else if (tool.cat === 'ai') brandClass = "brand-ai";
+
+                html += `
+                    <a href="${tool.url}.html" class="card" onclick="addToRecents('${tool.url}')"> 
+                        <div class="icon-box ${brandClass}"><i class="${iconPrefix} ${tool.icon}"></i></div>
+                        <div class="card-title">${tool.name}</div>
+                        <div class="card-desc">${tool.desc}</div>
+                    </a>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+            container.style.display = 'block';
+        }
+
+        // --- 3. THEME SWITCHER ---
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
@@ -458,7 +490,7 @@
             }
         })();
 
-        // --- 3. ADS ---
+        // --- 4. ADS ---
         function loadAds() {
             if (typeof adConfig === 'undefined' || !adConfig.enabled) {
                 heroWrapper.style.display = 'none';
@@ -491,7 +523,7 @@
             }
         }
 
-        // --- 4. RENDER FUNCTION ---
+        // --- 5. RENDER FUNCTION ---
         function render(cat) {
             if(window.innerWidth < 850) {
                 sidebar.classList.remove('open');
@@ -500,9 +532,16 @@
             if (cat === 'all' || cat === 'fav') {
                 if (introText) introText.style.display = 'block';
                 if (heroWrapper && heroWrapper.innerHTML.trim() !== "") heroWrapper.style.display = 'block';
+                
+                // Show Recents ONLY on 'All Tools'
+                const recentsDiv = document.getElementById('recents-container');
+                if(cat === 'all' && recentsDiv.innerHTML !== "") recentsDiv.style.display = 'block';
+                else recentsDiv.style.display = 'none';
+
             } else {
                 if (introText) introText.style.display = 'none';
                 if (heroWrapper) heroWrapper.style.display = 'none';
+                document.getElementById('recents-container').style.display = 'none';
             }
 
             const db = (typeof toolsDB !== 'undefined') ? toolsDB : [];
@@ -513,7 +552,7 @@
             const favs = getFavorites();
 
             if (cat === 'fav') {
-                grid.innerHTML = ""; // Clear for favs
+                grid.innerHTML = ""; 
                 filtered = db.filter(t => favs.includes(t.url));
                 if (filtered.length === 0) {
                     grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">
@@ -552,8 +591,9 @@
                 const starClass = isFav ? "active" : "";
                 const starIcon = isFav ? "fa-solid fa-star" : "fa-regular fa-star";
 
+                // ADD onclick="addToRecents" HERE
                 grid.innerHTML += `
-                    <a href="${tool.url}.html" class="card"> 
+                    <a href="${tool.url}.html" class="card" onclick="addToRecents('${tool.url}')"> 
                         ${badge}
                         <div class="fav-btn ${starClass}" onclick="toggleFav(event, '${tool.url}')">
                             <i class="${starIcon}"></i>
@@ -633,8 +673,14 @@
 
         // --- INIT ---
         loadAds(); 
-        const savedCat = localStorage.getItem('omni_last_category') || 'all';
-        setTimeout(() => filter(savedCat, null), 50); 
+        
+        // Load Database then Init Logic
+        setTimeout(() => {
+            renderRecents(); // Load recents bar first
+            const savedCat = localStorage.getItem('omni_last_category') || 'all';
+            filter(savedCat, null); 
+        }, 50);
+        
         setInterval(nextSlide, 5000); 
     </script>
 </body>
