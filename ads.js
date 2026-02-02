@@ -3,7 +3,7 @@
 const adConfig = {
     // 1. MASTER SWITCH
     // Set to 'false' to hide ALL ads instantly (clean site mode).
-    enabled: false, 
+    enabled: true, 
 
     // 2. HERO CAROUSEL (Big Slider at the Top)
     // Add as many slides as you want inside the [ brackets ].
