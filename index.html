@@ -31,12 +31,11 @@
             
             /* THE "EXPENSIVE" GOLD COLOR */
             --primary: #f59e0b;       /* Amber/Gold */
-            --accent-glow: rgba(245, 158, 11, 0.4); /* Gold Glow */
+            --accent-glow: rgba(245, 158, 11, 0.4); 
             
             --text-main: #ededef;
             --text-muted: #a1a1aa;
             
-            /* Gold Spotlight instead of Blue */
             --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
             --grid-color: #1f1f22;
 
@@ -50,7 +49,7 @@
             --bg-body: #ffffff;
             --bg-sidebar: #f8fafc; 
             --bg-card: #ffffff;
-            --bg-card-hover: #ffffeb; /* Very subtle warm tint */
+            --bg-card-hover: #ffffeb;
             --bg-header: rgba(255, 255, 255, 0.8);
 
             --border-subtle: #e2e8f0; 
@@ -199,12 +198,21 @@
         .card-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; font-weight: 400; }
         .verified-icon { color: var(--primary); font-size: 0.8rem; }
 
+        /* FAVORITE STAR */
+        .fav-btn {
+            position: absolute; top: 15px; right: 15px; z-index: 10;
+            color: var(--text-muted); font-size: 1rem; cursor: pointer;
+            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(0,0,0,0.2); border: 1px solid transparent;
+        }
+        .fav-btn:hover { background: var(--bg-card-hover); color: var(--text-main); transform: scale(1.1); }
+        .fav-btn.active { color: var(--primary); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); }
+
         .badge { 
-            position: absolute; top: 20px; right: 20px; 
-            font-size: 0.65rem; font-weight: 600; 
-            padding: 2px 8px; border-radius: 4px; 
-            text-transform: uppercase; letter-spacing: 0.02em; 
-            border: 1px solid transparent;
+            position: absolute; top: 20px; right: 50px; /* Moved left to avoid star */
+            font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; 
+            text-transform: uppercase; letter-spacing: 0.02em; border: 1px solid transparent;
         }
         .badge.hot { background: rgba(245, 158, 11, 0.1); color: var(--primary); border-color: rgba(245, 158, 11, 0.2); }
 
@@ -281,6 +289,8 @@
         </div>
         
         <div class="nav-item active" onclick="filter('all', this)"><i class="fa-solid fa-border-all"></i> All Tools</div>
+        <div class="nav-item" onclick="filter('fav', this)"><i class="fa-solid fa-star"></i> Favorites</div>
+        
         <div class="nav-item" onclick="filter('dev', this)"><i class="fa-solid fa-code"></i> Developer</div>
         <div class="nav-item" onclick="filter('business', this)"><i class="fa-solid fa-briefcase"></i> Business</div>
         <div class="nav-item" onclick="filter('text', this)"><i class="fa-solid fa-font"></i> Text Tools</div>
@@ -304,7 +314,7 @@
             
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" class="search-input" id="search" placeholder="Type to search..." onkeyup="searchTools()">
+                <input type="text" class="search-input" id="search" placeholder="Type / to search..." onkeyup="searchTools()">
             </div>
 
             <div class="theme-toggle" onclick="toggleTheme()" title="Switch Theme">
@@ -388,7 +398,38 @@
         const heroWrapper = document.getElementById('hero-wrapper');
         const introText = document.getElementById('intro-text-box');
 
-        // --- THEME SWITCHER LOGIC ---
+        // --- 1. FAVORITES LOGIC ---
+        function getFavorites() {
+            return JSON.parse(localStorage.getItem('omni_favorites')) || [];
+        }
+
+        function toggleFav(e, url) {
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            
+            let favs = getFavorites();
+            const btn = e.currentTarget;
+            
+            if (favs.includes(url)) {
+                favs = favs.filter(u => u !== url);
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fa-regular fa-star"></i>';
+            } else {
+                favs.push(url);
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fa-solid fa-star"></i>';
+            }
+            
+            localStorage.setItem('omni_favorites', JSON.stringify(favs));
+            
+            // Refresh if on Favorites tab
+            const activeTab = document.querySelector('.nav-item.active');
+            if(activeTab && activeTab.innerText.includes('Favorites')) {
+                render('fav');
+            }
+        }
+
+        // --- 2. THEME SWITCHER ---
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
@@ -417,7 +458,7 @@
             }
         })();
 
-        // --- ADS LOGIC ---
+        // --- 3. ADS ---
         function loadAds() {
             if (typeof adConfig === 'undefined' || !adConfig.enabled) {
                 heroWrapper.style.display = 'none';
@@ -450,13 +491,13 @@
             }
         }
 
-        // --- RENDER TOOLS ---
+        // --- 4. RENDER FUNCTION ---
         function render(cat) {
             if(window.innerWidth < 850) {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('active');
             }
-            if (cat === 'all') {
+            if (cat === 'all' || cat === 'fav') {
                 if (introText) introText.style.display = 'block';
                 if (heroWrapper && heroWrapper.innerHTML.trim() !== "") heroWrapper.style.display = 'block';
             } else {
@@ -465,12 +506,30 @@
             }
 
             const db = (typeof toolsDB !== 'undefined') ? toolsDB : [];
-            if(!db || db.length === 0) { return; } // KEEP BACKUP HTML if DB empty
+            if(!db || db.length === 0) { return; }
 
-            grid.innerHTML = "";
+            // Filtering
+            let filtered = [];
+            const favs = getFavorites();
 
-            const filtered = cat === 'all' ? db : db.filter(t => t.cat === cat);
-            
+            if (cat === 'fav') {
+                grid.innerHTML = ""; // Clear for favs
+                filtered = db.filter(t => favs.includes(t.url));
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">
+                        <i class="fa-regular fa-star" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i><br>
+                        No favorites yet. Click the star on any tool to pin it here.
+                    </div>`;
+                    return;
+                }
+            } else if (cat === 'all') {
+                filtered = db;
+            } else {
+                filtered = db.filter(t => t.cat === cat);
+            }
+
+            grid.innerHTML = ""; // Clear Grid
+
             let availableAds = [];
             if(typeof adConfig !== 'undefined' && adConfig.enabled && adConfig.native) {
                 availableAds = adConfig.native.filter(ad => ad.category === 'all' || ad.category === cat);
@@ -488,9 +547,18 @@
                 if (tool.cat === 'social') brandClass = "brand-social";
                 else if (tool.cat === 'ai') brandClass = "brand-ai";
 
+                // Favorites State
+                const isFav = favs.includes(tool.url);
+                const starClass = isFav ? "active" : "";
+                const starIcon = isFav ? "fa-solid fa-star" : "fa-regular fa-star";
+
                 grid.innerHTML += `
-                    <a href="${tool.url}" class="card"> 
+                    <a href="${tool.url}.html" class="card"> 
                         ${badge}
+                        <div class="fav-btn ${starClass}" onclick="toggleFav(event, '${tool.url}')">
+                            <i class="${starIcon}"></i>
+                        </div>
+
                         <div class="icon-box ${brandClass}"><i class="${iconPrefix} ${tool.icon}"></i></div>
                         <div class="card-title">${tool.name} <i class="fa-solid fa-circle-check verified-icon"></i></div>
                         <div class="card-desc">${tool.desc}</div>
@@ -519,12 +587,10 @@
             if(btn) {
                 btn.classList.add('active');
             } else {
-                // Auto-find active button on reload
                 const target = document.querySelector(`.nav-item[onclick*="'${cat}'"]`);
                 if(target) target.classList.add('active');
             }
             
-            // SAVE CATEGORY
             localStorage.setItem('omni_last_category', cat);
             render(cat);
         }
@@ -557,13 +623,18 @@
             setSlide(next);
         }
 
+        // KEYBOARD SHORTCUTS
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '/' && document.activeElement !== document.getElementById('search')) {
+                e.preventDefault();
+                document.getElementById('search').focus();
+            }
+        });
+
         // --- INIT ---
         loadAds(); 
-        
-        // CHECK MEMORY
         const savedCat = localStorage.getItem('omni_last_category') || 'all';
         setTimeout(() => filter(savedCat, null), 50); 
-        
         setInterval(nextSlide, 5000); 
     </script>
 </body>
