@@ -1,63 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free DNS Lookup - Check A, MX, TXT, CNAME Records</title>
-    <meta name="description" content="Instant DNS Record Lookup. Check A, AAAA, MX, NS, and TXT records for any domain name. Debug website and email issues instantly.">
+    <title>DNS Record Lookup | OmniTools</title>
+    <meta name="description" content="Instant DNS Record Lookup. Check A, AAAA, MX, NS, and TXT records for any domain name using Google DNS API.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- NETWORK THEME --- */
+        /* --- PREMIUM GOLD THEME --- */
         :root { 
-            --bg: #0f172a; 
-            --panel: #1e293b; 
-            --text: #f8fafc; 
-            --muted: #94a3b8; 
-            --brand: #8b5cf6; /* Purple (Network) */
-            --ip: #22d3ee;    /* Cyan */
-            --border: 1px solid rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(139, 92, 246, 0.2);
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --ip-color: #3b82f6;      /* Blue for IPs */
+            --record-color: #10b981;  /* Green for Records */
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
-
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            min-height: 100vh;
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; }
+
         /* HEADER */
-        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
-        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .back-btn:hover { color: white; }
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { 
+            color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+            padding: 8px 16px; border-radius: 6px; border: 1px solid transparent;
+        }
+        .back-btn:hover { color: var(--text-main); background: var(--bg-card); border-color: var(--border-subtle); }
 
         .header-title { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #8b5cf6, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: var(--muted); font-size: 1.1rem; }
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
 
         /* SEARCH BAR */
         .search-area { 
-            background: var(--panel); padding: 30px; border-radius: 20px; border: var(--border); 
-            box-shadow: var(--glow); display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 40px;
+            background: var(--bg-card); padding: 30px; border-radius: var(--radius-lg); 
+            border: 1px solid var(--border-subtle); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+            display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 40px;
         }
 
         .input-group { flex: 1; min-width: 250px; position: relative; }
-        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); z-index: 1; }
         
         input, select { 
-            width: 100%; padding: 15px 15px 15px 50px; background: #020617; border: 1px solid #334155; 
-            color: white; border-radius: 12px; font-size: 1.1rem; font-weight: 600; transition: 0.3s;
-            font-family: 'Outfit', sans-serif; height: 55px;
+            width: 100%; padding: 16px 16px 16px 50px; background: var(--bg-input); 
+            border: 1px solid var(--border-subtle); color: var(--text-main); 
+            border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 500; 
+            transition: 0.2s; font-family: 'Inter', sans-serif; height: 55px; appearance: none;
         }
-        select { padding-left: 20px; }
-        input:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+        select { padding-left: 20px; cursor: pointer; }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+
+        /* Custom Arrow for Select */
+        .select-wrapper { position: relative; flex: 1; min-width: 150px; }
+        .select-wrapper::after {
+            content: '\f0d7'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); pointer-events: none;
+        }
 
         .search-btn { 
-            background: var(--brand); color: white; border: none; padding: 0 30px; height: 55px;
-            border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem;
-            display: flex; align-items: center; gap: 10px;
+            background: var(--primary); color: #000; border: none; padding: 0 30px; height: 55px;
+            border-radius: var(--radius-md); font-weight: 700; cursor: pointer; transition: 0.2s; 
+            font-size: 1rem; display: flex; align-items: center; gap: 10px;
         }
         .search-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
@@ -65,23 +113,25 @@
         .results-container { min-height: 200px; }
         
         .result-card { 
-            background: #020617; border: var(--border); border-radius: 12px; padding: 20px; 
-            margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; font-family: 'Fira Code', monospace;
-            border-left: 4px solid var(--brand); animation: fadeIn 0.3s ease;
+            background: var(--bg-input); border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); padding: 20px; margin-bottom: 15px; 
+            display: flex; flex-direction: column; gap: 10px; font-family: 'Fira Code', monospace;
+            border-left: 4px solid var(--primary); animation: fadeIn 0.3s ease; transition: 0.2s;
         }
+        .result-card:hover { border-color: var(--border-highlight); transform: translateX(5px); }
         
-        .res-header { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
-        .res-data { color: var(--ip); font-size: 1rem; word-break: break-all; }
-        .res-ttl { font-size: 0.8rem; color: #64748b; }
-
+        .res-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .res-data { color: var(--ip-color); font-size: 0.95rem; word-break: break-all; }
+        
         /* EMPTY STATE */
-        .empty-state { text-align: center; color: var(--muted); padding: 40px; border: 2px dashed #334155; border-radius: 20px; }
+        .empty-state { text-align: center; color: var(--text-muted); padding: 40px; border: 1px dashed var(--border-subtle); border-radius: var(--radius-lg); }
         .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
 
         /* SEO SECTION */
-        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
-        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
-        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section { max-width: 800px; margin: 60px auto 0; color: var(--text-muted); line-height: 1.7; border-top: 1px solid var(--border-subtle); padding-top: 50px; font-size: 0.95rem; }
+        .seo-section h2 { color: var(--text-main); font-size: 1.5rem; margin-bottom: 20px; }
+        .seo-section h3 { color: var(--text-main); font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; }
+        .seo-section strong { color: var(--primary); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @media(max-width: 600px) { .search-area { flex-direction: column; } .search-btn { width: 100%; justify-content: center; } }
@@ -105,7 +155,7 @@
             <input type="text" id="domain" placeholder="example.com" onkeypress="handleEnter(event)">
         </div>
         
-        <div class="input-group" style="flex: 1;">
+        <div class="select-wrapper">
             <select id="recordType">
                 <option value="A">A (IPv4)</option>
                 <option value="AAAA">AAAA (IPv6)</option>
@@ -117,7 +167,7 @@
         </div>
 
         <button class="search-btn" onclick="lookup()">
-            <i class="fa-solid fa-magnifying-glass"></i> Lookup
+            Lookup <i class="fa-solid fa-magnifying-glass"></i>
         </button>
     </div>
 
@@ -134,14 +184,13 @@
             The <strong>Domain Name System (DNS)</strong> is the phonebook of the internet. It translates human-readable domain names (like google.com) into IP addresses (like 142.250.190.46) that computers use to talk to each other.
         </p>
         
-
         <h3>Common Record Types Explained</h3>
         <ul>
             <li><strong>A Record:</strong> Points a domain to an IPv4 address (e.g., 192.168.1.1). This is the most common record for hosting websites.</li>
             <li><strong>AAAA Record:</strong> Points a domain to an IPv6 address. This is the modern successor to IPv4.</li>
-            <li><strong>MX Record:</strong> Stands for "Mail Exchange". It tells the internet which mail server handles email for your domain (e.g., sending emails to Gmail or Outlook).</li>
+            <li><strong>MX Record:</strong> Stands for "Mail Exchange". It tells the internet which mail server handles email for your domain.</li>
             <li><strong>TXT Record:</strong> Used for verification (like verifying your site with Google Console) and email security (SPF, DKIM).</li>
-            <li><strong>NS Record:</strong> "Nameserver" records. They tell the internet which DNS provider manages your domain (e.g., Cloudflare, GoDaddy, AWS).</li>
+            <li><strong>NS Record:</strong> "Nameserver" records. They tell the internet which DNS provider manages your domain (e.g., Cloudflare, GoDaddy).</li>
         </ul>
 
         <h3>How this tool works</h3>
@@ -179,7 +228,7 @@
 
             if(!data.Answer) {
                 container.innerHTML = `
-                    <div class="empty-state" style="border-color: #f43f5e; color: #f43f5e;">
+                    <div class="empty-state" style="border-color: #ef4444; color: #ef4444;">
                         <div class="empty-icon"><i class="fa-solid fa-circle-xmark"></i></div>
                         <p>No records found for ${domain} (${type}).</p>
                     </div>
@@ -202,7 +251,7 @@
 
         } catch(e) {
             container.innerHTML = `
-                <div class="empty-state" style="border-color: #f43f5e; color: #f43f5e;">
+                <div class="empty-state" style="border-color: #ef4444; color: #ef4444;">
                     <div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
                     <p>Error fetching data. Please check the domain name.</p>
                 </div>
@@ -210,9 +259,7 @@
         }
     }
 </script>
-    <script src="database.js"></script>
-
+<script src="database.js"></script>
 
 </body>
-
 </html>
