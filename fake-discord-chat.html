@@ -1,27 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fake Discord Chat Generator - Prank Tool</title>
-    <meta name="description" content="Create realistic fake Discord chat screenshots. Customize username, role colors, bot tags, and message content. Share to unlock watermark removal.">
+    <title>Fake Discord Chat Generator | OmniTools</title>
+    <meta name="description" content="Create realistic fake Discord chat screenshots. Customize username, role colors, bot tags, and message content.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- VARIABLES --- */
-        :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --border-color: #334155;
-            --accent-blurple: #5865F2;
-            --accent-green: #23a559;
-            --font-main: 'Roboto', sans-serif;
+        /* --- PREMIUM GOLD THEME (UI) --- */
+        :root { 
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
         }
 
-        /* --- DISCORD THEMES --- */
+        /* --- DISCORD THEMES (PREVIEW ONLY) --- */
         .theme-dark {
             --dc-bg: #313338;
             --dc-header: #2b2d31;
@@ -31,7 +45,6 @@
             --dc-msg-hover: #2e3035;
             --dc-timestamp: #949ba4;
         }
-
         .theme-light {
             --dc-bg: #ffffff;
             --dc-header: #f2f3f5;
@@ -43,122 +56,181 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-main); background: var(--bg-color); color: white; padding: 20px 10px; min-height: 100vh; }
-
-        /* --- LAYOUT --- */
-        .app-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: row; align-items: flex-start; gap: 40px; justify-content: center; }
-
-        /* --- CONTROLS --- */
-        .controls { 
-            flex: 1; min-width: 320px; background: var(--panel-bg); padding: 25px; 
-            border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding: 20px 10px; 
+            min-height: 100vh;
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        .toggle-group { display: flex; background: var(--bg-color); border-radius: 12px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border-color); }
-        .toggle-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #94a3b8; font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
-        .toggle-btn.active { background: var(--accent-blurple); color: white; }
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
 
-        .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 8px 0; font-weight: 700; }
-        .row-inputs { display: flex; gap: 10px; }
+        /* LAYOUT */
+        .app-container { 
+            max-width: 1200px; margin: 0 auto; display: flex; flex-direction: row; 
+            align-items: flex-start; gap: 40px; justify-content: center; position: relative;
+        }
+
+        /* --- CONTROLS PANEL --- */
+        .controls { 
+            flex: 1; min-width: 350px; background: var(--bg-card); padding: 30px; 
+            border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); 
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); z-index: 10;
+        }
+
+        .back-link { 
+            color: var(--text-muted); text-decoration: none; margin-bottom: 25px; 
+            display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500;
+            transition: 0.2s;
+        }
+        .back-link:hover { color: var(--text-main); }
+
+        /* Toggles */
+        .toggle-group { 
+            display: flex; background: var(--bg-input); border-radius: 10px; padding: 4px; 
+            margin-bottom: 25px; border: 1px solid var(--border-subtle); 
+        }
+        .toggle-btn { 
+            flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-muted); 
+            font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.2s; 
+            display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem;
+        }
+        .toggle-btn:hover { color: var(--text-main); }
+        .toggle-btn.active { background: var(--bg-card); color: var(--primary); border: 1px solid var(--border-highlight); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        .section-label { 
+            color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; 
+            margin: 20px 0 10px 0; font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+        .row-inputs { display: flex; gap: 10px; margin-bottom: 10px; }
         
         input, textarea, select { 
-            width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); color: white; 
-            padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; font-family: var(--font-main);
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border-subtle); 
+            color: var(--text-main); padding: 14px; border-radius: var(--radius-md); 
+            font-size: 0.95rem; font-family: 'Inter', sans-serif; transition: 0.2s;
         }
-        input[type="color"] { padding: 2px; height: 45px; cursor: pointer; }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+        input[type="color"] { padding: 2px; height: 48px; cursor: pointer; width: 60px; }
         
-        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; background: var(--bg-color); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); }
-        .checkbox-wrapper input { width: auto; margin: 0; }
+        .checkbox-wrapper { 
+            display: flex; align-items: center; gap: 12px; margin-bottom: 20px; cursor: pointer; 
+            background: var(--bg-input); padding: 12px 16px; border-radius: var(--radius-md); 
+            border: 1px solid var(--border-subtle); transition: 0.2s;
+        }
+        .checkbox-wrapper:hover { border-color: var(--border-highlight); }
+        .checkbox-wrapper input { width: auto; margin: 0; accent-color: var(--primary); }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 0.95rem; }
-        .btn-blue { background: var(--accent-blurple); color: white; }
-        .btn-green { background: var(--accent-green); color: white; }
-        .btn-share { background: white; color: black; margin-top: 25px; }
+        /* Buttons */
+        .btn { 
+            width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; 
+            transition: 0.2s; margin-top: 15px; font-size: 0.9rem;
+        }
+        .btn-action { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+        .btn-action:hover { border-color: var(--border-highlight); color: var(--text-main); }
+        
+        .btn-primary { background: var(--primary); color: #000; font-weight: 700; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        /* UNLOCK BUTTON */
-        .btn-unlock { background: linear-gradient(135deg, #8b5cf6, #d946ef); color: white; margin-top: 20px; box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3); border: 1px solid rgba(255,255,255,0.2); animation: pulse 2s infinite; }
-        .btn-unlock.unlocked { background: #22c55e; animation: none; box-shadow: none; cursor: default; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-        /* --- PREVIEW AREA --- */
-        .preview-container { position: sticky; top: 20px; z-index: 100; }
-        .phone-wrapper { width: 380px; height: 800px; position: relative; transition: transform 0.3s ease; transform-origin: top center; }
+        /* --- PREVIEW AREA (PHONE) --- */
+        .preview-container { position: sticky; top: 20px; z-index: 100; perspective: 1000px; }
+        .phone-wrapper { 
+            width: 360px; height: 720px; position: relative; transition: transform 0.3s ease; 
+            transform-origin: top center; 
+        }
         .phone-frame { 
-            width: 100%; height: 100%; background: black; border-radius: 50px; 
-            box-shadow: 0 0 0 10px #1a1a1a, 0 30px 80px rgba(0,0,0,0.6); 
-            overflow: hidden; position: relative;
+            width: 100%; height: 100%; background: #000; border-radius: 45px; 
+            box-shadow: 0 0 0 8px #1a1a1a, 0 30px 80px -10px rgba(0,0,0,0.8); 
+            overflow: hidden; position: relative; border: 4px solid #2a2a2a;
         }
 
-        /* --- DISCORD UI --- */
+        /* --- DISCORD UI (Internal) --- */
         .screen { 
-            width: 100%; height: 100%; 
-            background: var(--dc-bg); color: var(--dc-text);
-            display: flex; flex-direction: column; 
-            font-family: var(--font-main); position: relative; 
+            width: 100%; height: 100%; background: var(--dc-bg); color: var(--dc-text); 
+            display: flex; flex-direction: column; font-family: 'Roboto', sans-serif; position: relative; 
         }
 
-        .status-bar { height: 44px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 10px 28px; font-size: 15px; font-weight: 600; z-index: 10; }
+        .status-bar { 
+            height: 40px; display: flex; justify-content: space-between; align-items: flex-end; 
+            padding: 0 25px 8px 28px; font-size: 13px; font-weight: 600; z-index: 10; color: var(--dc-text-head);
+        }
         
-        /* Header */
+        /* Discord Header */
         .dc-header { 
-            height: 50px; background: var(--dc-header); 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
-            border-bottom: 1px solid rgba(0,0,0,0.2);
+            height: 48px; background: var(--dc-header); display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 16px; border-bottom: 1px solid rgba(0,0,0,0.1); 
             font-weight: 700; color: var(--dc-text-head);
         }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-icons { display: flex; gap: 20px; font-size: 20px; color: var(--dc-text); }
-        .channel-name { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-icons { display: flex; gap: 20px; font-size: 18px; color: var(--dc-text); }
+        .channel-name { display: flex; align-items: center; gap: 6px; font-size: 15px; }
 
         /* Chat Area */
-        .chat-area { flex: 1; padding: 10px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0px; }
+        .chat-area { flex: 1; padding: 15px 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0px; }
 
         .msg-container { 
-            display: flex; gap: 16px; padding: 2px 16px 2px 16px; 
-            margin-top: 15px; /* Group spacing */
+            display: flex; gap: 12px; padding: 2px 16px 4px 16px; margin-top: 15px; 
         }
         .msg-container:hover { background: var(--dc-msg-hover); }
 
-        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; margin-top: 4px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; cursor: pointer; margin-top: 2px; }
         
         .msg-content { flex: 1; display: flex; flex-direction: column; }
         
-        .username-row { display: flex; align-items: center; gap: 6px; line-height: 1.3; }
-        .username { font-weight: 600; font-size: 16px; color: var(--dc-text-head); }
-        .timestamp { font-size: 12px; color: var(--dc-timestamp); margin-left: 4px; font-weight: 500; }
+        .username-row { display: flex; align-items: center; gap: 6px; line-height: 1.3; margin-bottom: 2px; }
+        .username { font-weight: 500; font-size: 15px; color: var(--dc-text-head); }
+        .timestamp { font-size: 11px; color: var(--dc-timestamp); font-weight: 500; margin-top: 2px; }
         
         .bot-tag { 
-            background: #5865F2; color: white; font-size: 10px; padding: 1px 5px; 
-            border-radius: 4px; display: flex; align-items: center; gap: 3px; font-weight: 700; height: 15px; line-height: 1;
+            background: #5865F2; color: white; font-size: 9px; padding: 1px 4px; 
+            border-radius: 3px; display: flex; align-items: center; gap: 3px; font-weight: 700; height: 14px; line-height: 1;
         }
-        .bot-tag i { font-size: 8px; }
+        .bot-tag i { font-size: 7px; }
 
-        .message-text { font-size: 15px; line-height: 1.375rem; white-space: pre-wrap; color: var(--dc-text); }
-        .message-img { max-width: 100%; border-radius: 8px; margin-top: 6px; cursor: pointer; display: none; }
+        .message-text { font-size: 14px; line-height: 1.4; white-space: pre-wrap; color: var(--dc-text); font-weight: 400; }
+        .message-img { max-width: 100%; border-radius: 6px; margin-top: 8px; cursor: pointer; display: none; }
 
         /* Input Area */
         .input-area { 
-            padding: 10px 16px 25px 16px; background: var(--dc-header); 
-            border-top: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; 
+            padding: 10px 12px 25px 12px; background: var(--dc-header); 
+            border-top: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; 
         }
-        .plus-btn { width: 24px; height: 24px; background: var(--dc-text); color: var(--dc-header); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; }
+        .plus-btn { 
+            width: 24px; height: 24px; background: var(--dc-text); color: var(--dc-header); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; opacity: 0.7;
+        }
         
         .input-box { 
-            flex: 1; background: var(--dc-input); height: 44px; border-radius: 22px; 
-            display: flex; align-items: center; padding: 0 15px; color: var(--dc-text); font-size: 15px;
+            flex: 1; background: var(--dc-input); height: 40px; border-radius: 20px; 
+            display: flex; align-items: center; padding: 0 12px; color: var(--dc-text); font-size: 14px; 
             justify-content: space-between;
         }
-        .input-icons { display: flex; gap: 12px; color: var(--dc-text); font-size: 20px; }
+        .input-icons { display: flex; gap: 12px; color: var(--dc-text); font-size: 18px; opacity: 0.8; }
 
-        .watermark { position: absolute; bottom: 85px; right: 15px; font-size: 10px; color: rgba(255,255,255,0.1); font-weight: bold; pointer-events: none; z-index: 20; }
+        .watermark { position: absolute; bottom: 85px; right: 15px; font-size: 9px; color: rgba(255,255,255,0.15); font-weight: bold; pointer-events: none; z-index: 20; }
         .watermark.hidden { display: none !important; }
 
         /* RESPONSIVE */
         @media (max-width: 950px) {
-            .app-container { flex-direction: column; align-items: center; gap: 20px; }
-            .preview-container { width: 100%; display: flex; justify-content: center; height: 680px; overflow: hidden; margin-bottom: -130px; }
-            .phone-wrapper { transform: scale(0.8); }
-            .controls { width: 100%; margin-top: 20px; }
+            .app-container { flex-direction: column; align-items: center; gap: 30px; }
+            .preview-container { width: 100%; display: flex; justify-content: center; height: auto; margin-bottom: 0; }
+            .phone-wrapper { transform: scale(0.9); }
+            .controls { width: 100%; margin-top: 0; }
         }
     </style>
 </head>
@@ -167,45 +239,45 @@
 <div class="app-container">
     
     <div class="controls">
-        <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
 
         <div class="toggle-group">
-            <button class="toggle-btn active" onclick="setTheme('dark')" id="btn-dark">Dark</button>
-            <button class="toggle-btn" onclick="setTheme('light')" id="btn-light">Light</button>
+            <button class="toggle-btn active" onclick="setTheme('dark')" id="btn-dark"><i class="fa-solid fa-moon"></i> Dark</button>
+            <button class="toggle-btn" onclick="setTheme('light')" id="btn-light"><i class="fa-solid fa-sun"></i> Light</button>
         </div>
 
-        <div class="section-label">User Settings</div>
+        <div class="section-label"><i class="fa-solid fa-user"></i> User Profile</div>
         <div class="row-inputs">
             <input type="text" id="inp-name" value="Midjourney Bot" oninput="renderUI()" placeholder="Username">
-            <input type="color" id="inp-color" value="#ffffff" oninput="renderUI()" style="width:50px;">
+            <input type="color" id="inp-color" value="#ffffff" oninput="renderUI()" title="Name Color">
         </div>
 
         <label class="checkbox-wrapper">
             <input type="checkbox" id="inp-bot" checked onchange="renderUI()"> 
-            <span style="font-size:14px; color:#ccc;">Bot Tag</span>
+            <span style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Show Bot Tag</span>
         </label>
         
-        <button class="btn btn-blue" style="margin-top:0;" onclick="document.getElementById('pfp-upload').click()">Upload Avatar</button>
+        <button class="btn btn-action" onclick="document.getElementById('pfp-upload').click()">
+            <i class="fa-solid fa-image"></i> Upload Avatar
+        </button>
         <input type="file" id="pfp-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'pfp')">
 
-        <div class="section-label">Message Content</div>
-        <textarea id="inp-msg" rows="3" oninput="renderUI()" placeholder="Message...">**Image Generating**
+        <div class="section-label"><i class="fa-solid fa-message"></i> Message Content</div>
+        <textarea id="inp-msg" rows="4" oninput="renderUI()" placeholder="Type message content...">**Image Generating**
 Prompts: Cyberpunk city, neon lights, rain, 4k --v 5.2</textarea>
         
-        <button class="btn btn-blue" onclick="document.getElementById('img-upload').click()">Upload Image Attachment</button>
+        <button class="btn btn-action" onclick="document.getElementById('img-upload').click()">
+            <i class="fa-solid fa-paperclip"></i> Attach Image
+        </button>
         <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="handleImage(this, 'img')">
 
-        <div class="section-label">Metadata</div>
+        <div class="section-label"><i class="fa-solid fa-clock"></i> Metadata</div>
         <div class="row-inputs">
             <input type="text" id="inp-time" value="Today at 4:20 PM" oninput="renderUI()" placeholder="Timestamp">
             <input type="text" id="inp-channel" value="general" oninput="renderUI()" placeholder="Channel Name">
         </div>
 
-        <button class="btn btn-unlock" id="btn-watermark" onclick="unlockWatermark()">
-            <i class="fa-solid fa-lock"></i> Remove Watermark (Share App)
-        </button>
-
-        <button class="btn btn-share" onclick="downloadImage()">
+        <button class="btn btn-primary" onclick="downloadImage()">
             <i class="fa-solid fa-download"></i> Download Screenshot
         </button>
     </div>
@@ -222,9 +294,9 @@ Prompts: Cyberpunk city, neon lights, rain, 4k --v 5.2</textarea>
 
                     <div class="dc-header">
                         <div class="header-left">
-                            <i class="fa-solid fa-bars" style="font-size:20px; color:var(--dc-text);"></i>
+                            <i class="fa-solid fa-bars" style="font-size:18px; color:var(--dc-text);"></i>
                             <div class="channel-name">
-                                <span style="font-size:20px; color:#949ba4;">#</span> <span id="txt-channel">general</span>
+                                <span style="font-size:18px; color:#949ba4;">#</span> <span id="txt-channel">general</span>
                             </div>
                         </div>
                         <div class="header-icons">
@@ -313,42 +385,17 @@ Prompts: Cyberpunk city, neon lights, rain, 4k --v 5.2</div>
     async function downloadImage() {
         const capture = document.getElementById('capture');
         const canvas = await html2canvas(capture, { scale: 2, useCORS: true });
-        canvas.toBlob(async (blob) => {
-            const file = new File([blob], "fake-discord.png", { type: "image/png" });
-            if (navigator.share && navigator.canShare({ files: [file] }) && /Mobi|Android/i.test(navigator.userAgent)) {
-                try { await navigator.share({ files: [file] }); } catch(e){}
-            } else {
-                const a = document.createElement('a');
-                a.download = 'fake-discord.png';
-                a.href = canvas.toDataURL();
-                a.click();
-            }
-        });
-    }
-
-    async function unlockWatermark() {
-        const url = window.location.href;
-        if (navigator.share) {
-            try { await navigator.share({ title: 'Fake Discord', url: url }); document.querySelector('.watermark').classList.add('hidden'); document.getElementById('btn-watermark').classList.add('unlocked'); alert("Unlocked!"); } catch (err) {}
-        } else {
-            navigator.clipboard.writeText(url); document.querySelector('.watermark').classList.add('hidden'); alert("Link copied! Watermark removed.");
-        }
+        
+        const a = document.createElement('a');
+        a.download = 'fake-discord.png';
+        a.href = canvas.toDataURL();
+        a.click();
     }
 
     // Init
     renderUI();
 </script>
-
 <script src="database.js"></script>
-<script>
-    if(typeof toolsDB !== 'undefined') {
-        const d = document.createElement('div');
-        d.innerHTML = '<br><b>More Tools:</b><br><div id="rec" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>';
-        document.querySelector('.controls').appendChild(d);
-        document.getElementById('rec').innerHTML = toolsDB.slice(0,3).map(t=>`<a href="${t.url}" style="color:#5865F2;">${t.title}</a>`).join(' • ');
-    }
-</script>
-  <script src="database.js"></script>
 
 </body>
 </html>
