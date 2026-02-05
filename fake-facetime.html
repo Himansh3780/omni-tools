@@ -1,67 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fake FaceTime Video Call Generator | Prank Tool</title>
+    <title>Fake FaceTime Generator | OmniTools</title>
     <meta name="description" content="Create realistic Fake FaceTime video calls. Customize caller name, photo, and video. Perfect for TikTok pranks and social media content.">
     
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
-        /* iOS SYSTEM FONTS & COLORS */
-        :root {
-            --bg: #000000;
-            --glass: rgba(30, 30, 30, 0.6);
+        /* --- PREMIUM GOLD THEME (UI CONTROLS) --- */
+        :root { 
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
+        }
+
+        /* --- iOS SYSTEM VARIABLES (PREVIEW ONLY) --- */
+        .ios-screen {
+            --ios-bg: #000000;
+            --ios-glass: rgba(30, 30, 30, 0.6);
             --ios-green: #30d158;
             --ios-red: #ff3b30;
             --ios-gray: #1c1c1e;
-            --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+            --ios-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
         }
 
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: #0f172a; font-family: var(--font); color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        body { 
+            margin: 0; background: var(--bg-body); font-family: 'Inter', sans-serif; 
+            color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; 
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
 
-        /* --- CONTAINER --- */
-        .page-wrapper { width: 100%; max-width: 1200px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        /* --- LAYOUT --- */
+        .page-wrapper { width: 100%; max-width: 1200px; padding: 40px 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 60px; }
 
         /* --- 1. SETUP PANEL (LEFT SIDE) --- */
         .controls { 
-            flex: 1; min-width: 320px; max-width: 400px; background: #1e293b; 
-            padding: 25px; border-radius: 20px; border: 1px solid #334155; height: fit-content; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            flex: 1; min-width: 320px; max-width: 400px; background: var(--bg-card); 
+            padding: 30px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); 
+            height: fit-content; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0 0 20px 0; font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, #30cfd0, #330867); -webkit-background-clip: text; color: transparent; }
+        .back-link { 
+            color: var(--text-muted); text-decoration: none; font-size: 0.85rem; 
+            display: flex; align-items: center; gap: 6px; margin-bottom: 20px; font-weight: 500;
+            transition: 0.2s;
+        }
+        .back-link:hover { color: var(--text-main); }
 
-        .input-group { margin-bottom: 15px; }
-        .label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; font-size: 14px; }
+        h1 { margin: 0 0 25px 0; font-size: 1.8rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em; }
+
+        .input-group { margin-bottom: 20px; }
+        .label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        
+        input[type="text"] { 
+            width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); 
+            background: var(--bg-input); color: var(--text-main); outline: none; font-size: 0.95rem; font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
         
         .file-box { 
-            width: 100%; padding: 12px; background: #0f172a; border: 1px dashed #334155; 
-            border-radius: 10px; color: #94a3b8; cursor: pointer; text-align: center; font-size: 13px;
-            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 14px; background: var(--bg-input); border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); color: var(--text-muted); cursor: pointer; text-align: center; 
+            font-size: 0.9rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500;
         }
-        .file-box:hover { border-color: #3b82f6; color: #3b82f6; }
+        .file-box:hover { border-color: var(--primary); color: var(--text-main); background: rgba(245, 158, 11, 0.05); }
         
         .btn-start {
-            width: 100%; padding: 15px; margin-top: 10px;
-            background: linear-gradient(135deg, #30d158, #20aa45); 
-            color: white; font-weight: 700; font-size: 16px;
-            border: none; border-radius: 12px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(48, 209, 88, 0.3);
+            width: 100%; padding: 16px; margin-top: 15px;
+            background: var(--primary); color: #000; font-weight: 700; font-size: 1rem;
+            border: none; border-radius: var(--radius-md); cursor: pointer;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
+        .btn-start:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        .watermark-btn {
+            background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted);
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .watermark-btn:hover { border-color: var(--border-highlight); color: var(--text-main); }
 
         /* --- 2. PHONE PREVIEW (RIGHT SIDE) --- */
         .phone-wrapper { 
             width: 375px; height: 812px; position: relative; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5); border-radius: 50px;
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.8); border-radius: 50px;
+            border: 8px solid #1a1a1a; background: #000;
         }
         .phone-frame { 
-            width: 100%; height: 100%; background: black; border-radius: 50px; 
-            overflow: hidden; position: relative; border: 8px solid #121212; 
+            width: 100%; height: 100%; background: black; border-radius: 42px; 
+            overflow: hidden; position: relative; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
         }
 
         /* --- CALL UI SCREENS --- */
@@ -74,15 +137,15 @@
         
         .caller-top { display: flex; flex-direction: column; align-items: center; }
         .caller-avatar { width: 110px; height: 110px; background: #333; border-radius: 50%; background-size: cover; background-position: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .caller-text-name { font-size: 34px; font-weight: 600; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .caller-text-name { font-size: 34px; font-weight: 600; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); color: white; }
         .caller-text-sub { font-size: 19px; color: rgba(255,255,255,0.8); font-weight: 400; }
 
         .incoming-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 10px; }
-        .action-btn { width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; transition: transform 0.1s; }
+        .action-btn { width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; transition: transform 0.1s; color: white; }
         .action-btn:active { transform: scale(0.95); }
         .btn-decline { background: #eb4e3d; }
         .btn-accept { background: #30d158; }
-        .action-label { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 500; }
+        .action-label { text-align: center; margin-top: 10px; font-size: 14px; font-weight: 500; color: white; }
 
         /* B. ACTIVE CALL SCREEN */
         #active-screen { background: #000; }
@@ -97,7 +160,7 @@
             transition: opacity 0.3s;
         }
         .pill-icon { width: 40px; height: 40px; border-radius: 50%; background: #333; background-size: cover; }
-        .pill-info h3 { margin: 0; font-size: 17px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .pill-info h3 { margin: 0; font-size: 17px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); color: white; }
         .pill-info p { margin: 0; font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
 
         /* PIP (Selfie) */
@@ -129,21 +192,23 @@
         .ctrl-btn:active { background: rgba(255,255,255,0.3); }
         .ctrl-end { background: #ff3b30; width: 60px; height: 60px; font-size: 28px; }
 
-        .watermark { position: absolute; bottom: 120px; left: 20px; font-size: 12px; opacity: 0.4; font-weight: 600; text-shadow: 0 1px 2px black; pointer-events: none; z-index: 5; }
+        .watermark { position: absolute; bottom: 120px; left: 20px; font-size: 12px; opacity: 0.4; font-weight: 600; text-shadow: 0 1px 2px black; pointer-events: none; z-index: 5; color: white; }
         .watermark.hidden { display: none; }
 
         /* SEO CONTENT STYLES */
-        .seo-content { width: 100%; max-width: 900px; margin-top: 50px; background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #334155; }
-        .seo-content h2 { color: #3b82f6; font-size: 1.5rem; margin-top: 20px; margin-bottom: 10px; }
-        .seo-content p { color: #cbd5e1; line-height: 1.6; margin-bottom: 15px; }
-        .seo-content ul { color: #cbd5e1; margin-left: 20px; line-height: 1.6; }
+        .seo-content { width: 100%; max-width: 900px; margin-top: 50px; background: var(--bg-card); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); color: var(--text-muted); line-height: 1.7; font-size: 0.95rem; }
+        .seo-content h2 { color: var(--text-main); font-size: 1.5rem; margin-top: 20px; margin-bottom: 10px; font-weight: 700; }
+        .seo-content p { margin-bottom: 15px; }
+        .seo-content ul { margin-left: 20px; margin-bottom: 20px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: var(--primary); }
     </style>
 </head>
 <body>
 
 <div class="page-wrapper">
     <div class="controls">
-        <a href="index.html" style="color:#94a3b8; text-decoration:none; font-size:13px; display:flex; align-items:center; gap:5px; margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
         <h1>FaceTime Simulator</h1>
         
         <div class="input-group">
@@ -171,8 +236,8 @@
             <i class="fa-solid fa-phone-volume"></i> Start Call
         </button>
         
-        <div style="margin-top:20px; text-align:center;">
-            <button onclick="unlock()" style="background:none; border:1px solid #334155; color:#94a3b8; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:12px;">
+        <div style="margin-top:25px; text-align:center;">
+            <button class="watermark-btn" onclick="unlock()">
                 <i class="fa-solid fa-lock"></i> Remove Watermark
             </button>
         </div>
@@ -322,10 +387,12 @@
         if(videoUrl) vid.play();
 
         // Start Webcam
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
-            .then(stream => {
-                document.getElementById('pip-video').srcObject = stream;
-            }).catch(e => console.log("Camera Error"));
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                .then(stream => {
+                    document.getElementById('pip-video').srcObject = stream;
+                }).catch(e => console.log("Camera Error"));
+        }
 
         // Start Timer
         timerInt = setInterval(() => {
