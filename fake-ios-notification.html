@@ -1,88 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fake iPhone Lock Screen Generator - Notification Prank</title>
+    <title>Fake iPhone Lock Screen Generator | OmniTools</title>
     <meta name="description" content="Create realistic iPhone lock screens with fake notifications. Customize wallpaper, time, and add fake messages from any app.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- VARIABLES --- */
-        :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --border-color: #334155;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
+        /* --- PREMIUM GOLD THEME (UI) --- */
+        :root { 
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
+        }
+
+        /* --- iOS SYSTEM VARIABLES (PREVIEW ONLY) --- */
+        .ios-theme {
             --font-ios: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-color); color: white; padding: 20px 10px; min-height: 100vh; }
-
-        /* --- LAYOUT --- */
-        .app-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: row; align-items: flex-start; gap: 40px; justify-content: center; }
-
-        /* --- CONTROLS --- */
-        .controls { 
-            flex: 1; min-width: 320px; background: var(--panel-bg); padding: 25px; 
-            border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding: 20px 10px; 
+            min-height: 100vh;
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        .section-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 8px 0; font-weight: 700; }
-        .row-inputs { display: flex; gap: 10px; }
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        /* LAYOUT */
+        .app-container { 
+            max-width: 1200px; margin: 0 auto; display: flex; flex-direction: row; 
+            align-items: flex-start; gap: 40px; justify-content: center; position: relative;
+        }
+
+        /* --- CONTROLS PANEL --- */
+        .controls { 
+            flex: 1; min-width: 350px; background: var(--bg-card); padding: 30px; 
+            border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); 
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); z-index: 10;
+        }
+
+        .back-link { 
+            color: var(--text-muted); text-decoration: none; margin-bottom: 25px; 
+            display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500;
+            transition: 0.2s;
+        }
+        .back-link:hover { color: var(--text-main); }
+
+        .section-label { 
+            color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; 
+            margin: 20px 0 10px 0; font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+
+        .row-inputs { display: flex; gap: 10px; margin-bottom: 10px; }
         
         input, select, textarea { 
-            width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); color: white; 
-            padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; font-family: var(--font-ios);
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border-subtle); 
+            color: var(--text-main); padding: 14px; border-radius: var(--radius-md); 
+            font-size: 0.95rem; font-family: 'Inter', sans-serif; transition: 0.2s;
         }
-        input:focus { border-color: var(--accent-blue); }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; margin-top: 10px; font-size: 0.95rem; }
-        .btn-blue { background: var(--accent-blue); color: white; }
-        .btn-red { background: #ef4444; color: white; margin-top:0; }
-        .btn-share { background: white; color: black; margin-top: 25px; }
+        /* Buttons */
+        .btn { 
+            width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 600; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; 
+            transition: 0.2s; margin-top: 15px; font-size: 0.9rem;
+        }
+        .btn-action { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+        .btn-action:hover { border-color: var(--border-highlight); color: var(--text-main); }
+        
+        .btn-primary { background: var(--primary); color: #000; font-weight: 700; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        /* UNLOCK BUTTON */
-        .btn-unlock { background: linear-gradient(135deg, #8b5cf6, #d946ef); color: white; margin-top: 20px; box-shadow: 0 4px 15px rgba(217, 70, 239, 0.3); border: 1px solid rgba(255,255,255,0.2); animation: pulse 2s infinite; }
-        .btn-unlock.unlocked { background: #22c55e; animation: none; box-shadow: none; cursor: default; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        .btn-add { background: #10b981; color: #000; font-weight: 700; } /* Green for Add */
+        .btn-add:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .watermark-btn {
+            background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted);
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; margin-top: 20px;
+        }
+        .watermark-btn:hover { border-color: var(--border-highlight); color: var(--text-main); }
 
         /* NOTIFICATION LIST IN CONTROLS */
         .notif-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .notif-item-control { background: #0f172a; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
-        .notif-info { font-size: 12px; }
+        .notif-item-control { 
+            background: var(--bg-input); padding: 12px; border-radius: var(--radius-md); 
+            display: flex; justify-content: space-between; align-items: center; 
+            border: 1px solid var(--border-subtle); transition: 0.2s;
+        }
+        .notif-item-control:hover { border-color: var(--border-highlight); }
+        .notif-info { font-size: 0.85rem; color: var(--text-muted); }
+        .notif-info b { color: var(--text-main); }
 
-        /* --- PREVIEW AREA --- */
-        .preview-container { position: sticky; top: 20px; z-index: 100; }
-        .phone-wrapper { width: 380px; height: 800px; position: relative; transition: transform 0.3s ease; transform-origin: top center; }
+        .btn-delete { 
+            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); 
+            color: #ef4444; padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-delete:hover { background: rgba(239, 68, 68, 0.2); }
+
+        /* --- PREVIEW AREA (PHONE) --- */
+        .preview-container { position: sticky; top: 20px; z-index: 100; perspective: 1000px; }
+        .phone-wrapper { 
+            width: 360px; height: 780px; position: relative; transition: transform 0.3s ease; 
+            transform-origin: top center; 
+        }
         .phone-frame { 
-            width: 100%; height: 100%; background: black; border-radius: 50px; 
-            box-shadow: 0 0 0 12px #1a1a1a, 0 30px 80px rgba(0,0,0,0.6); 
-            overflow: hidden; position: relative;
+            width: 100%; height: 100%; background: #000; border-radius: 45px; 
+            box-shadow: 0 0 0 8px #1a1a1a, 0 30px 80px -10px rgba(0,0,0,0.8); 
+            overflow: hidden; position: relative; border: 4px solid #2a2a2a;
         }
 
-        /* --- IOS UI --- */
+        /* --- iOS UI (Internal) --- */
         .screen { 
             width: 100%; height: 100%; 
             background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; align-items: center;
-            font-family: var(--font-ios); position: relative; color: white;
-            padding-top: 60px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            position: relative; color: white; padding-top: 60px;
         }
 
         /* Time & Date */
-        .lock-padlock { font-size: 24px; margin-bottom: 5px; opacity: 0.9; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .lock-padlock { font-size: 24px; margin-bottom: 8px; opacity: 0.9; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .lock-date { font-size: 20px; font-weight: 500; margin-bottom: 0px; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .lock-time { font-size: 84px; font-weight: 600; letter-spacing: -2px; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.3); font-family: 'Roboto', sans-serif; /* Fallback for SF Pro */ }
+        .lock-time { 
+            font-size: 84px; font-weight: 600; letter-spacing: -2px; line-height: 1; 
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3); font-family: 'Roboto', sans-serif; 
+        }
 
         /* Notification Stack */
-        .notif-stack { width: 92%; margin-top: 30px; display: flex; flex-direction: column; gap: 8px; z-index: 10; flex: 1; overflow: hidden; }
+        .notif-stack { 
+            width: 92%; margin-top: 30px; display: flex; flex-direction: column; gap: 8px; 
+            z-index: 10; flex: 1; overflow: hidden; 
+        }
         
         /* Single Notification Bubble */
         .ios-notif { 
@@ -96,7 +185,7 @@
 
         .notif-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .notif-app { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 400; color: #333; text-transform: uppercase; }
-        .app-icon { width: 20px; height: 20px; border-radius: 5px; }
+        .app-icon { width: 20px; height: 20px; border-radius: 5px; object-fit: cover; }
         .notif-time { font-size: 12px; color: #555; }
         
         .notif-title { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
@@ -105,26 +194,26 @@
         /* Bottom Buttons */
         .lock-footer { 
             position: absolute; bottom: 40px; width: 100%; 
-            display: flex; justify-content: space-between; padding: 0 40px; 
+            display: flex; justify-content: space-between; padding: 0 46px; 
             align-items: flex-end;
         }
         .round-btn { 
             width: 50px; height: 50px; background: rgba(30,30,30,0.6); 
             backdrop-filter: blur(10px); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
-            color: white; font-size: 20px; cursor: pointer;
+            color: white; font-size: 20px; 
         }
         .home-bar { position: absolute; bottom: 8px; width: 130px; height: 5px; background: white; border-radius: 3px; left: 50%; transform: translateX(-50%); }
 
-        .watermark { position: absolute; bottom: 100px; font-size: 12px; opacity: 0.5; font-weight: bold; pointer-events: none; text-shadow: 0 1px 2px black; }
+        .watermark { position: absolute; bottom: 100px; font-size: 12px; opacity: 0.5; font-weight: bold; pointer-events: none; text-shadow: 0 1px 2px black; color: white; }
         .watermark.hidden { display: none !important; }
 
         /* RESPONSIVE */
         @media (max-width: 950px) {
-            .app-container { flex-direction: column; align-items: center; gap: 20px; }
-            .preview-container { width: 100%; display: flex; justify-content: center; height: 680px; overflow: hidden; margin-bottom: -130px; }
-            .phone-wrapper { transform: scale(0.8); }
-            .controls { width: 100%; margin-top: 20px; }
+            .app-container { flex-direction: column; align-items: center; gap: 30px; }
+            .preview-container { width: 100%; display: flex; justify-content: center; height: auto; margin-bottom: 0; }
+            .phone-wrapper { transform: scale(0.9); }
+            .controls { width: 100%; margin-top: 0; }
         }
     </style>
 </head>
@@ -133,17 +222,20 @@
 <div class="app-container">
     
     <div class="controls">
-        <a href="index.html" style="color:#94a3b8; text-decoration:none; margin-bottom:20px; display:inline-flex; align-items:center; gap:8px; font-size:14px;"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
 
-        <div class="section-label">Lock Screen Settings</div>
+        <div class="section-label"><i class="fa-solid fa-gear"></i> Lock Screen Settings</div>
         <div class="row-inputs">
             <input type="text" id="inp-time" value="9:41" oninput="renderClock()" placeholder="Time (e.g. 9:41)">
             <input type="text" id="inp-date" value="Tuesday, September 12" oninput="renderClock()" placeholder="Date">
         </div>
-        <button class="btn btn-blue" style="margin-top:0;" onclick="document.getElementById('bg-upload').click()">Upload Wallpaper</button>
+        
+        <button class="btn btn-action" onclick="document.getElementById('bg-upload').click()">
+            <i class="fa-regular fa-image"></i> Upload Wallpaper
+        </button>
         <input type="file" id="bg-upload" accept="image/*" style="display:none" onchange="handleBg(this)">
 
-        <div class="section-label">Create Notification</div>
+        <div class="section-label"><i class="fa-solid fa-bell"></i> Create Notification</div>
         <div class="row-inputs">
             <select id="inp-app" onchange="updateAppIcon()">
                 <option value="wa">WhatsApp</option>
@@ -161,21 +253,27 @@
         <textarea id="inp-msg" rows="2" placeholder="Message content...">Where are you?</textarea>
 
         <input type="file" id="icon-upload" accept="image/*" style="display:none" onchange="handleCustomIcon(this)">
-        <button class="btn btn-blue" id="btn-custom-icon" style="display:none; margin-bottom:10px;" onclick="document.getElementById('icon-upload').click()">Upload App Icon</button>
+        <button class="btn btn-action" id="btn-custom-icon" style="display:none; margin-bottom:10px;" onclick="document.getElementById('icon-upload').click()">
+            <i class="fa-solid fa-upload"></i> Upload App Icon
+        </button>
 
-        <button class="btn btn-green" onclick="addNotification()">+ Add Notification</button>
+        <button class="btn btn-add" onclick="addNotification()">
+            <i class="fa-solid fa-plus"></i> Add Notification
+        </button>
 
-        <div class="section-label">Active Notifications</div>
+        <div class="section-label"><i class="fa-solid fa-list-ul"></i> Active Notifications</div>
         <div class="notif-list" id="notif-control-list">
             </div>
 
-        <button class="btn btn-unlock" id="btn-watermark" onclick="unlockWatermark()">
-            <i class="fa-solid fa-lock"></i> Remove Watermark (Share App)
-        </button>
-
-        <button class="btn btn-share" onclick="downloadImage()">
+        <button class="btn btn-primary" onclick="downloadImage()">
             <i class="fa-solid fa-download"></i> Download Screenshot
         </button>
+        
+        <div style="text-align:center;">
+            <button class="watermark-btn" onclick="unlockWatermark()">
+                <i class="fa-solid fa-lock"></i> Remove Watermark
+            </button>
+        </div>
     </div>
 
     <div class="preview-container">
@@ -232,7 +330,7 @@
         const type = document.getElementById('inp-app').value;
         const btn = document.getElementById('btn-custom-icon');
         if(type === 'custom') {
-            btn.style.display = 'block';
+            btn.style.display = 'flex'; // Changed to flex for centering
         } else {
             btn.style.display = 'none';
         }
@@ -316,7 +414,7 @@
             item.className = 'notif-item-control';
             item.innerHTML = `
                 <div class="notif-info"><b>${n.title}</b><br>${n.msg.substring(0,20)}...</div>
-                <button onclick="deleteNotif(${n.id})" style="background:#ef4444; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                <button class="btn-delete" onclick="deleteNotif(${n.id})"><i class="fa-solid fa-trash"></i></button>
             `;
             controlList.appendChild(item);
         });
@@ -326,7 +424,7 @@
     async function unlockWatermark() {
         const url = window.location.href;
         if (navigator.share) {
-            try { await navigator.share({ title: 'Fake Lock Screen', url: url }); document.querySelector('.watermark').classList.add('hidden'); document.getElementById('btn-watermark').classList.add('unlocked'); alert("Unlocked!"); } catch (err) {}
+            try { await navigator.share({ title: 'Fake Lock Screen', url: url }); document.querySelector('.watermark').classList.add('hidden'); alert("Unlocked!"); } catch (err) {}
         } else {
             navigator.clipboard.writeText(url); document.querySelector('.watermark').classList.add('hidden'); alert("Link copied! Watermark removed.");
         }
@@ -335,14 +433,11 @@
     async function downloadImage() {
         const capture = document.getElementById('capture');
         const canvas = await html2canvas(capture, { scale: 2, useCORS: true, backgroundColor:null });
-        canvas.toBlob(async (blob) => {
-            const file = new File([blob], "fake-lockscreen.png", { type: "image/png" });
-            if (navigator.share && navigator.canShare({ files: [file] }) && /Mobi|Android/i.test(navigator.userAgent)) {
-                try { await navigator.share({ files: [file] }); } catch(e){}
-            } else {
-                const a = document.createElement('a'); a.download = 'fake-lockscreen.png'; a.href = canvas.toDataURL(); a.click();
-            }
-        });
+        
+        const a = document.createElement('a');
+        a.download = 'fake-lockscreen.png';
+        a.href = canvas.toDataURL();
+        a.click();
     }
 
     // Init
@@ -350,15 +445,6 @@
 </script>
 
 <script src="database.js"></script>
-<script>
-    if(typeof toolsDB !== 'undefined') {
-        const d = document.createElement('div');
-        d.innerHTML = '<br><b>More Tools:</b><br><div id="rec" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>';
-        document.querySelector('.controls').appendChild(d);
-        document.getElementById('rec').innerHTML = toolsDB.slice(0,3).map(t=>`<a href="${t.url}" style="color:#3b82f6;">${t.title}</a>`).join(' • ');
-    }
-</script>
-  <script src="database.js"></script>
 
 </body>
 </html>
