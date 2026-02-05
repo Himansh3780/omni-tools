@@ -1,103 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free AI Business Name Generator - Brand & Startup Name Ideas</title>
-    <meta name="description" content="Generate catchy, creative, and premium business names instantly. Free AI-powered brand name generator for startups, shops, and agencies.">
+    <title>AI Business Name Generator | OmniTools</title>
+    <meta name="description" content="Generate catchy, creative, and premium business names instantly. Free AI-powered brand name generator.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- BRANDING THEME --- */
+        /* --- PREMIUM GOLD THEME --- */
         :root { 
-            --bg: #0f172a; 
-            --panel: #1e293b; 
-            --text: #f8fafc; 
-            --muted: #94a3b8; 
-            --brand: #8b5cf6; /* Violet (Creative) */
-            --accent: #d946ef; /* Pink */
-            --gradient: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
-            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            min-height: 100vh;
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; }
+
         /* HEADER */
         nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
-        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .back-btn:hover { color: white; }
+        .back-btn { 
+            color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+            padding: 8px 16px; border-radius: 6px; border: 1px solid transparent;
+        }
+        .back-btn:hover { color: var(--text-main); background: var(--bg-card); border-color: var(--border-subtle); }
 
-        /* HERO INPUT */
+        /* HERO SECTION */
         .hero { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: var(--muted); font-size: 1.2rem; margin-bottom: 40px; }
+        h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
 
+        /* SEARCH BAR */
         .search-box { 
-            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 50px; border: var(--border);
-            display: inline-flex; width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-            backdrop-filter: blur(10px);
+            background: var(--bg-card); padding: 8px; border-radius: 50px; border: 1px solid var(--border-subtle);
+            display: inline-flex; width: 100%; max-width: 600px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            transition: 0.2s;
         }
+        .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+        
         .search-box input {
-            flex: 1; background: transparent; border: none; padding: 15px 25px; font-size: 1.2rem; color: white; font-weight: 600; outline: none;
+            flex: 1; background: transparent; border: none; padding: 15px 25px; 
+            font-size: 1.1rem; color: var(--text-main); font-weight: 500; outline: none; font-family: 'Inter', sans-serif;
         }
-        .search-box input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-box input::placeholder { color: var(--text-muted); }
         
         .generate-btn {
-            background: var(--gradient); color: white; border: none; padding: 15px 40px; border-radius: 40px;
-            font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            background: var(--primary); color: #000; border: none; padding: 12px 30px; border-radius: 40px;
+            font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s;
         }
-        .generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(217, 70, 239, 0.5); }
+        .generate-btn:hover { transform: scale(1.05); opacity: 0.9; }
 
         /* FILTERS */
-        .filters { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
         .filter-btn {
-            background: #1e293b; border: 1px solid #334155; color: var(--muted); padding: 8px 20px;
-            border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.2s;
+            background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-muted); 
+            padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; font-weight: 500;
         }
-        .filter-btn.active { border-color: var(--brand); color: white; background: rgba(139, 92, 246, 0.1); }
+        .filter-btn:hover { border-color: var(--border-highlight); color: var(--text-main); }
+        .filter-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(245, 158, 11, 0.1); }
 
         /* RESULTS GRID */
         .results-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; 
             min-height: 200px;
         }
 
         .name-card {
-            background: var(--panel); border: var(--border); border-radius: 16px; padding: 25px;
-            text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+            background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 25px;
+            text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .name-card:hover { transform: translateY(-5px); border-color: var(--brand); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .name-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3); }
         
-        .name-text { font-size: 1.4rem; font-weight: 700; color: white; margin-bottom: 5px; }
-        .name-tag { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .name-text { font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+        .name-tag { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         
         .action-row { 
-            margin-top: 15px; display: flex; gap: 10px; opacity: 0; transform: translateY(10px); transition: 0.3s;
+            margin-top: 15px; display: flex; gap: 10px; opacity: 0; transform: translateY(10px); transition: 0.2s;
         }
         .name-card:hover .action-row { opacity: 1; transform: translateY(0); }
         
         .icon-btn { 
-            width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.1); 
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;
+            width: 32px; height: 32px; border-radius: 50%; background: var(--bg-input); border: 1px solid var(--border-subtle);
+            display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem; transition: 0.2s;
         }
-        .icon-btn:hover { background: var(--brand); }
+        .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         /* EMPTY STATE */
-        .empty-state { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px; }
-        .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+        .empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; }
+        .empty-icon { font-size: 2.5rem; margin-bottom: 15px; opacity: 0.3; }
 
         /* SEO SECTION */
-        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
-        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
-        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        .seo-section { 
+            max-width: 800px; margin: 80px auto 0; color: var(--text-muted); 
+            line-height: 1.7; border-top: 1px solid var(--border-subtle); padding-top: 50px; font-size: 0.95rem;
+        }
+        .seo-section h2 { color: var(--text-main); font-size: 1.5rem; margin-bottom: 20px; }
+        .seo-section h3 { color: var(--text-main); font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; }
+        .seo-section strong { color: var(--primary); font-weight: 600; }
 
-        @media(max-width: 600px) { h1 { font-size: 2rem; } .search-box { flex-direction: column; border-radius: 20px; } .search-box input { text-align: center; } .generate-btn { width: 100%; } }
+        @media(max-width: 600px) { 
+            h1 { font-size: 2rem; } 
+            .search-box { border-radius: 12px; padding: 5px; } 
+            .generate-btn { padding: 12px 20px; } 
+        }
     </style>
 </head>
 <body>
@@ -113,7 +162,7 @@
 
         <div class="search-box">
             <input type="text" id="keyword" placeholder="e.g. Tech, Coffee, Fitness..." onkeypress="handleEnter(event)">
-            <button class="generate-btn" onclick="generateNames()">Generate Names</button>
+            <button class="generate-btn" onclick="generateNames()">Generate</button>
         </div>
     </div>
 
@@ -239,18 +288,19 @@
 
     function copyName(text) {
         navigator.clipboard.writeText(text);
-        alert(text + " copied!");
+        // Change icon temporarily
+        const btn = event.currentTarget;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        setTimeout(() => btn.innerHTML = originalHTML, 1500);
     }
 
     function checkDomain(name) {
-        // Affiliate Link Placeholder (GoDaddy Search)
         const cleanName = name.replace(/\s/g, '');
         window.open(`https://www.godaddy.com/domainsearch/find?checkAvail=1&domainToCheck=${cleanName}.com`, '_blank');
     }
 </script>
-    <script src="database.js"></script>
-
+<script src="database.js"></script>
 
 </body>
-
 </html>
