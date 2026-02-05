@@ -1,99 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cron Job Generator - Visual Crontab Editor</title>
+    <title>Cron Job Generator | OmniTools</title>
     <meta name="description" content="Generate Cron job syntax easily. Visual editor for Linux Crontab schedules. Convert clicks to cron expressions instantly.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- DEV THEME --- */
+        /* --- PREMIUM GOLD THEME --- */
         :root { 
-            --bg: #0f172a; 
-            --panel: #1e293b; 
-            --text: #f8fafc; 
-            --muted: #94a3b8; 
-            --code: #3b82f6;  /* Blue */
-            --highlight: #8b5cf6; /* Purple */
-            --border: 1px solid rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(59, 130, 246, 0.2);
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            min-height: 100vh;
+            
+            /* Technical Grid Background */
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Top Spotlight */
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; }
+
         /* HEADER */
         nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
-        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .back-btn:hover { color: white; }
-
-        /* MAIN OUTPUT BOX (The "Terminal") */
-        .terminal-box { 
-            background: #020617; border: 1px solid #334155; border-radius: 16px; padding: 30px; 
-            margin-bottom: 40px; text-align: center; position: relative;
-            box-shadow: var(--glow);
+        .back-btn { 
+            color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+            padding: 8px 16px; border-radius: 6px; border: 1px solid transparent;
         }
+        .back-btn:hover { color: var(--text-main); background: var(--bg-card); border-color: var(--border-subtle); }
 
-        .cron-display { 
-            font-family: 'Fira Code', monospace; font-size: 3rem; color: var(--code); 
-            font-weight: 600; margin: 20px 0; letter-spacing: 5px; text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-        }
-        
-        .human-readable { font-size: 1.1rem; color: var(--muted); background: rgba(255,255,255,0.05); display: inline-block; padding: 8px 20px; border-radius: 20px; }
-
-        .copy-btn {
-            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); 
-            border: none; color: white; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
-        }
-        .copy-btn:hover { background: var(--code); }
-
-        /* FIELD EXPLAINER */
-        .field-labels { display: flex; justify-content: center; gap: 15px; margin-top: -10px; margin-bottom: 20px; color: #64748b; font-size: 0.8rem; font-family: 'Fira Code', monospace; }
-        .lbl-item { width: 50px; text-align: center; }
-
-        /* EDITOR UI */
-        .editor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
-        
-        .col-panel { background: var(--panel); border: var(--border); border-radius: 12px; padding: 15px; height: 400px; display: flex; flex-direction: column; }
-        .col-title { font-weight: 700; text-align: center; margin-bottom: 10px; color: white; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        
-        .scroll-area { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 5px; padding-right: 5px; }
-        
-        /* Custom Scrollbar */
-        .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-track { background: #0f172a; }
-        .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-
-        .select-opt { 
-            padding: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; border-radius: 6px; transition: 0.2s; text-align: center; 
-        }
-        .select-opt:hover { background: rgba(255,255,255,0.05); color: white; }
-        .select-opt.active { background: var(--code); color: white; font-weight: 700; }
-        .select-opt.every { color: var(--highlight); font-weight: 700; border: 1px dashed var(--highlight); }
+        .header-box { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
 
         /* PRESETS */
         .presets { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
         .preset-btn { 
-            background: #1e293b; border: 1px solid #334155; color: white; padding: 10px 20px; 
-            border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s;
+            background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-muted); 
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; 
+            transition: 0.2s;
         }
-        .preset-btn:hover { border-color: var(--code); color: var(--code); }
+        .preset-btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+
+        /* TERMINAL BOX */
+        .terminal-box { 
+            background: #0c0c0e; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); 
+            padding: 40px; margin-bottom: 40px; text-align: center; position: relative;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .cron-display { 
+            font-family: 'Fira Code', monospace; font-size: 3.5rem; color: var(--primary); 
+            font-weight: 600; margin: 20px 0; letter-spacing: 5px; 
+            text-shadow: 0 0 30px var(--primary-glow);
+        }
+        
+        .human-readable { 
+            font-size: 1rem; color: var(--text-muted); background: var(--bg-input); 
+            display: inline-block; padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border-subtle);
+        }
+
+        .copy-btn {
+            position: absolute; top: 20px; right: 20px; background: var(--bg-input); 
+            border: 1px solid var(--border-subtle); color: var(--text-muted); width: 40px; height: 40px; 
+            border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            transition: 0.2s;
+        }
+        .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* FIELD LABELS */
+        .field-labels { 
+            display: flex; justify-content: center; gap: 15px; margin-top: -10px; margin-bottom: 25px; 
+            color: var(--text-muted); font-size: 0.75rem; font-family: 'Fira Code', monospace; 
+            opacity: 0.6;
+        }
+        .lbl-item { width: 60px; text-align: center; }
+
+        /* EDITOR UI */
+        .editor-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+        
+        .col-panel { 
+            background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); 
+            padding: 15px; height: 350px; display: flex; flex-direction: column; 
+        }
+        .col-title { 
+            font-weight: 700; text-align: center; margin-bottom: 12px; color: var(--text-main); font-size: 0.85rem; 
+            text-transform: uppercase; letter-spacing: 1px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle); 
+        }
+        
+        .scroll-area { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 4px; padding-right: 5px; }
+        
+        /* Custom Scrollbar */
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+
+        .select-opt { 
+            padding: 8px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; border-radius: 6px; 
+            transition: 0.2s; text-align: center; font-family: 'Fira Code', monospace;
+        }
+        .select-opt:hover { background: var(--bg-input); color: var(--text-main); }
+        .select-opt.active { background: var(--primary); color: #000; font-weight: 700; }
+        .select-opt.every { color: var(--primary); font-weight: 700; border: 1px dashed var(--border-subtle); margin-bottom: 5px; }
+        .select-opt.every.active { background: var(--bg-input); color: var(--primary); border-color: var(--primary); }
 
         /* SEO SECTION */
-        .seo-section { max-width: 800px; margin: 60px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
-        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
-        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
-        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--code); margin-bottom: 20px; }
+        .seo-section { 
+            max-width: 800px; margin: 60px auto 0; color: var(--text-muted); line-height: 1.7; 
+            border-top: 1px solid var(--border-subtle); padding-top: 50px; font-size: 0.95rem;
+        }
+        .seo-section h2 { color: var(--text-main); font-size: 1.5rem; margin-bottom: 20px; }
+        .seo-section h3 { color: var(--text-main); font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; }
+        
+        .code-block { 
+            background: var(--bg-input); padding: 20px; border-radius: 8px; font-family: 'Fira Code', monospace; 
+            border: 1px solid var(--border-subtle); color: var(--primary); margin-bottom: 20px; font-size: 0.9rem;
+        }
 
         @media(max-width: 900px) { 
             .editor-grid { grid-template-columns: 1fr; } 
             .col-panel { height: auto; max-height: 200px; }
+            .cron-display { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -104,9 +170,9 @@
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
     </nav>
 
-    <div style="text-align:center; margin-bottom:30px;">
+    <div class="header-box">
         <h1>Cron Job Generator</h1>
-        <p style="color:#94a3b8;">Create Linux crontab syntax quickly and easily.</p>
+        <p class="subtitle">Create Linux crontab syntax quickly and easily.</p>
     </div>
 
     <div class="presets">
@@ -161,7 +227,6 @@
             Cron is a time-based job scheduler in Unix-like computer operating systems (like Linux and macOS). Developers use cron to schedule jobs (commands or scripts) to run periodically at fixed times, dates, or intervals.
         </p>
         
-
         <h3>Understanding Crontab Syntax</h3>
         <p>A standard cron expression consists of five fields separated by whitespace:</p>
         <div class="code-block">
@@ -244,10 +309,8 @@
     }
 
     function selectItem(key, val, btnElement) {
-        // Simple logic: Single selection for now (expandable to multi later)
         state[key] = val;
         
-        // Visual update
         const parent = btnElement.parentElement;
         Array.from(parent.children).forEach(c => c.classList.remove('active'));
         btnElement.classList.add('active');
@@ -263,8 +326,7 @@
         state.month = parts[3];
         state.week = parts[4];
         
-        // Reset visual state (Simplified: reload)
-        // For a full app, we would match buttons to state
+        // In a real app, we'd update the UI selection here too
         updateDisplay();
     }
 
@@ -292,14 +354,18 @@
     function copyCron() {
         const str = `${state.min} ${state.hour} ${state.day} ${state.month} ${state.week}`;
         navigator.clipboard.writeText(str);
-        alert("Copied to clipboard!");
+        
+        const btn = document.querySelector('.copy-btn');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        setTimeout(() => btn.innerHTML = '<i class="fa-regular fa-copy"></i>', 2000);
     }
+
+    // Placeholder for updateUI if needed in future
+    function updateUI() {}
 
     init();
 </script>
-    <script src="database.js"></script>
-
+<script src="database.js"></script>
 
 </body>
-
 </html>
