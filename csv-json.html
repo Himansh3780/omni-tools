@@ -1,93 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV to JSON Converter - Free Excel to JSON Tool</title>
-    <meta name="description" content="Convert CSV files to JSON format instantly. Handles commas inside quotes correctly. Free, secure, and client-side conversion for developers.">
+    <title>CSV to JSON Converter | OmniTools</title>
+    <meta name="description" content="Convert CSV files to JSON format instantly. Handles commas inside quotes correctly. Free, secure, and client-side conversion.">
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- TECH THEME --- */
+        /* --- PREMIUM GOLD THEME --- */
         :root { 
-            --bg: #0f172a; 
-            --panel: #1e293b; 
-            --text: #f8fafc; 
-            --muted: #94a3b8; 
-            --code: #3b82f6;  /* Blue */
-            --success: #10b981;
-            --error: #f43f5e;
-            --border: 1px solid rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(16, 185, 129, 0.2);
+            --bg-body: #09090b;       
+            --bg-card: #0c0c0e;       
+            --bg-input: #121215; 
+            
+            --border-subtle: #1f1f22; 
+            --border-highlight: #3f3f46;
+            
+            --primary: #f59e0b;       /* Gold/Amber */
+            --primary-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-main: #ededef;
+            --text-muted: #a1a1aa;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.08), transparent 70%);
+            --grid-color: #1f1f22;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            padding-bottom: 80px; 
+            min-height: 100vh;
+            
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 500px;
+            background: var(--spotlight);
+            pointer-events: none; z-index: -1;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; }
+
         /* HEADER */
-        nav { display: flex; align-items: center; margin-bottom: 30px; padding-top: 20px; }
-        .back-btn { color: var(--muted); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .back-btn:hover { color: white; }
+        nav { display: flex; align-items: center; margin-bottom: 40px; padding-top: 20px; }
+        .back-btn { 
+            color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+            padding: 8px 16px; border-radius: 6px; border: 1px solid transparent;
+        }
+        .back-btn:hover { color: var(--text-main); background: var(--bg-card); border-color: var(--border-subtle); }
 
         .header-title { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #34d399, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: var(--muted); font-size: 1.1rem; }
+        h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; color: var(--text-main); letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
 
         /* WORKSPACE */
-        .workspace { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 10px; height: 600px; }
+        .workspace { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 15px; height: 600px; }
         
         /* PANELS */
-        .panel { display: flex; flex-direction: column; background: var(--panel); border: var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--glow); }
-        .panel-header { background: rgba(0,0,0,0.2); padding: 15px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .panel-title { font-weight: 700; color: var(--success); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .panel { 
+            display: flex; flex-direction: column; background: var(--bg-card); 
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); 
+            overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+        
+        .panel-header { 
+            background: var(--bg-input); padding: 12px 20px; border-bottom: 1px solid var(--border-subtle); 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-title { font-weight: 700; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
         
         .code-area { 
-            flex: 1; width: 100%; background: #0b0f19; border: none; color: #e2e8f0; 
+            flex: 1; width: 100%; background: #0c0c0e; border: none; color: #ededef; 
             padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.9rem; line-height: 1.6; resize: none;
         }
+        .code-area:focus { outline: none; }
         .code-area::placeholder { color: rgba(255,255,255,0.1); }
 
-        /* MIDDLE CONTROLS */
+        /* CONTROLS */
         .controls { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        
         .control-btn { 
-            width: 50px; height: 50px; border-radius: 50%; border: var(--border); background: var(--panel); 
-            color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            font-size: 1.2rem; transition: 0.2s;
+            width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--border-subtle); 
+            background: var(--bg-input); color: var(--text-muted); cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: 0.2s;
         }
-        .control-btn:hover { background: var(--success); color: #020617; transform: scale(1.1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); border-color: var(--success); }
+        .control-btn:hover { 
+            background: rgba(245, 158, 11, 0.1); color: var(--primary); 
+            border-color: var(--primary); transform: scale(1.1); 
+        }
 
         /* ACTION BAR */
-        .action-bar { display: flex; gap: 10px; }
+        .action-bar { display: flex; gap: 8px; }
         .sm-btn { 
-            padding: 5px 12px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #334155; 
-            background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s;
+            padding: 6px 12px; font-size: 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle); 
+            background: transparent; color: var(--text-muted); cursor: pointer; transition: 0.2s;
         }
-        .sm-btn:hover { color: white; border-color: white; }
-        .download-btn { background: var(--code); color: white; border: none; font-weight: 700; }
-        .download-btn:hover { background: #60a5fa; border: none; }
+        .sm-btn:hover { color: var(--text-main); border-color: var(--text-main); background: var(--bg-input); }
+        
+        .download-btn { background: var(--primary); color: #000; font-weight: 700; border: none; }
+        .download-btn:hover { background: #d97706; opacity: 1; color: #000; border: none; }
 
         /* TOAST */
         .status-msg { 
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
-            padding: 12px 25px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; 
+            padding: 12px 25px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; 
             display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
         }
-        .error { background: rgba(244, 63, 94, 0.9); color: white; }
-        .success { background: rgba(16, 185, 129, 0.9); color: #020617; }
+        .status-msg.success { background: #10b981; color: #000; }
+        .status-msg.error { background: #ef4444; color: #fff; }
 
         /* SAMPLE LINK */
-        .sample-link { text-align: center; margin-bottom: 20px; }
-        .sample-link a { color: var(--success); text-decoration: none; font-size: 0.9rem; cursor: pointer; border-bottom: 1px dashed var(--success); }
+        .sample-link { text-align: center; margin-bottom: 30px; }
+        .sample-link a { 
+            color: var(--primary); text-decoration: none; font-size: 0.9rem; cursor: pointer; 
+            border-bottom: 1px dashed var(--primary); padding-bottom: 2px;
+        }
+        .sample-link a:hover { opacity: 0.8; }
 
         /* SEO SECTION */
-        .seo-section { max-width: 800px; margin: 80px auto 0; color: #cbd5e1; line-height: 1.8; border-top: var(--border); padding-top: 50px; }
-        .seo-section h2 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
-        .seo-section h3 { color: white; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
-        .code-block { background: #020617; padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; border: 1px solid #334155; color: var(--muted); margin-bottom: 20px; font-size: 0.85rem; }
+        .seo-section { max-width: 900px; margin: 80px auto 0; color: var(--text-muted); line-height: 1.7; border-top: 1px solid var(--border-subtle); padding-top: 50px; font-size: 0.95rem; }
+        .seo-section h2 { color: var(--text-main); font-size: 1.5rem; margin-bottom: 20px; }
+        .seo-section h3 { color: var(--text-main); font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; }
+        .seo-section strong { color: var(--primary); font-weight: 600; }
+        
+        .code-block { 
+            background: var(--bg-input); padding: 15px; border-radius: 8px; font-family: 'Fira Code', monospace; 
+            border: 1px solid var(--border-subtle); color: var(--text-muted); margin-bottom: 20px; font-size: 0.85rem;
+        }
 
         @media(max-width: 900px) { 
             .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr auto 1fr; height: auto; } 
@@ -148,7 +204,6 @@
         <p>
             <strong>CSV</strong> (Comma Separated Values) is the default format for exporting data from spreadsheets like Microsoft Excel and Google Sheets. However, modern web applications and APIs communicate using <strong>JSON</strong> (JavaScript Object Notation).
         </p>
-        
         
         <p>
             Our tool acts as the bridge. It parses your CSV text, identifies the first row as the "Headers" (keys), and converts every subsequent row into a JSON object using those keys.
@@ -287,9 +342,7 @@
         document.body.removeChild(a);
     }
 </script>
-    <script src="database.js"></script>
-
+<script src="database.js"></script>
 
 </body>
-
 </html>
