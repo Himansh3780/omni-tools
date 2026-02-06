@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>OmniTools | Free Online Developer & PDF Tools (No Signup)</title>
-    <meta name="description" content="Access 50+ free online tools: Compress PDF, JSON Formatter, TikTok Downloader, AI Prompt Generator, and Image Converters. Fast, secure, and privacy-focused.">
-    <meta name="keywords" content="pdf compressor, json formatter, tiktok downloader, free online tools, developer dashboard, image converter, ai tools, text tools">
+    <title>OmniTools | Free Government Form & Exam Tools (SSC, UPSC, Railways)</title>
+    <meta name="description" content="Free online tools for students and job seekers: Resize photos for SSC/UPSC, compress PDF for forms, and generate secure passwords. No signup required.">
+    <meta name="keywords" content="ssc photo resizer, upsc image resize, pdf compressor 200kb, signature resizer, free online tools">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://omnitools.in">
     
@@ -19,13 +19,13 @@
         /* --- 2. LUXURY GOLD THEME VARIABLES --- */
         :root { 
             /* DARK MODE (DEFAULT) */
-            --bg-body: #09090b;       
-            --bg-sidebar: #09090b;    
-            --bg-card: #0c0c0e;       
-            --bg-card-hover: #121215; 
+            --bg-body: #09090b;        
+            --bg-sidebar: #09090b;     
+            --bg-card: #0c0c0e;        
+            --bg-card-hover: #121215;  
             --bg-header: rgba(9, 9, 11, 0.7);
             
-            --border-subtle: #1f1f22; 
+            --border-subtle: #1f1f22;  
             --border-hover: #3f3f46;
             --input-bg: #09090b;
             
@@ -57,8 +57,8 @@
             --border-hover: #cbd5e1;  
             --input-bg: #f8fafc;
 
-            --text-main: #0f172a;     
-            --text-muted: #64748b;    
+            --text-main: #0f172a;      
+            --text-muted: #64748b;     
             
             --spotlight: radial-gradient(circle at 50% -20%, rgba(245, 158, 11, 0.05), transparent 60%);
             --grid-color: #f1f5f9;
@@ -271,7 +271,7 @@
         </div>
         
         <div class="nav-item active" onclick="filter('all', this)"><i class="fa-solid fa-border-all"></i> All Tools</div>
-       <div class="nav-item" onclick="filter('fav', this)"><i class="fa-solid fa-star"></i> Favorites</div>
+        <div class="nav-item" onclick="filter('fav', this)"><i class="fa-solid fa-star"></i> Favorites</div>
         
         <div class="nav-item" onclick="filter('image-resize', this)"><i class="fa-solid fa-image"></i> Image Resize</div>
         <div class="nav-item" onclick="filter('signature', this)"><i class="fa-solid fa-file-signature"></i> Signature Resize</div>
@@ -279,12 +279,6 @@
         <div class="nav-item" onclick="filter('password', this)"><i class="fa-solid fa-key"></i> Password Tools</div>
         <div class="nav-item" onclick="filter('converter', this)"><i class="fa-solid fa-file-arrow-up"></i> JPG ↔ PDF</div>
         
-        <div class="nav-item" onclick="filter('password', this)">
-            <i class="fa-solid fa-shield-halved"></i> Passwords
-        </div>
-        <div class="nav-item" onclick="filter('converter', this)">
-            <i class="fa-solid fa-file-arrow-up"></i> Converters
-        </div>
         <div class="sidebar-ad-box" id="sidebar-ad-container"></div>
 
         <div class="nav-item" onclick="toggleMenu()" style="margin-top:auto; color:#ef4444; border-top:1px solid var(--border-subtle); border-radius:0; flex-shrink: 0;">
@@ -322,21 +316,7 @@
             <h3 style="margin-bottom:20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Applications</h3>
             
             <div class="grid" id="tools-grid">
-                <a href="pdf-compressor.html" class="card">
-                    <div class="icon-box"><i class="fa-solid fa-file-pdf"></i></div>
-                    <div class="card-title">PDF Compressor</div>
-                    <div class="card-desc">Reduce PDF file size without losing quality.</div>
-                </a>
-                <a href="json-formatter.html" class="card">
-                    <div class="icon-box"><i class="fa-solid fa-code"></i></div>
-                    <div class="card-title">JSON Formatter</div>
-                    <div class="card-desc">Beautify and validate JSON data instantly.</div>
-                </a>
-                <a href="password-gen.html" class="card">
-                    <div class="icon-box"><i class="fa-solid fa-key"></i></div>
-                    <div class="card-title">Password Generator</div>
-                    <div class="card-desc">Create secure, random passwords securely.</div>
-                </a>
+                <div style="grid-column:1/-1; color:var(--text-muted);">Loading Tools...</div>
             </div>
 
             <div class="seo-block">
@@ -374,7 +354,6 @@
     <div id="sticky-footer"></div>
 
     <script src="ads.js"></script>
-    <script>const demoToolsDB = [];</script>
     <script src="database.js"></script>
 
     <script>
@@ -547,7 +526,12 @@
             }
 
             const db = (typeof toolsDB !== 'undefined') ? toolsDB : [];
-            if(!db || db.length === 0) { return; }
+            
+            // Empty State
+            if(!db || db.length === 0) { 
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No tools loaded from database.js</div>`;
+                return; 
+            }
 
             // Filtering
             let filtered = [];
@@ -567,6 +551,12 @@
                 filtered = db;
             } else {
                 filtered = db.filter(t => t.cat === cat);
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">
+                        No tools found in this category yet.
+                    </div>`;
+                    return;
+                }
             }
 
             grid.innerHTML = ""; // Clear Grid
@@ -582,7 +572,6 @@
             filtered.forEach(tool => {
                 let badge = tool.tag ? `<span class="badge ${tool.tag.toLowerCase()}">${tool.tag}</span>` : "";
                 let iconPrefix = "fa-solid";
-                if (['tiktok','instagram','youtube','twitter','facebook','discord','paypal'].some(b => tool.icon.includes(b))) iconPrefix = "fa-brands";
                 
                 let brandClass = "brand-dev"; 
                 if (tool.cat === 'social') brandClass = "brand-social";
